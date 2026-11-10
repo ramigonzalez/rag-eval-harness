@@ -1,0 +1,46 @@
+# Full SciFact test split. Local models only. LLM strategies run when a key is set.
+dataset: scifact
+seed: 7
+max_queries: null
+k_values: [5, 10]
+hit_k: 60
+fusion_pool: 80
+rerank_pool: 20
+rrf_k: 60
+latency_queries: 10
+bm25:
+  k1: 1.5
+  b: 0.75
+embedder:
+  kind: fastembed
+  model: sentence-transformers/all-MiniLM-L6-v2
+  batch_size: 128
+reranker:
+  kind: fastembed
+  model: Xenova/ms-marco-MiniLM-L-6-v2
+  batch_size: 32
+chunkers:
+  - name: whole
+  - name: fixed
+    chunk_size: 100
+    overlap: 25
+  - name: recursive
+    chunk_size: 100
+    overlap: 25
+  - name: semantic
+    breakpoint_percentile: 95
+    max_chunk_words: 220
+    min_chunk_words: 40
+retrievers: [bm25, dense, hybrid, rerank]
+llm_retrievers: [hyde, rag_fusion]
+rag_fusion_queries: 3
+generation:
+  mode: "auto"
+  max_queries: 20
+  k: 5
+  pairs:
+    - [recursive, hybrid]
+output_dir: results/scifact
+data_dir: data
+cache_dir: data/cache
+plugins: []

@@ -1,0 +1,834 @@
+[
+  {
+    "chunker": "whole",
+    "retriever": "bm25",
+    "query_id": "1",
+    "query": "0-dimensional biomaterials show inductive properties.",
+    "hits": [
+      {
+        "doc_id": "10608397",
+        "chunk_id": "10608397::c0",
+        "score": 10.5563,
+        "text": "High-performance neuroprosthetic control by an individual with tetraplegia. BACKGROUND Paralysis or amputation of an arm results in the loss of the ability to orient the hand and grasp, manipulate, and carry objects, functions that are e..."
+      },
+      {
+        "doc_id": "43385013",
+        "chunk_id": "43385013::c0",
+        "score": 10.1292,
+        "text": "Epithelial and mesenchymal subpopulations within normal basal breast cell lines exhibit distinct stem cell/progenitor properties. It has been proposed that epithelial-mesenchymal transition (EMT) in mammary epithelial cells and breast ca..."
+      },
+      {
+        "doc_id": "40212412",
+        "chunk_id": "40212412::c0",
+        "score": 9.6276,
+        "text": "Periosteal bone formation--a neglected determinant of bone strength. Life forms that have low body mass can hunt for food on the undersurface of branches or along shear cliff faces quite unperturbed by gravity. For larger animals, the hu..."
+      }
+    ]
+  },
+  {
+    "chunker": "whole",
+    "retriever": "bm25",
+    "query_id": "380",
+    "query": "Enhanced early production of inflammatory chemokines improves viral control in the lung.",
+    "hits": [
+      {
+        "doc_id": "19005293",
+        "chunk_id": "19005293::c0",
+        "score": 29.5975,
+        "text": "Memory CD4+ T cells induce innate responses independently of pathogen Inflammation induced by recognition of pathogen-associated molecular patterns markedly affects subsequent adaptive responses. We asked whether the adaptive immune syst..."
+      },
+      {
+        "doc_id": "17223891",
+        "chunk_id": "17223891::c0",
+        "score": 19.6332,
+        "text": "The NOD-like receptor NLRP12 attenuates colon inflammation and tumorigenesis. NLRP12 is a member of the intracellular Nod-like receptor (NLR) family that has been suggested to downregulate the production of inflammatory cytokines, but it..."
+      },
+      {
+        "doc_id": "10648422",
+        "chunk_id": "10648422::c0",
+        "score": 18.1958,
+        "text": "Programmed death-1\u2013induced interleukin-10 production by monocytes impairs CD4+ T cell activation during HIV infection Viral replication and microbial translocation from the gut to the blood during HIV infection lead to hyperimmune activa..."
+      }
+    ]
+  },
+  {
+    "chunker": "whole",
+    "retriever": "dense",
+    "query_id": "1",
+    "query": "0-dimensional biomaterials show inductive properties.",
+    "hits": [
+      {
+        "doc_id": "29638116",
+        "chunk_id": "29638116::c0",
+        "score": 0.354,
+        "text": "Complex Tissue and Disease Modeling using hiPSCs. Defined genetic models based on human pluripotent stem cells have opened new avenues for understanding disease mechanisms and drug screening. Many of these models assume cell-autonomous m..."
+      },
+      {
+        "doc_id": "4346436",
+        "chunk_id": "4346436::c0",
+        "score": 0.3306,
+        "text": "Nonlinear Elasticity in Biological Gels Unlike most synthetic materials, biological materials often stiffen as they are deformed. This nonlinear elastic response, critical for the physiological function of some tissues, has been document..."
+      },
+      {
+        "doc_id": "3874000",
+        "chunk_id": "3874000::c0",
+        "score": 0.2922,
+        "text": "Tissue Mechanics Orchestrate Wnt-Dependent Human Embryonic Stem Cell Differentiation. Regenerative medicine is predicated on understanding the mechanisms regulating development and applying these conditions to direct stem cell fate. Embr..."
+      }
+    ]
+  },
+  {
+    "chunker": "whole",
+    "retriever": "dense",
+    "query_id": "380",
+    "query": "Enhanced early production of inflammatory chemokines improves viral control in the lung.",
+    "hits": [
+      {
+        "doc_id": "19005293",
+        "chunk_id": "19005293::c0",
+        "score": 0.5974,
+        "text": "Memory CD4+ T cells induce innate responses independently of pathogen Inflammation induced by recognition of pathogen-associated molecular patterns markedly affects subsequent adaptive responses. We asked whether the adaptive immune syst..."
+      },
+      {
+        "doc_id": "3835423",
+        "chunk_id": "3835423::c0",
+        "score": 0.5604,
+        "text": "CD4+ T cell help guides formation of CD103+ lung-resident memory CD8+ T cells during influenza viral infection. Tissue-resident memory T (Trm) cells provide enhanced protection against infection at mucosal sites. Here we found that CD4(+..."
+      },
+      {
+        "doc_id": "12100963",
+        "chunk_id": "12100963::c0",
+        "score": 0.546,
+        "text": "Tissue exit: a novel control point in the accumulation of antigen-specific CD8 T cells in the influenza a virus-infected lung. Memory/effector T cells efficiently migrate into extralymphoid tissues and sites of infection, providing immun..."
+      }
+    ]
+  },
+  {
+    "chunker": "whole",
+    "retriever": "hybrid",
+    "query_id": "1",
+    "query": "0-dimensional biomaterials show inductive properties.",
+    "hits": [
+      {
+        "doc_id": "803312",
+        "chunk_id": "803312::c0",
+        "score": 0.0267,
+        "text": "Cerebral organoids model human brain development and microcephaly The complexity of the human brain has made it difficult to study many brain disorders in model organisms, highlighting the need for an in vitro model of human brain develo..."
+      },
+      {
+        "doc_id": "43385013",
+        "chunk_id": "43385013::c0",
+        "score": 0.0247,
+        "text": "Epithelial and mesenchymal subpopulations within normal basal breast cell lines exhibit distinct stem cell/progenitor properties. It has been proposed that epithelial-mesenchymal transition (EMT) in mammary epithelial cells and breast ca..."
+      },
+      {
+        "doc_id": "40212412",
+        "chunk_id": "40212412::c0",
+        "score": 0.0246,
+        "text": "Periosteal bone formation--a neglected determinant of bone strength. Life forms that have low body mass can hunt for food on the undersurface of branches or along shear cliff faces quite unperturbed by gravity. For larger animals, the hu..."
+      }
+    ]
+  },
+  {
+    "chunker": "whole",
+    "retriever": "hybrid",
+    "query_id": "380",
+    "query": "Enhanced early production of inflammatory chemokines improves viral control in the lung.",
+    "hits": [
+      {
+        "doc_id": "19005293",
+        "chunk_id": "19005293::c0",
+        "score": 0.0328,
+        "text": "Memory CD4+ T cells induce innate responses independently of pathogen Inflammation induced by recognition of pathogen-associated molecular patterns markedly affects subsequent adaptive responses. We asked whether the adaptive immune syst..."
+      },
+      {
+        "doc_id": "3835423",
+        "chunk_id": "3835423::c0",
+        "score": 0.0296,
+        "text": "CD4+ T cell help guides formation of CD103+ lung-resident memory CD8+ T cells during influenza viral infection. Tissue-resident memory T (Trm) cells provide enhanced protection against infection at mucosal sites. Here we found that CD4(+..."
+      },
+      {
+        "doc_id": "40365566",
+        "chunk_id": "40365566::c0",
+        "score": 0.0284,
+        "text": "Conventional and monocyte-derived CD11b(+) dendritic cells initiate and maintain T helper 2 cell-mediated immunity to house dust mite allergen. Dendritic cells (DCs) are crucial for mounting allergic airway inflammation, but it is unclea..."
+      }
+    ]
+  },
+  {
+    "chunker": "whole",
+    "retriever": "rerank",
+    "query_id": "1",
+    "query": "0-dimensional biomaterials show inductive properties.",
+    "hits": [
+      {
+        "doc_id": "43385013",
+        "chunk_id": "43385013::c0",
+        "score": -5.4163,
+        "text": "Epithelial and mesenchymal subpopulations within normal basal breast cell lines exhibit distinct stem cell/progenitor properties. It has been proposed that epithelial-mesenchymal transition (EMT) in mammary epithelial cells and breast ca..."
+      },
+      {
+        "doc_id": "6863070",
+        "chunk_id": "6863070::c0",
+        "score": -7.4692,
+        "text": "Three-dimensional superresolution colocalization of intracellular protein superstructures and the cell surface in live Caulobacter crescentus. Recently, single-molecule imaging and photocontrol have enabled superresolution optical micros..."
+      },
+      {
+        "doc_id": "393001",
+        "chunk_id": "393001::c0",
+        "score": -7.6797,
+        "text": "High Km soluble 5'-nucleotidase from human placenta. Properties and allosteric regulation by IMP and ATP. A human placental soluble \"high Km\" 5'-nucleotidase has been separated from \"low Km\" 5'-nucleotidase and nonspecific phosphatase by..."
+      }
+    ]
+  },
+  {
+    "chunker": "whole",
+    "retriever": "rerank",
+    "query_id": "380",
+    "query": "Enhanced early production of inflammatory chemokines improves viral control in the lung.",
+    "hits": [
+      {
+        "doc_id": "19005293",
+        "chunk_id": "19005293::c0",
+        "score": 5.468,
+        "text": "Memory CD4+ T cells induce innate responses independently of pathogen Inflammation induced by recognition of pathogen-associated molecular patterns markedly affects subsequent adaptive responses. We asked whether the adaptive immune syst..."
+      },
+      {
+        "doc_id": "26068103",
+        "chunk_id": "26068103::c0",
+        "score": -0.36,
+        "text": "Dual role of interleukin-10 in the regulation of respiratory syncitial virus (RSV)-induced lung inflammation. RSV lower respiratory tract infections (LRTI) are among the most common diseases necessitating hospital admission in children. ..."
+      },
+      {
+        "doc_id": "67045088",
+        "chunk_id": "67045088::c0",
+        "score": -0.9595,
+        "text": "Inhibition of the dipeptidyl peptidase DPP4 (CD26) reveals IL-33-dependent eosinophil-mediated control of tumor growth Post-translational modification of chemokines mediated by the dipeptidyl peptidase DPP4 (CD26) has been shown to negat..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "bm25",
+    "query_id": "1",
+    "query": "0-dimensional biomaterials show inductive properties.",
+    "hits": [
+      {
+        "doc_id": "43385013",
+        "chunk_id": "43385013::c1",
+        "score": 11.9401,
+        "text": "a mesenchymal-like phenotype is required for the maintenance of all their stem cell properties. We used nontumorigenic basal cell lines as models of normal stem cells/progenitors and demonstrate that these cell lines contain an epithelia..."
+      },
+      {
+        "doc_id": "10608397",
+        "chunk_id": "10608397::c2",
+        "score": 10.7049,
+        "text": "able to move the prosthetic limb freely in the three-dimensional workspace on the second day of training. After 13 weeks, robust seven-dimensional movements were performed routinely. Mean success rate on target-based reaching tasks was 9..."
+      },
+      {
+        "doc_id": "24998637",
+        "chunk_id": "24998637::c3",
+        "score": 10.5978,
+        "text": "in vitro culture. Taken together, these results indicate that IL-6 may play a key role in the development of AIA at the inductive as well as the effector phase, and the blockade of IL-6 is possibly beneficial in the treatment of rheumato..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "bm25",
+    "query_id": "380",
+    "query": "Enhanced early production of inflammatory chemokines improves viral control in the lung.",
+    "hits": [
+      {
+        "doc_id": "19005293",
+        "chunk_id": "19005293::c0",
+        "score": 27.7413,
+        "text": "Memory CD4+ T cells induce innate responses independently of pathogen Inflammation induced by recognition of pathogen-associated molecular patterns markedly affects subsequent adaptive responses. We asked whether the adaptive immune syst..."
+      },
+      {
+        "doc_id": "17223891",
+        "chunk_id": "17223891::c1",
+        "score": 20.2156,
+        "text": "is associated with increased production of inflammatory cytokines, chemokines, and tumorigenic factors. Enhanced colon inflammation and colorectal tumor development in Nlrp12-deficient mice are due to a failure to dampen NF-\u03baB and ERK ac..."
+      },
+      {
+        "doc_id": "17223891",
+        "chunk_id": "17223891::c0",
+        "score": 19.5718,
+        "text": "The NOD-like receptor NLRP12 attenuates colon inflammation and tumorigenesis. NLRP12 is a member of the intracellular Nod-like receptor (NLR) family that has been suggested to downregulate the production of inflammatory cytokines, but it..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "dense",
+    "query_id": "1",
+    "query": "0-dimensional biomaterials show inductive properties.",
+    "hits": [
+      {
+        "doc_id": "29638116",
+        "chunk_id": "29638116::c0",
+        "score": 0.3548,
+        "text": "Complex Tissue and Disease Modeling using hiPSCs. Defined genetic models based on human pluripotent stem cells have opened new avenues for understanding disease mechanisms and drug screening. Many of these models assume cell-autonomous m..."
+      },
+      {
+        "doc_id": "4346436",
+        "chunk_id": "4346436::c0",
+        "score": 0.3324,
+        "text": "Nonlinear Elasticity in Biological Gels Unlike most synthetic materials, biological materials often stiffen as they are deformed. This nonlinear elastic response, critical for the physiological function of some tissues, has been document..."
+      },
+      {
+        "doc_id": "10786948",
+        "chunk_id": "10786948::c0",
+        "score": 0.3037,
+        "text": "An efficient nonviral method to generate integration-free human-induced pluripotent stem cells from cord blood and peripheral blood cells. The generation of induced pluripotent stem cells (iPSCs) provides the opportunity to use patient-s..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "dense",
+    "query_id": "380",
+    "query": "Enhanced early production of inflammatory chemokines improves viral control in the lung.",
+    "hits": [
+      {
+        "doc_id": "26068103",
+        "chunk_id": "26068103::c3",
+        "score": 0.6076,
+        "text": "IL-5) and Th2-related chemokine [monocyte chemoattractant protein 1 (MCP-1), chemokine (C-C motif) ligand 3 (CCL3) and regulated upon activation normal T cell expressed and secreted (RANTES)] expression. We identified a subset of CD11b(+..."
+      },
+      {
+        "doc_id": "19005293",
+        "chunk_id": "19005293::c0",
+        "score": 0.5995,
+        "text": "Memory CD4+ T cells induce innate responses independently of pathogen Inflammation induced by recognition of pathogen-associated molecular patterns markedly affects subsequent adaptive responses. We asked whether the adaptive immune syst..."
+      },
+      {
+        "doc_id": "26068103",
+        "chunk_id": "26068103::c2",
+        "score": 0.5991,
+        "text": "h post-infection), but also late inflammatory changes [characterized by T helper type 2 (Th2) cytokine and chemokine expression]. While this result appears contradictory to some clinical observations where elevated IL-10 levels are obser..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "hybrid",
+    "query_id": "1",
+    "query": "0-dimensional biomaterials show inductive properties.",
+    "hits": [
+      {
+        "doc_id": "10607877",
+        "chunk_id": "10607877::c1",
+        "score": 0.0213,
+        "text": "(two-dimensional) receptor-ligand complex lifetimes at cell-cell interface were found to be smaller than (three-dimensional) lifetimes in solution but the underlying mechanism is unknown. At the cell-cell interface, the receptor-ligand c..."
+      },
+      {
+        "doc_id": "6863070",
+        "chunk_id": "6863070::c0",
+        "score": 0.0202,
+        "text": "Three-dimensional superresolution colocalization of intracellular protein superstructures and the cell surface in live Caulobacter crescentus. Recently, single-molecule imaging and photocontrol have enabled superresolution optical micros..."
+      },
+      {
+        "doc_id": "10607877",
+        "chunk_id": "10607877::c2",
+        "score": 0.0182,
+        "text": "of receptor triggering but it is unclear whether the mechanochemistry supports such small-scale segregation. Here we present a nanometer-scale mathematical model that couples membrane elasticity with the compressional stiffness and later..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "hybrid",
+    "query_id": "380",
+    "query": "Enhanced early production of inflammatory chemokines improves viral control in the lung.",
+    "hits": [
+      {
+        "doc_id": "19005293",
+        "chunk_id": "19005293::c0",
+        "score": 0.0325,
+        "text": "Memory CD4+ T cells induce innate responses independently of pathogen Inflammation induced by recognition of pathogen-associated molecular patterns markedly affects subsequent adaptive responses. We asked whether the adaptive immune syst..."
+      },
+      {
+        "doc_id": "3835423",
+        "chunk_id": "3835423::c0",
+        "score": 0.0282,
+        "text": "CD4+ T cell help guides formation of CD103+ lung-resident memory CD8+ T cells during influenza viral infection. Tissue-resident memory T (Trm) cells provide enhanced protection against infection at mucosal sites. Here we found that CD4(+..."
+      },
+      {
+        "doc_id": "24917562",
+        "chunk_id": "24917562::c3",
+        "score": 0.0279,
+        "text": "and weight loss are related to the presence of a systemic inflammatory response as reflected by enhanced levels of inflammatory mediators and acute phase proteins in patients with primary non-small-cell lung cancer."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "rerank",
+    "query_id": "1",
+    "query": "0-dimensional biomaterials show inductive properties.",
+    "hits": [
+      {
+        "doc_id": "10931595",
+        "chunk_id": "10931595::c1",
+        "score": -6.8213,
+        "text": "for the relative probabilities of the three possible terminal cell types in diverse genetic backgrounds as well as timed ablation of the inductive signal favor one geometric model and suffice to fit most of its parameters. The model is f..."
+      },
+      {
+        "doc_id": "6863070",
+        "chunk_id": "6863070::c0",
+        "score": -7.9458,
+        "text": "Three-dimensional superresolution colocalization of intracellular protein superstructures and the cell surface in live Caulobacter crescentus. Recently, single-molecule imaging and photocontrol have enabled superresolution optical micros..."
+      },
+      {
+        "doc_id": "43385013",
+        "chunk_id": "43385013::c1",
+        "score": -8.5296,
+        "text": "a mesenchymal-like phenotype is required for the maintenance of all their stem cell properties. We used nontumorigenic basal cell lines as models of normal stem cells/progenitors and demonstrate that these cell lines contain an epithelia..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "rerank",
+    "query_id": "380",
+    "query": "Enhanced early production of inflammatory chemokines improves viral control in the lung.",
+    "hits": [
+      {
+        "doc_id": "19005293",
+        "chunk_id": "19005293::c0",
+        "score": 5.2054,
+        "text": "Memory CD4+ T cells induce innate responses independently of pathogen Inflammation induced by recognition of pathogen-associated molecular patterns markedly affects subsequent adaptive responses. We asked whether the adaptive immune syst..."
+      },
+      {
+        "doc_id": "219475",
+        "chunk_id": "219475::c1",
+        "score": -0.7757,
+        "text": "produce large quantities of matrix metalloproteinase 9 (MMP9) and promote vascular remodeling. Deletion of MMP9 normalizes aberrant vasculature in the premetastatic lung and diminishes lung metastasis. The production and activity of MMP9..."
+      },
+      {
+        "doc_id": "17223891",
+        "chunk_id": "17223891::c1",
+        "score": -0.8751,
+        "text": "is associated with increased production of inflammatory cytokines, chemokines, and tumorigenic factors. Enhanced colon inflammation and colorectal tumor development in Nlrp12-deficient mice are due to a failure to dampen NF-\u03baB and ERK ac..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "bm25",
+    "query_id": "1",
+    "query": "0-dimensional biomaterials show inductive properties.",
+    "hits": [
+      {
+        "doc_id": "24998637",
+        "chunk_id": "24998637::c3",
+        "score": 11.2068,
+        "text": "Taken together, these results indicate that IL-6 may play a key role in the development of AIA at the inductive as well as the effector phase, and the blockade of IL-6 is possibly beneficial in the treatment of rheumatoid arthritis."
+      },
+      {
+        "doc_id": "10906636",
+        "chunk_id": "10906636::c2",
+        "score": 10.2447,
+        "text": "We further show that the constitutive endocytic property of US28 affects the action of its chemokine ligand fractalkine/CX3CL1 and show that in the absence of the US28 C terminus, fractalkine/CX3CL1 acts as an agonist on US28. This demon..."
+      },
+      {
+        "doc_id": "803312",
+        "chunk_id": "803312::c2",
+        "score": 10.1803,
+        "text": "We demonstrate premature neuronal differentiation in patient organoids, a defect that could help to explain the disease phenotype. Together, these data show that three-dimensional organoids can recapitulate development and disease even i..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "bm25",
+    "query_id": "380",
+    "query": "Enhanced early production of inflammatory chemokines improves viral control in the lung.",
+    "hits": [
+      {
+        "doc_id": "19005293",
+        "chunk_id": "19005293::c0",
+        "score": 24.7542,
+        "text": "Memory CD4+ T cells induce innate responses independently of pathogen Inflammation induced by recognition of pathogen-associated molecular patterns markedly affects subsequent adaptive responses. We asked whether the adaptive immune syst..."
+      },
+      {
+        "doc_id": "23912923",
+        "chunk_id": "23912923::c1",
+        "score": 17.0919,
+        "text": "The current study describes a comprehensive characterization of mice in which the gene for VISTA has been deleted. Despite the apparent normal hematopoietic development in young mice, VISTA genetic deficiency leads to a gradual accumulat..."
+      },
+      {
+        "doc_id": "17223891",
+        "chunk_id": "17223891::c0",
+        "score": 16.6595,
+        "text": "The NOD-like receptor NLRP12 attenuates colon inflammation and tumorigenesis. NLRP12 is a member of the intracellular Nod-like receptor (NLR) family that has been suggested to downregulate the production of inflammatory cytokines, but it..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "dense",
+    "query_id": "1",
+    "query": "0-dimensional biomaterials show inductive properties.",
+    "hits": [
+      {
+        "doc_id": "29638116",
+        "chunk_id": "29638116::c1",
+        "score": 0.3615,
+        "text": "Defined genetic models based on human pluripotent stem cells have opened new avenues for understanding disease mechanisms and drug screening. Many of these models assume cell-autonomous mechanisms of disease but it is possible that disea..."
+      },
+      {
+        "doc_id": "4346436",
+        "chunk_id": "4346436::c0",
+        "score": 0.33,
+        "text": "Nonlinear Elasticity in Biological Gels Unlike most synthetic materials, biological materials often stiffen as they are deformed. This nonlinear elastic response, critical for the physiological function of some tissues, has been document..."
+      },
+      {
+        "doc_id": "3874000",
+        "chunk_id": "3874000::c0",
+        "score": 0.3138,
+        "text": "Tissue Mechanics Orchestrate Wnt-Dependent Human Embryonic Stem Cell Differentiation. Regenerative medicine is predicated on understanding the mechanisms regulating development and applying these conditions to direct stem cell fate. Embr..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "dense",
+    "query_id": "380",
+    "query": "Enhanced early production of inflammatory chemokines improves viral control in the lung.",
+    "hits": [
+      {
+        "doc_id": "19005293",
+        "chunk_id": "19005293::c0",
+        "score": 0.6013,
+        "text": "Memory CD4+ T cells induce innate responses independently of pathogen Inflammation induced by recognition of pathogen-associated molecular patterns markedly affects subsequent adaptive responses. We asked whether the adaptive immune syst..."
+      },
+      {
+        "doc_id": "23509113",
+        "chunk_id": "23509113::c1",
+        "score": 0.5879,
+        "text": "These immunoresolvents are agonists for resolution that interact with specific receptors on leukocytes and structural cells to blunt further inflammation and promote catabasis. This process appears to be defective in several common lung ..."
+      },
+      {
+        "doc_id": "23509113",
+        "chunk_id": "23509113::c0",
+        "score": 0.5748,
+        "text": "Resolution of acute inflammation in the lung. Acute inflammation in the lung is essential to health. So too is its resolution. In response to invading microbes, noxious stimuli, or tissue injury, an acute inflammatory response is mounted..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "hybrid",
+    "query_id": "1",
+    "query": "0-dimensional biomaterials show inductive properties.",
+    "hits": [
+      {
+        "doc_id": "6863070",
+        "chunk_id": "6863070::c0",
+        "score": 0.0247,
+        "text": "Three-dimensional superresolution colocalization of intracellular protein superstructures and the cell surface in live Caulobacter crescentus. Recently, single-molecule imaging and photocontrol have enabled superresolution optical micros..."
+      },
+      {
+        "doc_id": "16939583",
+        "chunk_id": "16939583::c0",
+        "score": 0.0219,
+        "text": "2D and 3D Stem Cell Models of Primate Cortical Development Identify Species-Specific Differences in Progenitor Behavior Contributing to Brain Size. Variation in cerebral cortex size and complexity is thought to contribute to differences ..."
+      },
+      {
+        "doc_id": "24998637",
+        "chunk_id": "24998637::c3",
+        "score": 0.0164,
+        "text": "Taken together, these results indicate that IL-6 may play a key role in the development of AIA at the inductive as well as the effector phase, and the blockade of IL-6 is possibly beneficial in the treatment of rheumatoid arthritis."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "hybrid",
+    "query_id": "380",
+    "query": "Enhanced early production of inflammatory chemokines improves viral control in the lung.",
+    "hits": [
+      {
+        "doc_id": "19005293",
+        "chunk_id": "19005293::c0",
+        "score": 0.0328,
+        "text": "Memory CD4+ T cells induce innate responses independently of pathogen Inflammation induced by recognition of pathogen-associated molecular patterns markedly affects subsequent adaptive responses. We asked whether the adaptive immune syst..."
+      },
+      {
+        "doc_id": "3835423",
+        "chunk_id": "3835423::c0",
+        "score": 0.0289,
+        "text": "CD4+ T cell help guides formation of CD103+ lung-resident memory CD8+ T cells during influenza viral infection. Tissue-resident memory T (Trm) cells provide enhanced protection against infection at mucosal sites. Here we found that CD4(+..."
+      },
+      {
+        "doc_id": "40365566",
+        "chunk_id": "40365566::c1",
+        "score": 0.0286,
+        "text": "Mainly CD11b(+) cDCs but not CD103(+) cDCs induced T helper 2 (Th2) cell immunity in HDM-specific T cells in vitro and asthma in vivo. Studies in Flt3l(-/-) mice, lacking all cDCs, revealed that moDCs were also sufficient to induce Th2 c..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "rerank",
+    "query_id": "1",
+    "query": "0-dimensional biomaterials show inductive properties.",
+    "hits": [
+      {
+        "doc_id": "6863070",
+        "chunk_id": "6863070::c0",
+        "score": -8.2976,
+        "text": "Three-dimensional superresolution colocalization of intracellular protein superstructures and the cell surface in live Caulobacter crescentus. Recently, single-molecule imaging and photocontrol have enabled superresolution optical micros..."
+      },
+      {
+        "doc_id": "95764370",
+        "chunk_id": "95764370::c2",
+        "score": -8.5849,
+        "text": "Structural, optical and electrical properties have been analysed for the as-deposited and annealed films. XRD studies on the CBD\u2013CdS films reveal that the change in Cadmium ion concentration in the bath results in the change in crystalli..."
+      },
+      {
+        "doc_id": "43385013",
+        "chunk_id": "43385013::c1",
+        "score": -8.6559,
+        "text": "We used nontumorigenic basal cell lines as models of normal stem cells/progenitors and demonstrate that these cell lines contain an epithelial subpopulation (\"EpCAM+,\" epithelial cell adhesion molecule positive [EpCAM(pos)]/CD49f(high)) ..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "rerank",
+    "query_id": "380",
+    "query": "Enhanced early production of inflammatory chemokines improves viral control in the lung.",
+    "hits": [
+      {
+        "doc_id": "19005293",
+        "chunk_id": "19005293::c0",
+        "score": 4.6738,
+        "text": "Memory CD4+ T cells induce innate responses independently of pathogen Inflammation induced by recognition of pathogen-associated molecular patterns markedly affects subsequent adaptive responses. We asked whether the adaptive immune syst..."
+      },
+      {
+        "doc_id": "219475",
+        "chunk_id": "219475::c1",
+        "score": -0.7727,
+        "text": "In addition, they produce large quantities of matrix metalloproteinase 9 (MMP9) and promote vascular remodeling. Deletion of MMP9 normalizes aberrant vasculature in the premetastatic lung and diminishes lung metastasis. The production an..."
+      },
+      {
+        "doc_id": "15425958",
+        "chunk_id": "15425958::c2",
+        "score": -1.2475,
+        "text": "Furthermore, cmvIL-10 had pronounced long-term effects on those DCs that could overcome this inhibition of maturation. It enhanced the migration of mature DCs (mDCs) towards the lymph node homing chemokine but greatly reduced their cytok..."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "bm25",
+    "query_id": "1",
+    "query": "0-dimensional biomaterials show inductive properties.",
+    "hits": [
+      {
+        "doc_id": "24998637",
+        "chunk_id": "24998637::c2",
+        "score": 11.6656,
+        "text": "Taken together, these results indicate that IL-6 may play a key role in the development of AIA at the inductive as well as the effector phase, and the blockade of IL-6 is possibly beneficial in the treatment of rheumatoid arthritis."
+      },
+      {
+        "doc_id": "43385013",
+        "chunk_id": "43385013::c0",
+        "score": 10.2667,
+        "text": "Epithelial and mesenchymal subpopulations within normal basal breast cell lines exhibit distinct stem cell/progenitor properties. It has been proposed that epithelial-mesenchymal transition (EMT) in mammary epithelial cells and breast ca..."
+      },
+      {
+        "doc_id": "10608397",
+        "chunk_id": "10608397::c0",
+        "score": 9.7156,
+        "text": "High-performance neuroprosthetic control by an individual with tetraplegia. BACKGROUND Paralysis or amputation of an arm results in the loss of the ability to orient the hand and grasp, manipulate, and carry objects, functions that are e..."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "bm25",
+    "query_id": "380",
+    "query": "Enhanced early production of inflammatory chemokines improves viral control in the lung.",
+    "hits": [
+      {
+        "doc_id": "19005293",
+        "chunk_id": "19005293::c1",
+        "score": 29.5532,
+        "text": "We found that the response of memory, but not naive, CD4+ T cells enhances production of multiple innate inflammatory cytokines and chemokines (IICs) in the lung and that, during influenza infection, this leads to early control of virus...."
+      },
+      {
+        "doc_id": "40365566",
+        "chunk_id": "40365566::c1",
+        "score": 19.2772,
+        "text": "The main function of moDCs was the production of proinflammatory chemokines and allergen presentation in the lung during challenge. Thus, we have identified migratory CD11b(+) cDCs as the principal subset inducing Th2 cell-mediated immun..."
+      },
+      {
+        "doc_id": "17223891",
+        "chunk_id": "17223891::c0",
+        "score": 18.8411,
+        "text": "The NOD-like receptor NLRP12 attenuates colon inflammation and tumorigenesis. NLRP12 is a member of the intracellular Nod-like receptor (NLR) family that has been suggested to downregulate the production of inflammatory cytokines, but it..."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "dense",
+    "query_id": "1",
+    "query": "0-dimensional biomaterials show inductive properties.",
+    "hits": [
+      {
+        "doc_id": "4346436",
+        "chunk_id": "4346436::c0",
+        "score": 0.3747,
+        "text": "Nonlinear Elasticity in Biological Gels Unlike most synthetic materials, biological materials often stiffen as they are deformed. This nonlinear elastic response, critical for the physiological function of some tissues, has been document..."
+      },
+      {
+        "doc_id": "29638116",
+        "chunk_id": "29638116::c0",
+        "score": 0.354,
+        "text": "Complex Tissue and Disease Modeling using hiPSCs. Defined genetic models based on human pluripotent stem cells have opened new avenues for understanding disease mechanisms and drug screening. Many of these models assume cell-autonomous m..."
+      },
+      {
+        "doc_id": "16962732",
+        "chunk_id": "16962732::c1",
+        "score": 0.2983,
+        "text": "This approach is most effective in living material but also labels previously fixed material. In living material, labeled neurons continue to show normal synaptic responses and undergo dendritic remodeling. This technique is thus useful ..."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "dense",
+    "query_id": "380",
+    "query": "Enhanced early production of inflammatory chemokines improves viral control in the lung.",
+    "hits": [
+      {
+        "doc_id": "26068103",
+        "chunk_id": "26068103::c1",
+        "score": 0.6031,
+        "text": "Our results showed that the presence of IL-10 at the time of RSV infection not only attenuated acute inflammatory process (i.e. 24 h post-infection), but also late inflammatory changes [characterized by T helper type 2 (Th2) cytokine and..."
+      },
+      {
+        "doc_id": "19005293",
+        "chunk_id": "19005293::c1",
+        "score": 0.5986,
+        "text": "We found that the response of memory, but not naive, CD4+ T cells enhances production of multiple innate inflammatory cytokines and chemokines (IICs) in the lung and that, during influenza infection, this leads to early control of virus...."
+      },
+      {
+        "doc_id": "15425958",
+        "chunk_id": "15425958::c1",
+        "score": 0.5667,
+        "text": "Treatment of immature DCs (iDCs) with supernatant from HCMV-infected cultures inhibited both the lipopolysaccharide-induced DC maturation and proinflammatory cytokine production. These inhibitory effects were specifically mediated throug..."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "hybrid",
+    "query_id": "1",
+    "query": "0-dimensional biomaterials show inductive properties.",
+    "hits": [
+      {
+        "doc_id": "803312",
+        "chunk_id": "803312::c0",
+        "score": 0.0225,
+        "text": "Cerebral organoids model human brain development and microcephaly The complexity of the human brain has made it difficult to study many brain disorders in model organisms, highlighting the need for an in vitro model of human brain develo..."
+      },
+      {
+        "doc_id": "25404036",
+        "chunk_id": "25404036::c0",
+        "score": 0.0203,
+        "text": "Three-Dimensional Modeling and Quantitative Analysis of Gap Junction Distributions in Cardiac Tissue Gap junctions play a fundamental role in intercellular communication in cardiac tissue. Various types of heart disease including hypertr..."
+      },
+      {
+        "doc_id": "24998637",
+        "chunk_id": "24998637::c2",
+        "score": 0.0164,
+        "text": "Taken together, these results indicate that IL-6 may play a key role in the development of AIA at the inductive as well as the effector phase, and the blockade of IL-6 is possibly beneficial in the treatment of rheumatoid arthritis."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "hybrid",
+    "query_id": "380",
+    "query": "Enhanced early production of inflammatory chemokines improves viral control in the lung.",
+    "hits": [
+      {
+        "doc_id": "19005293",
+        "chunk_id": "19005293::c1",
+        "score": 0.0325,
+        "text": "We found that the response of memory, but not naive, CD4+ T cells enhances production of multiple innate inflammatory cytokines and chemokines (IICs) in the lung and that, during influenza infection, this leads to early control of virus...."
+      },
+      {
+        "doc_id": "40365566",
+        "chunk_id": "40365566::c1",
+        "score": 0.0306,
+        "text": "The main function of moDCs was the production of proinflammatory chemokines and allergen presentation in the lung during challenge. Thus, we have identified migratory CD11b(+) cDCs as the principal subset inducing Th2 cell-mediated immun..."
+      },
+      {
+        "doc_id": "3835423",
+        "chunk_id": "3835423::c0",
+        "score": 0.0288,
+        "text": "CD4+ T cell help guides formation of CD103+ lung-resident memory CD8+ T cells during influenza viral infection. Tissue-resident memory T (Trm) cells provide enhanced protection against infection at mucosal sites. Here we found that CD4(+..."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "rerank",
+    "query_id": "1",
+    "query": "0-dimensional biomaterials show inductive properties.",
+    "hits": [
+      {
+        "doc_id": "43385013",
+        "chunk_id": "43385013::c0",
+        "score": -6.945,
+        "text": "Epithelial and mesenchymal subpopulations within normal basal breast cell lines exhibit distinct stem cell/progenitor properties. It has been proposed that epithelial-mesenchymal transition (EMT) in mammary epithelial cells and breast ca..."
+      },
+      {
+        "doc_id": "10931595",
+        "chunk_id": "10931595::c0",
+        "score": -9.1523,
+        "text": "Geometry, epistasis, and developmental patterning. Developmental signaling networks are composed of dozens of components whose interactions are very difficult to quantify in an embryo. Geometric reasoning enumerates a discrete hierarchy ..."
+      },
+      {
+        "doc_id": "24998637",
+        "chunk_id": "24998637::c2",
+        "score": -9.8749,
+        "text": "Taken together, these results indicate that IL-6 may play a key role in the development of AIA at the inductive as well as the effector phase, and the blockade of IL-6 is possibly beneficial in the treatment of rheumatoid arthritis."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "rerank",
+    "query_id": "380",
+    "query": "Enhanced early production of inflammatory chemokines improves viral control in the lung.",
+    "hits": [
+      {
+        "doc_id": "19005293",
+        "chunk_id": "19005293::c1",
+        "score": 7.2329,
+        "text": "We found that the response of memory, but not naive, CD4+ T cells enhances production of multiple innate inflammatory cytokines and chemokines (IICs) in the lung and that, during influenza infection, this leads to early control of virus...."
+      },
+      {
+        "doc_id": "40365566",
+        "chunk_id": "40365566::c1",
+        "score": 0.6436,
+        "text": "The main function of moDCs was the production of proinflammatory chemokines and allergen presentation in the lung during challenge. Thus, we have identified migratory CD11b(+) cDCs as the principal subset inducing Th2 cell-mediated immun..."
+      },
+      {
+        "doc_id": "219475",
+        "chunk_id": "219475::c1",
+        "score": -0.7727,
+        "text": "In addition, they produce large quantities of matrix metalloproteinase 9 (MMP9) and promote vascular remodeling. Deletion of MMP9 normalizes aberrant vasculature in the premetastatic lung and diminishes lung metastasis. The production an..."
+      }
+    ]
+  }
+]

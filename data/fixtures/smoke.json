@@ -1,0 +1,71 @@
+{
+  "name": "smoke",
+  "documents": [
+    {
+      "doc_id": "glacier",
+      "title": "Ice cores",
+      "text": "Ice cores from the firncore site preserve glacier layers as annual bands of compacted snow. The firncore record is drilled where snow turns to ice, and each band stores dust, salt, and trapped air. Researchers count those bands to date the glacier and read past snowfall. A contaminated layer is easy to spot because the firncore drill log marks fractures and melt pockets. Teams store the cylinders in a cold room and scan them before any sample is cut. The point of the archive is a continuous firncore history of the glacier, not a single dramatic year."
+    },
+    {
+      "doc_id": "leaf",
+      "title": "Photosynthesis",
+      "text": "Inside a leaf, the thylakoid membrane holds the pigments that capture light for photosynthesis. A thylakoid stack is where water is split and a sugar-building cycle gets its energy. The thylakoid surface is packed with chlorophyll, so a damaged thylakoid membrane shows up as a pale leaf rather than a green one. Botanists measure oxygen leaving the leaf to see whether the thylakoid reactions are keeping up with bright sun. The same membrane also explains why a shaded leaf still makes sugar, only more slowly."
+    },
+    {
+      "doc_id": "rome",
+      "title": "Roman water",
+      "text": "Roman engineers moved drinking water through stone channels, and the cloaca carried wastewater away from the streets. The cloaca was a covered drain, not a fountain, and crews inspected the cloaca when storms pushed debris into the city. Aqueducts brought clean water in, while the cloaca kept the forum from flooding with runoff. Guides still point to the cloaca outlet near the river as evidence that the city planned for both supply and waste. Maintenance mattered as much as the arches people photograph."
+    },
+    {
+      "doc_id": "violin",
+      "title": "Ornament",
+      "text": "A violinist leans on an appoggiatura by playing a dissonant note before the note the harmony expects. The appoggiatura takes part of the written rhythm, which is why a rushed appoggiatura sounds like a mistake instead of an ornament. Teachers ask students to sing the appoggiatura first so the resolution feels inevitable. In a slow sonata the appoggiatura can carry the phrase, while in a fast dance it is only a flicker. Either way the ornament is a prepared dissonance, not a random extra pitch."
+    },
+    {
+      "doc_id": "quark",
+      "title": "Baryons",
+      "text": "A baryon is a particle built from three quarks bound by the strong force. The proton is the familiar baryon, and the neutron is the baryon that shares its nucleus. Physicists infer the baryon content from scattering patterns rather than from a picture of the quarks. Heavier baryon states decay quickly, leaving tracks in a detector and a known set of daughter particles. Calling a meson a baryon is a mistake, because a meson is a quark paired with an antiquark."
+    },
+    {
+      "doc_id": "mangrove",
+      "title": "Tidal roots",
+      "text": "A mangrove keeps a pneumatophore above the mud so the roots can breathe when the tide covers the swamp. The pneumatophore is a vertical snorkel, full of air spaces, and a crushed pneumatophore starves the root during a long flood. Seedlings that grow a pneumatophore early survive in softer mud than seedlings that do not. Birds perch on the pneumatophore at low tide, but the structure is for gas exchange, not for nesting. The forest depends on that small pipe staying open."
+    },
+    {
+      "doc_id": "kiln",
+      "title": "Pottery firing",
+      "text": "Potters protect a glaze by sealing the pot inside a saggar before it enters the kiln. The saggar is a clay box that keeps ash and flame off the surface, and a cracked saggar lets soot stain the glaze. Stacking one saggar on another saves shelf space but demands that each saggar floor stay flat. A saggar can be reused until it warps, which is why a studio labels the ones that have already survived several firings. The box is a tool, not a finished piece."
+    },
+    {
+      "doc_id": "range",
+      "title": "Mountain building",
+      "text": "An orogeny is a mountain-building episode driven by tectonic plates colliding or sliding. Geologists date an orogeny with folded strata and the age of the granite that intruded during the orogeny. A single orogeny can last millions of years and still leave a recognizable belt of deformed rock. Calling every hill an orogeny overstates the word, because an orogeny is the regional event, not one cliff. Maps of fault zones are how the event is reconstructed after the peaks have eroded."
+    },
+    {
+      "doc_id": "ship",
+      "title": "Stability",
+      "text": "A cargo ship takes on ballast water to sit deeper when the hold is empty. The ballast keeps the propeller underwater and stops the hull from rolling too easily in a beam sea. Crews move ballast between tanks rather than guessing at the harbor, and they record every ballast transfer. Harbor rules also limit where ballast may be pumped out, because the water can carry organisms from another coast. Stability is a loading problem, not just a fair-weather one."
+    },
+    {
+      "doc_id": "ferment",
+      "title": "Fermentation",
+      "text": "A savory broth tastes deeper after a long ferment because microbes break proteins into smaller pieces. The crock has to stay cooler than a kiln and wetter than a stack of dry clay. Cooks taste the ferment each week and stop it when the flavor turns sharp. This kitchen process shares no instruments with a physics lab and no drains with an ancient city. The result is food, measured with a spoon rather than a detector."
+    }
+  ],
+  "queries": [
+    {"query_id": "q-glacier", "text": "What does a firncore sample record about glacier layers?"},
+    {"query_id": "q-leaf", "text": "How does a thylakoid membrane support photosynthesis?"},
+    {"query_id": "q-rome", "text": "What was the cloaca in the Roman water system?"},
+    {"query_id": "q-violin", "text": "Where does an appoggiatura sit in a violin phrase?"},
+    {"query_id": "q-quark", "text": "What is a baryon made of in particle physics?"},
+    {"query_id": "q-mangrove", "text": "How does a pneumatophore help a mangrove at high tide?"}
+  ],
+  "qrels": [
+    {"query_id": "q-glacier", "doc_id": "glacier", "score": 1},
+    {"query_id": "q-leaf", "doc_id": "leaf", "score": 1},
+    {"query_id": "q-rome", "doc_id": "rome", "score": 1},
+    {"query_id": "q-violin", "doc_id": "violin", "score": 1},
+    {"query_id": "q-quark", "doc_id": "quark", "score": 1},
+    {"query_id": "q-mangrove", "doc_id": "mangrove", "score": 1}
+  ]
+}

@@ -1,0 +1,42 @@
+# Tiny offline-corpus smoke eval. CI gates BM25, which does not depend on model weights.
+dataset: fixture
+fixture_path: data/fixtures/smoke.json
+seed: 7
+max_queries: null
+k_values: [5, 10]
+hit_k: 40
+fusion_pool: 40
+rerank_pool: 10
+rrf_k: 60
+latency_queries: 4
+bm25:
+  k1: 1.5
+  b: 0.75
+embedder:
+  kind: fastembed
+  model: sentence-transformers/all-MiniLM-L6-v2
+  batch_size: 32
+reranker:
+  kind: fastembed
+  model: Xenova/ms-marco-MiniLM-L-6-v2
+  batch_size: 16
+chunkers:
+  - name: whole
+  - name: fixed
+    chunk_size: 40
+    overlap: 10
+  - name: recursive
+    chunk_size: 40
+    overlap: 10
+  - name: semantic
+    breakpoint_percentile: 90
+    max_chunk_words: 80
+    min_chunk_words: 15
+retrievers: [bm25, dense, hybrid, rerank]
+llm_retrievers: []
+generation:
+  mode: "off"
+output_dir: results/smoke
+data_dir: data
+cache_dir: data/cache
+plugins: []

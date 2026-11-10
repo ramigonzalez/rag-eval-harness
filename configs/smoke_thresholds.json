@@ -1,0 +1,13 @@
+{
+  "note": "Measured on the checked-in smoke fixture with all-MiniLM-L6-v2 and the MiniLM cross-encoder. BM25 MRR@10 is 1.0 because each query contains a token that appears only in its labeled document; that gate does not depend on model weights. The dense floor is below the measured 1.0 so a small ONNX change does not fail CI.",
+  "rules": [
+    {"chunker": "whole", "retriever": "bm25", "metric": "mrr@10", "min": 1.0},
+    {"chunker": "fixed", "retriever": "bm25", "metric": "mrr@10", "min": 1.0},
+    {"chunker": "fixed", "retriever": "bm25", "metric": "ndcg@10", "min": 1.0},
+    {"chunker": "recursive", "retriever": "bm25", "metric": "mrr@10", "min": 1.0},
+    {"chunker": "semantic", "retriever": "bm25", "metric": "mrr@10", "min": 1.0},
+    {"chunker": "whole", "retriever": "bm25", "metric": "context_precision@10", "min": 1.0},
+    {"chunker": "fixed", "retriever": "dense", "metric": "mrr@10", "min": 0.8},
+    {"chunker": "fixed", "retriever": "rerank", "metric": "recall@10", "min": 1.0}
+  ]
+}
