@@ -61,6 +61,8 @@ class RunConfig:
     cache_dir: Path
     plugins: list[str]
     latency_queries: int
+    llm_input_usd_per_million: float
+    llm_output_usd_per_million: float
     check_path: Path | None
     root: Path
 
@@ -100,6 +102,10 @@ class RunConfig:
             },
             "latency_queries": self.latency_queries,
             "plugins": list(self.plugins),
+            "llm": {
+                "input_usd_per_million": self.llm_input_usd_per_million,
+                "output_usd_per_million": self.llm_output_usd_per_million,
+            },
         }
 
 
@@ -180,6 +186,8 @@ def _build(payload: dict[str, Any], root: Path) -> RunConfig:
         cache_dir=_path(root, payload.get("cache_dir", "data/cache")),
         plugins=[str(item) for item in payload.get("plugins") or []],
         latency_queries=int(payload.get("latency_queries", 20)),
+        llm_input_usd_per_million=_llm_rate(payload, "input_usd_per_million", 0.15),
+        llm_output_usd_per_million=_llm_rate(payload, "output_usd_per_million", 0.60),
         check_path=None,
         root=root,
     )
@@ -235,6 +243,16 @@ def _model(value: dict[str, Any], label: str, default_kind: str) -> ModelSpec:
         batch_size=int(value.get("batch_size", 64)),
         dim=int(value.get("dim", 256)),
     )
+
+
+def _llm_rate(payload: dict[str, Any], key: str, default: float) -> float:
+    raw = payload.get("llm") or {}
+    if not isinstance(raw, dict):
+        raise ConfigError("llm must be a mapping")
+    value = float(raw.get(key, default))
+    if value < 0:
+        raise ConfigError(f"llm.{key} must be >= 0")
+    return value
 
 
 def _name_list(value: Any, label: str) -> list[str]:

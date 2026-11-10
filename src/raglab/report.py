@@ -133,6 +133,17 @@ def render_markdown(result: dict) -> str:
             "",
         ]
     )
+    retriever_names = {row["retriever"] for row in result["rows"]}
+    if "hyde" in retriever_names or "rag_fusion" in retriever_names:
+        lines.extend(
+            [
+                "HyDE and RAG-Fusion prompts are cached, so the chat model is called once per "
+                "query rather than once per chunker. online_latency_ms for those rows is measured "
+                "after the cache is warm and does not include the chat call. The first chunker's "
+                "eval_seconds does include it.",
+                "",
+            ]
+        )
     errors = [row for row in result["rows"] if row["status"] != "ok"]
     if errors:
         lines.append("Rows that did not finish:")
@@ -275,12 +286,40 @@ def _write_csv(rows: list[dict], path: Path) -> None:
 
 
 def _generation_markdown(generation: dict) -> str:
+    provider = generation.get("provider", "")
+    provider_bit = f", provider `{provider}`" if provider else ""
     lines = [
-        f"Model `{generation['model']}` judged {generation['num_queries']} queries.",
-        "",
-        "| Chunker | Retriever | Faithfulness | Answer relevancy | Hallucination rate | Errors |",
-        "| --- | --- | ---: | ---: | ---: | ---: |",
+        (
+            f"Model `{generation['model']}`{provider_bit} judged "
+            f"{generation['num_queries']} queries."
+        ),
     ]
+    if generation.get("retrieval_queries") is not None:
+        lines.append(
+            f"Retrieval grid size: {generation['retrieval_queries']} queries. "
+            f"Generation sample: {generation['num_queries']} queries, "
+            f"context_k={generation['pairs'][0]['context_k'] if generation.get('pairs') else ''}."
+        )
+    usage = generation.get("usage")
+    if usage:
+        lines.append(
+            "Token counts from the provider: "
+            f"{usage['prompt_tokens']} input, {usage['completion_tokens']} output, "
+            f"{usage['calls']} calls, {usage['cache_hits']} cache hits. "
+            f"Estimated cost ${usage['estimated_usd']:.4f} at "
+            f"${usage['input_usd_per_million']:.2f}/"
+            f"${usage['output_usd_per_million']:.2f} per million."
+        )
+    lines.extend(
+        [
+            "",
+            (
+                "| Chunker | Retriever | Faithfulness | Answer relevancy | "
+                "Hallucination rate | Errors |"
+            ),
+            "| --- | --- | ---: | ---: | ---: | ---: |",
+        ]
+    )
     for pair in generation["pairs"]:
         lines.append(
             "| {chunker} | {retriever} | {faithfulness} | {answer_relevancy} | "

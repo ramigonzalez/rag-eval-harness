@@ -13,3 +13,6 @@ smoke:
 
 bench:
 	$(PYTHON) -m raglab run --config configs/scifact.yaml
+
+generation:
+	$(PYTHON) -m raglab run --config configs/generation.yaml

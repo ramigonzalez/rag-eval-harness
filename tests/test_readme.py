@@ -39,6 +39,8 @@ def test_readme_marks_generation_as_needing_a_key():
     assert recorded["generation"]["status"] == "skipped"
     assert recorded["skipped_retrievers"] == ["hyde", "rag_fusion"]
     assert "run with API key" in readme
+    assert "Results are pending" in readme
+    assert "raglab run --config configs/generation.yaml" in readme
     assert "5,183" in readme
     assert "15,596" in readme
     assert recorded["dataset"]["num_queries"] == 300

@@ -1,4 +1,6 @@
-# Full SciFact test split. Local models only. LLM strategies run when a key is set.
+# Full SciFact test split. Local models only.
+# Generation stays off here so a key in the environment does not add paid calls.
+# The OpenRouter run is configs/generation.yaml.
 dataset: scifact
 seed: 7
 max_queries: null
@@ -35,7 +37,7 @@ retrievers: [bm25, dense, hybrid, rerank]
 llm_retrievers: [hyde, rag_fusion]
 rag_fusion_queries: 3
 generation:
-  mode: "auto"
+  mode: "off"
   max_queries: 20
   k: 5
   pairs:

@@ -124,8 +124,10 @@ def run_generation(
         )
     return {
         "status": "ok",
-        "model": services.llm.model,
+        "model": getattr(services.llm, "model", None),
         "num_queries": len(chosen),
+        "query_ids": [query.query_id for query in chosen],
+        "context_k": k,
         "pairs": pair_reports,
     }
 

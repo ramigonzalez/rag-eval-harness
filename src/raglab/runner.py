@@ -14,6 +14,7 @@ from pathlib import Path
 from raglab import __version__
 from raglab.chunking import build_chunker
 from raglab.config import ConfigError, RunConfig
+from raglab.cost import estimate_pre_run, format_actual, format_pre_run, plan_llm_calls
 from raglab.datasets import load_dataset
 from raglab.embeddings import load_embedder
 from raglab.generation import run_generation
@@ -33,6 +34,7 @@ def run_benchmark(config: RunConfig) -> dict:
     _import_plugins(config.plugins)
     dataset = load_dataset(config.dataset, config.data_dir, config.fixture_path)
     documents = [doc for doc in dataset.documents if doc.full_text.strip()]
+    labeled_available = _count_labeled(dataset.queries, dataset.qrels)
     queries = select_queries(dataset.queries, dataset.qrels, config.max_queries, config.seed)
     if not documents or not queries:
         raise ConfigError("The dataset has no documents or no labeled queries to score")
@@ -83,6 +85,24 @@ def run_benchmark(config: RunConfig) -> dict:
     )
     if skipped_llm:
         logger.info("Skipping %s because no API key is set", ", ".join(skipped_llm))
+    pre_run_estimate = None
+    if llm is not None:
+        judged = min(config.generation.max_queries, len(queries)) if generation_mode == "on" else 0
+        plan = plan_llm_calls(
+            retrieval_queries=len(queries),
+            generation_queries=judged,
+            retrievers=[item.name for item in retrievers],
+            generation_pairs=config.generation.pairs,
+            generation_enabled=generation_mode == "on",
+        )
+        pre_run_estimate = estimate_pre_run(
+            plan,
+            context_k=config.generation.k,
+            rag_fusion_queries=config.rag_fusion_queries,
+            input_usd_per_million=config.llm_input_usd_per_million,
+            output_usd_per_million=config.llm_output_usd_per_million,
+        )
+        logger.info(format_pre_run(pre_run_estimate))
 
     for spec in config.chunkers:
         try:
@@ -165,19 +185,38 @@ def run_benchmark(config: RunConfig) -> dict:
             max_queries=config.generation.max_queries,
             seed=config.seed,
         )
+        generation["retrieval_queries"] = len(queries)
     else:
         reason = SKIP_REASON if config.generation.mode == "auto" else "Generation was turned off."
         generation = {"status": "skipped", "reason": reason, "pairs": []}
 
+    llm_report = _llm_report(llm, config, pre_run_estimate)
+    if llm_report is not None:
+        generation["usage"] = llm_report["usage"]
+        generation["provider"] = llm_report["provider"]
+        generation["api_base"] = llm_report["api_base"]
+        if llm is not None:
+            logger.info(
+                format_actual(llm_report["usage"], llm_report["provider"], llm_report["model"])
+            )
+
     result = {
         "raglab_version": __version__,
-        "dataset": _dataset_summary(dataset.name, documents, queries, dataset.qrels),
+        "dataset": _dataset_summary(
+            dataset.name,
+            documents,
+            queries,
+            dataset.qrels,
+            labeled_available=labeled_available,
+            sample_seed=config.seed if len(queries) < labeled_available else None,
+        ),
         "config": config.to_public_dict(),
         "environment": _environment(config.root),
         "chunkers": chunk_reports,
         "rows": rows,
         "skipped_retrievers": skipped_llm,
         "generation": generation,
+        "llm": llm_report,
         "examples": examples,
         "latency_queries": min(config.latency_queries, len(queries)),
         "threshold_failures": [],
@@ -293,24 +332,29 @@ def _resolve_retrievers(config: RunConfig):
     # Importing the package registers the built-ins. Plugins were imported first.
     import raglab.retrieval  # noqa: F401
 
-    if config.force_retrievers:
-        names = list(config.retrievers)
-        for name in names:
-            cls = _retriever_class(name)
-            if cls.needs_llm and not llm_configured():
-                from raglab.llm import LLMNotConfigured
+    requested = list(config.retrievers)
+    # llm_retrievers join the grid when a key is set, unless generation is off.
+    # configs/scifact.yaml keeps generation off so a key in the environment
+    # does not silently add paid retrievers to the published 300-query run.
+    if llm_configured() and config.generation.mode != "off":
+        for name in config.llm_retrievers:
+            if name not in requested:
+                requested.append(name)
+    names: list[str] = []
+    skipped: list[str] = []
+    for name in requested:
+        if _retriever_class(name).needs_llm and not llm_configured():
+            skipped.append(name)
+            continue
+        names.append(name)
+    if not llm_configured():
+        for name in config.llm_retrievers:
+            if name not in skipped:
+                skipped.append(name)
+    if skipped and (config.force_retrievers or config.generation.mode == "on"):
+        from raglab.llm import LLMNotConfigured
 
-                raise LLMNotConfigured(SKIP_REASON)
-        skipped: list[str] = []
-    else:
-        names = list(config.retrievers)
-        if llm_configured():
-            for name in config.llm_retrievers:
-                if name not in names:
-                    names.append(name)
-            skipped = []
-        else:
-            skipped = list(config.llm_retrievers)
+        raise LLMNotConfigured(SKIP_REASON)
     return [_retriever_instance(name) for name in names], skipped
 
 
@@ -376,7 +420,40 @@ def _chunk_report(name, chunks, num_documents, chunk_seconds, index_seconds) -> 
     }
 
 
-def _dataset_summary(name, documents: list[Document], queries: list[Query], qrels) -> dict:
+def _count_labeled(queries: list[Query], qrels: dict) -> int:
+    return sum(
+        1
+        for query in queries
+        if query.text.strip() and any(grade > 0 for grade in qrels.get(query.query_id, {}).values())
+    )
+
+
+def _llm_report(
+    llm: LLMClient | None,
+    config: RunConfig,
+    pre_run_estimate: dict | None,
+) -> dict | None:
+    if llm is None:
+        return None
+    usage = llm.usage.as_dict(config.llm_input_usd_per_million, config.llm_output_usd_per_million)
+    return {
+        "provider": llm.provider,
+        "model": llm.model,
+        "api_base": llm.api_base,
+        "usage": usage,
+        "pre_run_estimate": pre_run_estimate,
+    }
+
+
+def _dataset_summary(
+    name,
+    documents: list[Document],
+    queries: list[Query],
+    qrels,
+    *,
+    labeled_available: int,
+    sample_seed: int | None,
+) -> dict:
     doc_words = [word_count(document.full_text) for document in documents]
     relevant_counts = []
     for query in queries:
@@ -387,6 +464,8 @@ def _dataset_summary(name, documents: list[Document], queries: list[Query], qrel
         "name": name,
         "num_documents": len(documents),
         "num_queries": len(queries),
+        "labeled_queries_available": labeled_available,
+        "query_sample_seed": sample_seed,
         "mean_doc_words": sum(doc_words) / len(doc_words),
         "mean_relevant_docs": sum(relevant_counts) / len(relevant_counts),
         "query_ids": [query.query_id for query in queries],

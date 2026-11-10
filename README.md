@@ -50,16 +50,7 @@ raglab run --config configs/smoke.yaml --check configs/smoke_thresholds.json
 
 The scored SciFact command took **26 minutes 43 seconds** on this machine (4 vCPUs, Python 3.12.3, fastembed 0.9.1, numpy 2.5.4). Whole-document and fixed-size embeddings were loaded from `data/cache` in 0.8s and 1.1s because an earlier attempt on the same corpus had written them. Recursive indexing (244.5s) and semantic chunking (393.0s, then 165.0s to embed the chunks) were cold. A machine with an empty cache also embeds the whole-document and fixed indexes.
 
-To add the LLM strategies and the generation metrics:
-
-```bash
-export OPENAI_API_KEY=...
-# optional: RAGBENCH_API_BASE (default https://api.openai.com/v1)
-# optional: RAGBENCH_LLM_MODEL (default gpt-4o-mini)
-raglab run --generation on
-```
-
-`RAGBENCH_API_KEY` is accepted as an alias of `OPENAI_API_KEY`. With no key, the command skips generation, HyDE, and RAG-Fusion and says so in the report. It does not invent those numbers.
+`raglab run` does not call an API. The OpenRouter command is below. With no key, HyDE, RAG-Fusion, and the generation metrics stay off. **run with API key**.
 
 ## Results
 
@@ -106,6 +97,21 @@ The cross-encoder adds a smaller gain on top of that. The best nDCG@10 in the gr
 Chunking is not free, and it does not help every retriever. BM25 is best on the whole abstract (nDCG@10 0.664) and worse on fixed windows (0.634) and recursive splits (0.623). Dense search moves the other way: recursive dense is 0.660 and whole-document dense is 0.645. The highest recall@10 is recursive + rerank at 0.838. The highest context precision@10 is whole-document rerank at 0.656. Splitting the abstract can raise document-level nDCG while making the context window noisier, because the label applies to the whole abstract and a window full of chunks has more chances to put an irrelevant piece above a relevant one.
 
 Semantic chunking does not win on this corpus. Abstracts are single-topic and about 215 words, so the splitter keeps 1.91 chunks per document and lands next to the whole-document rows (semantic rerank nDCG@10 is 0.694). Deciding those boundaries took 393.0 seconds of sentence embedding.
+
+## Generation results
+
+Results are pending. This repository does not contain faithfulness, answer relevancy, or hallucination numbers, and it does not contain HyDE or RAG-Fusion scores. Run this on a machine that has an OpenRouter key, then commit `results/generation/`.
+
+```bash
+export OPENROUTER_API_KEY=...
+raglab run --config configs/generation.yaml
+```
+
+`OPENAI_API_KEY` still works and talks to `https://api.openai.com/v1` with default model `gpt-4o-mini`. `OPENROUTER_API_KEY` talks to `https://openrouter.ai/api/v1` with default model `openai/gpt-4o-mini`. If both are set, the OpenRouter key is used. `RAGBENCH_API_KEY`, `RAGBENCH_API_BASE`, and `RAGBENCH_LLM_MODEL` override those defaults. The key is not written into the results.
+
+The config indexes the full SciFact corpus and scores a seeded subsample of 50 test queries (seed 7) with BM25, dense, hybrid, rerank, HyDE, and RAG-Fusion. Generation metrics are judged on 20 of those 50 queries for five stacks: whole-document BM25, plus rerank on each chunker. Rerank was the best nDCG@10 on every chunker in the 300-query table above. That choice is from the retrieval run, not from generation scores. HyDE and RAG-Fusion prompts are cached, so each query calls the chat model once for HyDE and once for RAG-Fusion, not once per chunker. The command prints a pre-run token estimate and records the provider's token counts, the model id, and the sample sizes in `results/generation/metrics.json`. For this config the estimate is 400 calls, about 195,750 input tokens and 36,750 output tokens, roughly $0.0514 at the configured list rates of $0.15 and $0.60 per million. That estimate assumes 80-character questions, 600-character chunks, and four characters per token. It is not a bill, and it is not a generation score.
+
+Expected runtime on a cold 4-vCPU machine like the one that produced the table: about 30–40 minutes. Semantic chunking took 393.0 seconds and the semantic dense index another 165.0 seconds; the recursive index took 244.5 seconds for 15,727 chunks. The fixed index is 15,596 chunks, so expect a similar build, and the whole-document index is about a third of that. The four rerank passes took 664.1 seconds at 300 queries (259.9 + 105.7 + 91.8 + 206.7), which scales to about 111 seconds at 50 queries. The chat calls were not timed here. The plan is 50 HyDE calls, 50 RAG-Fusion calls, and 300 judge calls (20 queries × 5 pairs × 3). At one to two seconds per call that is roughly 10–15 minutes on top of the local work. If `data/cache` already holds the SciFact embeddings, the embedding steps drop out and the rest is the rerank passes plus the API calls, closer to 15 minutes.
 
 ## How I'd use this in production
 

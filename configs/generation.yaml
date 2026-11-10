@@ -1,0 +1,63 @@
+# OpenRouter generation run. Requires OPENROUTER_API_KEY (or OPENAI_API_KEY).
+# Retrieval grid: the four local retrievers plus HyDE and RAG-Fusion, on a
+# seeded 50-query subsample of the 300 SciFact test claims. The full corpus
+# is still indexed.
+# Generation metrics: whole-document BM25 (the baseline) plus the retriever
+# with the best nDCG@10 on each chunker in the 300-query local run, which
+# was rerank for whole, fixed, recursive, and semantic. Judged on 20 of the
+# 50 queries. No generation scores are filled in until this file is run.
+dataset: scifact
+seed: 7
+max_queries: 50
+k_values: [5, 10]
+hit_k: 60
+fusion_pool: 80
+rerank_pool: 20
+rrf_k: 60
+latency_queries: 5
+bm25:
+  k1: 1.5
+  b: 0.75
+embedder:
+  kind: fastembed
+  model: sentence-transformers/all-MiniLM-L6-v2
+  batch_size: 128
+reranker:
+  kind: fastembed
+  model: Xenova/ms-marco-MiniLM-L-6-v2
+  batch_size: 32
+chunkers:
+  - name: whole
+  - name: fixed
+    chunk_size: 100
+    overlap: 25
+  - name: recursive
+    chunk_size: 100
+    overlap: 25
+  - name: semantic
+    breakpoint_percentile: 95
+    max_chunk_words: 220
+    min_chunk_words: 40
+retrievers: [bm25, dense, hybrid, rerank, hyde, rag_fusion]
+llm_retrievers: [hyde, rag_fusion]
+rag_fusion_queries: 3
+generation:
+  mode: "on"
+  max_queries: 20
+  k: 5
+  pairs:
+    - [whole, bm25]
+    - [whole, rerank]
+    - [fixed, rerank]
+    - [recursive, rerank]
+    - [semantic, rerank]
+llm:
+  # List rates for openai/gpt-4o-mini, used only to turn token counts into
+  # a dollar estimate. OpenRouter's own price can differ; the token counts
+  # in the results are the part to trust.
+  input_usd_per_million: 0.15
+  output_usd_per_million: 0.60
+output_dir: results/generation
+data_dir: data
+cache_dir: data/cache
+plugins: []
