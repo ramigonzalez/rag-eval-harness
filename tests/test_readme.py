@@ -31,17 +31,30 @@ def test_readme_retrieval_table_matches_the_csv():
         assert cells[4] == f"{float(source['ndcg@10']):.3f}"
         assert cells[5] == f"{float(source['context_precision@10']):.3f}"
         assert cells[6] == f"{float(source['online_latency_ms']):.1f}"
-
-
-def test_readme_marks_generation_as_needing_a_key():
-    readme = (ROOT / "README.md").read_text(encoding="utf-8")
-    recorded = json.loads((ROOT / "results" / "scifact" / "metrics.json").read_text())
-    assert recorded["generation"]["status"] == "skipped"
-    assert recorded["skipped_retrievers"] == ["hyde", "rag_fusion"]
-    assert "run with API key" in readme
-    assert "Results are pending" in readme
-    assert "raglab run --config configs/generation.yaml" in readme
+    scifact = json.loads((ROOT / "results" / "scifact" / "metrics.json").read_text())
+    assert scifact["dataset"]["num_queries"] == 300
+    assert scifact["environment"]["cpu_count"] == 4
+    assert scifact["generation"]["status"] == "skipped"
     assert "5,183" in readme
-    assert "15,596" in readme
-    assert recorded["dataset"]["num_queries"] == 300
-    assert recorded["environment"]["cpu_count"] == 4
+
+
+def test_readme_generation_table_matches_the_judge_file():
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    recorded = json.loads((ROOT / "results" / "generation" / "metrics.json").read_text())
+    shown = _table(readme, "| Chunker | Retriever | Faithfulness |")
+    pairs = {(pair["chunker"], pair["retriever"]): pair for pair in recorded["generation"]["pairs"]}
+    assert len(shown) == len(pairs) == 5
+    for cells in shown:
+        source = pairs[(cells[0], cells[1])]
+        assert cells[2] == f"{float(source['faithfulness']):.3f}"
+        assert cells[3] == f"{float(source['answer_relevancy']):.3f}"
+        assert cells[4] == f"{float(source['hallucination_rate']):.3f}"
+        assert cells[5] == str(source["num_errors"])
+    assert recorded["generation"]["num_queries"] == 20
+    assert recorded["generation"]["model"] == "openai/gpt-4o-mini"
+    assert recorded["llm"]["usage"]["calls"] == 331
+    assert "did not run" not in readme
+    assert "rag-eval-harness" in readme
+    assert "raglab run --config configs/generation.yaml" in readme
+    assert recorded["dataset"]["num_queries"] == 50
+    assert recorded["environment"]["cpu_count"] == 8

@@ -1,7 +1,7 @@
 [project]
-name = "raglab"
+name = "rag-eval-harness"
 version = "0.1.0"
-description = "Reproducible benchmark of RAG chunking and retrieval strategies."
+description = "Measured comparison of RAG chunking and retrieval strategies."
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{ name = "Ramiro Gonzalez" }]

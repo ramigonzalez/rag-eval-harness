@@ -1,0 +1,1250 @@
+[
+  {
+    "chunker": "whole",
+    "retriever": "bm25",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 33.9323,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "4398832",
+        "chunk_id": "4398832::c0",
+        "score": 17.6642,
+        "text": "Cyclin A Regulates Kinetochore-Microtubules to Promote Faithful Chromosome Segregation The most conspicuous event in the cell cycle is the alignment of chromosomes in metaphase. Chromosome alignment fosters faithful segregation through t..."
+      },
+      {
+        "doc_id": "25516011",
+        "chunk_id": "25516011::c0",
+        "score": 16.6686,
+        "text": "Purification and characterization of mouse hematopoietic stem cells. Mouse bone marrow hematopoietic stem cells were isolated with the use of a variety of phenotypic markers. These cells can proliferate and differentiate with approximate..."
+      }
+    ]
+  },
+  {
+    "chunker": "whole",
+    "retriever": "bm25",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 24.0106,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      },
+      {
+        "doc_id": "10012166",
+        "chunk_id": "10012166::c0",
+        "score": 17.9423,
+        "text": "The role of protein clearance mechanisms in organismal ageing and age-related diseases. The ability to maintain a functional proteome, or proteostasis, declines during the ageing process. Damaged and misfolded proteins accumulate with ag..."
+      },
+      {
+        "doc_id": "52887689",
+        "chunk_id": "52887689::c0",
+        "score": 12.1112,
+        "text": "Guidelines for the use and interpretation of assays for monitoring autophagy. In 2008 we published the first set of guidelines for standardizing research in autophagy. Since then, research on this topic has continued to accelerate, and m..."
+      }
+    ]
+  },
+  {
+    "chunker": "whole",
+    "retriever": "dense",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "34982259",
+        "chunk_id": "34982259::c0",
+        "score": 0.6246,
+        "text": "Of lineage and legacy: the development of mammalian hematopoietic stem cells The hematopoietic system is one of the first complex tissues to develop in the mammalian conceptus. Of particular interest in the field of developmental hematop..."
+      },
+      {
+        "doc_id": "14550841",
+        "chunk_id": "14550841::c0",
+        "score": 0.6029,
+        "text": "Asymmetric Cell Divisions Sustain Long-Term Hematopoiesis from Single-sorted Human Fetal Liver Cells Hematopoietic stem cells (HSCs) in adult marrow are believed to be derived from fetal liver precursors. To study cell kinetics involved ..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 0.5979,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      }
+    ]
+  },
+  {
+    "chunker": "whole",
+    "retriever": "dense",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "15728433",
+        "chunk_id": "15728433::c0",
+        "score": 0.64,
+        "text": "Tightrope act: autophagy in stem cell renewal, differentiation, proliferation, and aging Autophagy is a constitutive lysosomal catabolic pathway that degrades damaged organelles and protein aggregates. Stem cells are characterized by sel..."
+      },
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 0.6244,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      },
+      {
+        "doc_id": "26952804",
+        "chunk_id": "26952804::c0",
+        "score": 0.5989,
+        "text": "The role of autophagy in cancer development and response to therapy Autophagy is a process in which subcellular membranes undergo dynamic morphological changes that lead to the degradation of cellular proteins and cytoplasmic organelles...."
+      }
+    ]
+  },
+  {
+    "chunker": "whole",
+    "retriever": "hybrid",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 0.0323,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "34982259",
+        "chunk_id": "34982259::c0",
+        "score": 0.0318,
+        "text": "Of lineage and legacy: the development of mammalian hematopoietic stem cells The hematopoietic system is one of the first complex tissues to develop in the mammalian conceptus. Of particular interest in the field of developmental hematop..."
+      },
+      {
+        "doc_id": "25516011",
+        "chunk_id": "25516011::c0",
+        "score": 0.0315,
+        "text": "Purification and characterization of mouse hematopoietic stem cells. Mouse bone marrow hematopoietic stem cells were isolated with the use of a variety of phenotypic markers. These cells can proliferate and differentiate with approximate..."
+      }
+    ]
+  },
+  {
+    "chunker": "whole",
+    "retriever": "hybrid",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 0.0325,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      },
+      {
+        "doc_id": "15728433",
+        "chunk_id": "15728433::c0",
+        "score": 0.0315,
+        "text": "Tightrope act: autophagy in stem cell renewal, differentiation, proliferation, and aging Autophagy is a constitutive lysosomal catabolic pathway that degrades damaged organelles and protein aggregates. Stem cells are characterized by sel..."
+      },
+      {
+        "doc_id": "10012166",
+        "chunk_id": "10012166::c0",
+        "score": 0.0315,
+        "text": "The role of protein clearance mechanisms in organismal ageing and age-related diseases. The ability to maintain a functional proteome, or proteostasis, declines during the ageing process. Damaged and misfolded proteins accumulate with ag..."
+      }
+    ]
+  },
+  {
+    "chunker": "whole",
+    "retriever": "rerank",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 6.0278,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "2701077",
+        "chunk_id": "2701077::c0",
+        "score": 0.1726,
+        "text": "Hematopoietic stem cell quiescence promotes error-prone DNA repair and mutagenesis. Most adult stem cells, including hematopoietic stem cells (HSCs), are maintained in a quiescent or resting state in vivo. Quiescence is widely considered..."
+      },
+      {
+        "doc_id": "14550841",
+        "chunk_id": "14550841::c0",
+        "score": -0.7865,
+        "text": "Asymmetric Cell Divisions Sustain Long-Term Hematopoiesis from Single-sorted Human Fetal Liver Cells Hematopoietic stem cells (HSCs) in adult marrow are believed to be derived from fetal liver precursors. To study cell kinetics involved ..."
+      }
+    ]
+  },
+  {
+    "chunker": "whole",
+    "retriever": "rerank",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 6.869,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      },
+      {
+        "doc_id": "10012166",
+        "chunk_id": "10012166::c0",
+        "score": 2.8683,
+        "text": "The role of protein clearance mechanisms in organismal ageing and age-related diseases. The ability to maintain a functional proteome, or proteostasis, declines during the ageing process. Damaged and misfolded proteins accumulate with ag..."
+      },
+      {
+        "doc_id": "15728433",
+        "chunk_id": "15728433::c0",
+        "score": 0.7655,
+        "text": "Tightrope act: autophagy in stem cell renewal, differentiation, proliferation, and aging Autophagy is a constitutive lysosomal catabolic pathway that degrades damaged organelles and protein aggregates. Stem cells are characterized by sel..."
+      }
+    ]
+  },
+  {
+    "chunker": "whole",
+    "retriever": "hyde",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "14550841",
+        "chunk_id": "14550841::c0",
+        "score": 0.6581,
+        "text": "Asymmetric Cell Divisions Sustain Long-Term Hematopoiesis from Single-sorted Human Fetal Liver Cells Hematopoietic stem cells (HSCs) in adult marrow are believed to be derived from fetal liver precursors. To study cell kinetics involved ..."
+      },
+      {
+        "doc_id": "92499",
+        "chunk_id": "92499::c0",
+        "score": 0.6566,
+        "text": "The journey of developing hematopoietic stem cells. Hematopoietic stem cells (HSCs) develop during embryogenesis in a complex process that involves multiple anatomical sites. Once HSC precursors have been specified from mesoderm, they ha..."
+      },
+      {
+        "doc_id": "13116880",
+        "chunk_id": "13116880::c0",
+        "score": 0.6333,
+        "text": "Hematopoietic stem cell: self-renewal versus differentiation. The mammalian blood system, containing more than 10 distinct mature cell types, stands on one specific cell type, hematopoietic stem cell (HSC). Within the system, only HSCs p..."
+      }
+    ]
+  },
+  {
+    "chunker": "whole",
+    "retriever": "hyde",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "15728433",
+        "chunk_id": "15728433::c0",
+        "score": 0.6839,
+        "text": "Tightrope act: autophagy in stem cell renewal, differentiation, proliferation, and aging Autophagy is a constitutive lysosomal catabolic pathway that degrades damaged organelles and protein aggregates. Stem cells are characterized by sel..."
+      },
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 0.6492,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      },
+      {
+        "doc_id": "19922508",
+        "chunk_id": "19922508::c0",
+        "score": 0.6478,
+        "text": "Monitoring starvation-induced reactive oxygen species formation. Reactive oxygen species (ROS) are potentially harmful to cells because of their ability to oxidize cell constituents such as DNA, proteins, and lipids. However, at low leve..."
+      }
+    ]
+  },
+  {
+    "chunker": "whole",
+    "retriever": "rag_fusion",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "14550841",
+        "chunk_id": "14550841::c0",
+        "score": 0.0653,
+        "text": "Asymmetric Cell Divisions Sustain Long-Term Hematopoiesis from Single-sorted Human Fetal Liver Cells Hematopoietic stem cells (HSCs) in adult marrow are believed to be derived from fetal liver precursors. To study cell kinetics involved ..."
+      },
+      {
+        "doc_id": "34982259",
+        "chunk_id": "34982259::c0",
+        "score": 0.0643,
+        "text": "Of lineage and legacy: the development of mammalian hematopoietic stem cells The hematopoietic system is one of the first complex tissues to develop in the mammalian conceptus. Of particular interest in the field of developmental hematop..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 0.064,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      }
+    ]
+  },
+  {
+    "chunker": "whole",
+    "retriever": "rag_fusion",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "15728433",
+        "chunk_id": "15728433::c0",
+        "score": 0.0656,
+        "text": "Tightrope act: autophagy in stem cell renewal, differentiation, proliferation, and aging Autophagy is a constitutive lysosomal catabolic pathway that degrades damaged organelles and protein aggregates. Stem cells are characterized by sel..."
+      },
+      {
+        "doc_id": "26952804",
+        "chunk_id": "26952804::c0",
+        "score": 0.064,
+        "text": "The role of autophagy in cancer development and response to therapy Autophagy is a process in which subcellular membranes undergo dynamic morphological changes that lead to the degradation of cellular proteins and cytoplasmic organelles...."
+      },
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 0.0635,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "bm25",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 29.4705,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c2",
+        "score": 26.8331,
+        "text": "less than 6% of HSCs retained BrdU and less than 0.5% of all BrdU-retaining haematopoietic cells were HSCs, revealing that BrdU has poor specificity and poor sensitivity as an HSC marker. Sequential administration of 5-chloro-2-deoxyurid..."
+      },
+      {
+        "doc_id": "34982259",
+        "chunk_id": "34982259::c0",
+        "score": 18.618,
+        "text": "Of lineage and legacy: the development of mammalian hematopoietic stem cells The hematopoietic system is one of the first complex tissues to develop in the mammalian conceptus. Of particular interest in the field of developmental hematop..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "bm25",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 24.9623,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      },
+      {
+        "doc_id": "10012166",
+        "chunk_id": "10012166::c0",
+        "score": 14.9466,
+        "text": "The role of protein clearance mechanisms in organismal ageing and age-related diseases. The ability to maintain a functional proteome, or proteostasis, declines during the ageing process. Damaged and misfolded proteins accumulate with ag..."
+      },
+      {
+        "doc_id": "52887689",
+        "chunk_id": "52887689::c0",
+        "score": 13.5944,
+        "text": "Guidelines for the use and interpretation of assays for monitoring autophagy. In 2008 we published the first set of guidelines for standardizing research in autophagy. Since then, research on this topic has continued to accelerate, and m..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "dense",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "14550841",
+        "chunk_id": "14550841::c1",
+        "score": 0.6668,
+        "text": "colonies were recloned upon reaching a 100\u2013200 cell stage. Strikingly, the number of cells in subclones varied widely again. These results are indicative of asymmetric divisions in primitive hematopoietic cells in which proliferative pot..."
+      },
+      {
+        "doc_id": "34982259",
+        "chunk_id": "34982259::c1",
+        "score": 0.637,
+        "text": "a topic of lively discussion and intense research. Interest is also focused on developmental signals that induce the adult hematopoietic stem cell program, as these may prove useful for generating and expanding these clinically important..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 0.6163,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "dense",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 0.7015,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      },
+      {
+        "doc_id": "15728433",
+        "chunk_id": "15728433::c0",
+        "score": 0.6976,
+        "text": "Tightrope act: autophagy in stem cell renewal, differentiation, proliferation, and aging Autophagy is a constitutive lysosomal catabolic pathway that degrades damaged organelles and protein aggregates. Stem cells are characterized by sel..."
+      },
+      {
+        "doc_id": "52887689",
+        "chunk_id": "52887689::c3",
+        "score": 0.6543,
+        "text": "with more autophagy. In fact, in many cases, autophagosomes accumulate because of a block in trafficking to lysosomes without a concomitant change in autophagosome biogenesis, whereas an increase in autolysosomes may reflect a reduction ..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "hybrid",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 0.0323,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "25516011",
+        "chunk_id": "25516011::c0",
+        "score": 0.0306,
+        "text": "Purification and characterization of mouse hematopoietic stem cells. Mouse bone marrow hematopoietic stem cells were isolated with the use of a variety of phenotypic markers. These cells can proliferate and differentiate with approximate..."
+      },
+      {
+        "doc_id": "34982259",
+        "chunk_id": "34982259::c0",
+        "score": 0.0304,
+        "text": "Of lineage and legacy: the development of mammalian hematopoietic stem cells The hematopoietic system is one of the first complex tissues to develop in the mammalian conceptus. Of particular interest in the field of developmental hematop..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "hybrid",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 0.0328,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      },
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c1",
+        "score": 0.0308,
+        "text": "functional loss characteristic of aged organisms. To determine whether these negative features of aging can be prevented by maintaining efficient autophagic activity until late in life, in this work we have corrected the CMA defect in ag..."
+      },
+      {
+        "doc_id": "52887689",
+        "chunk_id": "52887689::c0",
+        "score": 0.0306,
+        "text": "Guidelines for the use and interpretation of assays for monitoring autophagy. In 2008 we published the first set of guidelines for standardizing research in autophagy. Since then, research on this topic has continued to accelerate, and m..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "rerank",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c2",
+        "score": 5.2352,
+        "text": "less than 6% of HSCs retained BrdU and less than 0.5% of all BrdU-retaining haematopoietic cells were HSCs, revealing that BrdU has poor specificity and poor sensitivity as an HSC marker. Sequential administration of 5-chloro-2-deoxyurid..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 3.9022,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "30714190",
+        "chunk_id": "30714190::c0",
+        "score": -0.1127,
+        "text": "Genome-wide lineage-specific transcriptional networks underscore Ikaros-dependent lymphoid priming in hematopoietic stem cells. The mechanisms regulating lineage potential during early hematopoiesis were investigated. First, a cascade of..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "rerank",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 7.2341,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      },
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c1",
+        "score": 3.7983,
+        "text": "functional loss characteristic of aged organisms. To determine whether these negative features of aging can be prevented by maintaining efficient autophagic activity until late in life, in this work we have corrected the CMA defect in ag..."
+      },
+      {
+        "doc_id": "10012166",
+        "chunk_id": "10012166::c0",
+        "score": 2.8489,
+        "text": "The role of protein clearance mechanisms in organismal ageing and age-related diseases. The ability to maintain a functional proteome, or proteostasis, declines during the ageing process. Damaged and misfolded proteins accumulate with ag..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "hyde",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "14550841",
+        "chunk_id": "14550841::c1",
+        "score": 0.7456,
+        "text": "colonies were recloned upon reaching a 100\u2013200 cell stage. Strikingly, the number of cells in subclones varied widely again. These results are indicative of asymmetric divisions in primitive hematopoietic cells in which proliferative pot..."
+      },
+      {
+        "doc_id": "92499",
+        "chunk_id": "92499::c0",
+        "score": 0.6443,
+        "text": "The journey of developing hematopoietic stem cells. Hematopoietic stem cells (HSCs) develop during embryogenesis in a complex process that involves multiple anatomical sites. Once HSC precursors have been specified from mesoderm, they ha..."
+      },
+      {
+        "doc_id": "13116880",
+        "chunk_id": "13116880::c1",
+        "score": 0.6422,
+        "text": "more differentiated progenitors while properly maintaining the HSC pool size throughout life by precisely balancing self-renewal and differentiation. Thus, understanding the mechanisms of self-renewal and differentiation of HSC has been ..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "hyde",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 0.7227,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      },
+      {
+        "doc_id": "15728433",
+        "chunk_id": "15728433::c0",
+        "score": 0.697,
+        "text": "Tightrope act: autophagy in stem cell renewal, differentiation, proliferation, and aging Autophagy is a constitutive lysosomal catabolic pathway that degrades damaged organelles and protein aggregates. Stem cells are characterized by sel..."
+      },
+      {
+        "doc_id": "19922508",
+        "chunk_id": "19922508::c0",
+        "score": 0.6869,
+        "text": "Monitoring starvation-induced reactive oxygen species formation. Reactive oxygen species (ROS) are potentially harmful to cells because of their ability to oxidize cell constituents such as DNA, proteins, and lipids. However, at low leve..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "rag_fusion",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "14550841",
+        "chunk_id": "14550841::c1",
+        "score": 0.0656,
+        "text": "colonies were recloned upon reaching a 100\u2013200 cell stage. Strikingly, the number of cells in subclones varied widely again. These results are indicative of asymmetric divisions in primitive hematopoietic cells in which proliferative pot..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 0.064,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "34982259",
+        "chunk_id": "34982259::c1",
+        "score": 0.0633,
+        "text": "a topic of lively discussion and intense research. Interest is also focused on developmental signals that induce the adult hematopoietic stem cell program, as these may prove useful for generating and expanding these clinically important..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "rag_fusion",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "15728433",
+        "chunk_id": "15728433::c0",
+        "score": 0.065,
+        "text": "Tightrope act: autophagy in stem cell renewal, differentiation, proliferation, and aging Autophagy is a constitutive lysosomal catabolic pathway that degrades damaged organelles and protein aggregates. Stem cells are characterized by sel..."
+      },
+      {
+        "doc_id": "52887689",
+        "chunk_id": "52887689::c5",
+        "score": 0.0635,
+        "text": "various methods of assessing autophagy and what information can, or cannot, be obtained from them. Finally, by discussing the merits and limits of particular autophagy assays, we hope to encourage technical innovation in the field."
+      },
+      {
+        "doc_id": "52887689",
+        "chunk_id": "52887689::c3",
+        "score": 0.0628,
+        "text": "with more autophagy. In fact, in many cases, autophagosomes accumulate because of a block in trafficking to lysosomes without a concomitant change in autophagosome biogenesis, whereas an increase in autolysosomes may reflect a reduction ..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "bm25",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c2",
+        "score": 29.1658,
+        "text": "Sequential administration of 5-chloro-2-deoxyuridine and 5-iodo-2-deoxyuridine indicated that all HSCs segregate their chromosomes randomly. Division of individual HSCs in culture revealed no asymmetric segregation of the label. Thus, HS..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 29.0445,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c1",
+        "score": 25.0006,
+        "text": "Here we tested these hypotheses in haematopoietic stem cells (HSCs), which can be highly purified using well characterized markers. We administered BrdU to newborn mice, mice treated with cyclophosphamide and granulocyte colony-stimulati..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "bm25",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 26.2581,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      },
+      {
+        "doc_id": "10012166",
+        "chunk_id": "10012166::c1",
+        "score": 14.595,
+        "text": "The ability to maintain a functional proteome, or proteostasis, declines during the ageing process. Damaged and misfolded proteins accumulate with age, impairing cell function and tissue homeostasis. The accumulation of damaged proteins ..."
+      },
+      {
+        "doc_id": "52887689",
+        "chunk_id": "52887689::c0",
+        "score": 13.334,
+        "text": "Guidelines for the use and interpretation of assays for monitoring autophagy. In 2008 we published the first set of guidelines for standardizing research in autophagy. Since then, research on this topic has continued to accelerate, and m..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "dense",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "14550841",
+        "chunk_id": "14550841::c1",
+        "score": 0.6679,
+        "text": "Single cells in slow growing colonies were recloned upon reaching a 100\u2013200 cell stage. Strikingly, the number of cells in subclones varied widely again. These results are indicative of asymmetric divisions in primitive hematopoietic cel..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 0.6128,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "14550841",
+        "chunk_id": "14550841::c0",
+        "score": 0.6014,
+        "text": "Asymmetric Cell Divisions Sustain Long-Term Hematopoiesis from Single-sorted Human Fetal Liver Cells Hematopoietic stem cells (HSCs) in adult marrow are believed to be derived from fetal liver precursors. To study cell kinetics involved ..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "dense",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "15728433",
+        "chunk_id": "15728433::c0",
+        "score": 0.6821,
+        "text": "Tightrope act: autophagy in stem cell renewal, differentiation, proliferation, and aging Autophagy is a constitutive lysosomal catabolic pathway that degrades damaged organelles and protein aggregates. Stem cells are characterized by sel..."
+      },
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 0.6784,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      },
+      {
+        "doc_id": "52887689",
+        "chunk_id": "52887689::c5",
+        "score": 0.6634,
+        "text": "In these guidelines, we consider these various methods of assessing autophagy and what information can, or cannot, be obtained from them. Finally, by discussing the merits and limits of particular autophagy assays, we hope to encourage t..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "hybrid",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 0.0323,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "92499",
+        "chunk_id": "92499::c0",
+        "score": 0.0308,
+        "text": "The journey of developing hematopoietic stem cells. Hematopoietic stem cells (HSCs) develop during embryogenesis in a complex process that involves multiple anatomical sites. Once HSC precursors have been specified from mesoderm, they ha..."
+      },
+      {
+        "doc_id": "25516011",
+        "chunk_id": "25516011::c0",
+        "score": 0.0305,
+        "text": "Purification and characterization of mouse hematopoietic stem cells. Mouse bone marrow hematopoietic stem cells were isolated with the use of a variety of phenotypic markers. These cells can proliferate and differentiate with approximate..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "hybrid",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 0.0325,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      },
+      {
+        "doc_id": "52887689",
+        "chunk_id": "52887689::c0",
+        "score": 0.0302,
+        "text": "Guidelines for the use and interpretation of assays for monitoring autophagy. In 2008 we published the first set of guidelines for standardizing research in autophagy. Since then, research on this topic has continued to accelerate, and m..."
+      },
+      {
+        "doc_id": "10012166",
+        "chunk_id": "10012166::c1",
+        "score": 0.0286,
+        "text": "The ability to maintain a functional proteome, or proteostasis, declines during the ageing process. Damaged and misfolded proteins accumulate with age, impairing cell function and tissue homeostasis. The accumulation of damaged proteins ..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "rerank",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c2",
+        "score": 6.6827,
+        "text": "Sequential administration of 5-chloro-2-deoxyuridine and 5-iodo-2-deoxyuridine indicated that all HSCs segregate their chromosomes randomly. Division of individual HSCs in culture revealed no asymmetric segregation of the label. Thus, HS..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c1",
+        "score": 4.6537,
+        "text": "Here we tested these hypotheses in haematopoietic stem cells (HSCs), which can be highly purified using well characterized markers. We administered BrdU to newborn mice, mice treated with cyclophosphamide and granulocyte colony-stimulati..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 4.1148,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "rerank",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 7.126,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      },
+      {
+        "doc_id": "10012166",
+        "chunk_id": "10012166::c1",
+        "score": 2.943,
+        "text": "The ability to maintain a functional proteome, or proteostasis, declines during the ageing process. Damaged and misfolded proteins accumulate with age, impairing cell function and tissue homeostasis. The accumulation of damaged proteins ..."
+      },
+      {
+        "doc_id": "15728433",
+        "chunk_id": "15728433::c0",
+        "score": 0.8079,
+        "text": "Tightrope act: autophagy in stem cell renewal, differentiation, proliferation, and aging Autophagy is a constitutive lysosomal catabolic pathway that degrades damaged organelles and protein aggregates. Stem cells are characterized by sel..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "hyde",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "14550841",
+        "chunk_id": "14550841::c1",
+        "score": 0.7333,
+        "text": "Single cells in slow growing colonies were recloned upon reaching a 100\u2013200 cell stage. Strikingly, the number of cells in subclones varied widely again. These results are indicative of asymmetric divisions in primitive hematopoietic cel..."
+      },
+      {
+        "doc_id": "92499",
+        "chunk_id": "92499::c0",
+        "score": 0.6613,
+        "text": "The journey of developing hematopoietic stem cells. Hematopoietic stem cells (HSCs) develop during embryogenesis in a complex process that involves multiple anatomical sites. Once HSC precursors have been specified from mesoderm, they ha..."
+      },
+      {
+        "doc_id": "13116880",
+        "chunk_id": "13116880::c0",
+        "score": 0.6491,
+        "text": "Hematopoietic stem cell: self-renewal versus differentiation. The mammalian blood system, containing more than 10 distinct mature cell types, stands on one specific cell type, hematopoietic stem cell (HSC). Within the system, only HSCs p..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "hyde",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "33569870",
+        "chunk_id": "33569870::c2",
+        "score": 0.7159,
+        "text": "The absence of endothelial autophagy markedly increased atherosclerotic burden. Thus, in both an acute and chronic in vivo model, endothelial autophagy appears critically important in limiting lipid accumulation within the vessel wall. A..."
+      },
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 0.6894,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      },
+      {
+        "doc_id": "19922508",
+        "chunk_id": "19922508::c0",
+        "score": 0.682,
+        "text": "Monitoring starvation-induced reactive oxygen species formation. Reactive oxygen species (ROS) are potentially harmful to cells because of their ability to oxidize cell constituents such as DNA, proteins, and lipids. However, at low leve..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "rag_fusion",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "14550841",
+        "chunk_id": "14550841::c1",
+        "score": 0.0656,
+        "text": "Single cells in slow growing colonies were recloned upon reaching a 100\u2013200 cell stage. Strikingly, the number of cells in subclones varied widely again. These results are indicative of asymmetric divisions in primitive hematopoietic cel..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 0.064,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "14550841",
+        "chunk_id": "14550841::c0",
+        "score": 0.0616,
+        "text": "Asymmetric Cell Divisions Sustain Long-Term Hematopoiesis from Single-sorted Human Fetal Liver Cells Hematopoietic stem cells (HSCs) in adult marrow are believed to be derived from fetal liver precursors. To study cell kinetics involved ..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "rag_fusion",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "15728433",
+        "chunk_id": "15728433::c0",
+        "score": 0.0651,
+        "text": "Tightrope act: autophagy in stem cell renewal, differentiation, proliferation, and aging Autophagy is a constitutive lysosomal catabolic pathway that degrades damaged organelles and protein aggregates. Stem cells are characterized by sel..."
+      },
+      {
+        "doc_id": "52887689",
+        "chunk_id": "52887689::c5",
+        "score": 0.064,
+        "text": "In these guidelines, we consider these various methods of assessing autophagy and what information can, or cannot, be obtained from them. Finally, by discussing the merits and limits of particular autophagy assays, we hope to encourage t..."
+      },
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 0.0618,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "bm25",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 28.7901,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c1",
+        "score": 24.902,
+        "text": "We administered BrdU to newborn mice, mice treated with cyclophosphamide and granulocyte colony-stimulating factor, and normal adult mice for 4 to 10 days, followed by 70 days without BrdU. In each case, less than 6% of HSCs retained Brd..."
+      },
+      {
+        "doc_id": "34982259",
+        "chunk_id": "34982259::c0",
+        "score": 18.0526,
+        "text": "Of lineage and legacy: the development of mammalian hematopoietic stem cells The hematopoietic system is one of the first complex tissues to develop in the mammalian conceptus. Of particular interest in the field of developmental hematop..."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "bm25",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 23.2589,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      },
+      {
+        "doc_id": "10012166",
+        "chunk_id": "10012166::c1",
+        "score": 12.3376,
+        "text": "Damaged proteins are degraded by the ubiquitin-proteasome system or through autophagy-lysosome, key components of the proteostasis network. Modulation of either proteasome activity or autophagic-lysosomal potential extends lifespan and p..."
+      },
+      {
+        "doc_id": "52887689",
+        "chunk_id": "52887689::c1",
+        "score": 11.7769,
+        "text": "Accordingly, it is important to update these guidelines for monitoring autophagy in different organisms. Various reviews have described the range of assays that have been used for this purpose. Nevertheless, there continues to be confusi..."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "dense",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "14550841",
+        "chunk_id": "14550841::c1",
+        "score": 0.6503,
+        "text": "After 8\u201310 d, the number of cells in primary cultures varied from 10,000 cells. Single cells in slow growing colonies were recloned upon reaching a 100\u2013200 cell stage. Strikingly, the number of cells in subclones varied widely again. The..."
+      },
+      {
+        "doc_id": "34982259",
+        "chunk_id": "34982259::c1",
+        "score": 0.6464,
+        "text": "Interest is also focused on developmental signals that induce the adult hematopoietic stem cell program, as these may prove useful for generating and expanding these clinically important cell populations ex vivo. This review presents a h..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 0.6298,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "dense",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 0.6402,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      },
+      {
+        "doc_id": "15728433",
+        "chunk_id": "15728433::c0",
+        "score": 0.64,
+        "text": "Tightrope act: autophagy in stem cell renewal, differentiation, proliferation, and aging Autophagy is a constitutive lysosomal catabolic pathway that degrades damaged organelles and protein aggregates. Stem cells are characterized by sel..."
+      },
+      {
+        "doc_id": "26952804",
+        "chunk_id": "26952804::c0",
+        "score": 0.6084,
+        "text": "The role of autophagy in cancer development and response to therapy Autophagy is a process in which subcellular membranes undergo dynamic morphological changes that lead to the degradation of cellular proteins and cytoplasmic organelles...."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "hybrid",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 0.0323,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "25516011",
+        "chunk_id": "25516011::c0",
+        "score": 0.0308,
+        "text": "Purification and characterization of mouse hematopoietic stem cells. Mouse bone marrow hematopoietic stem cells were isolated with the use of a variety of phenotypic markers. These cells can proliferate and differentiate with approximate..."
+      },
+      {
+        "doc_id": "13116880",
+        "chunk_id": "13116880::c0",
+        "score": 0.0306,
+        "text": "Hematopoietic stem cell: self-renewal versus differentiation. The mammalian blood system, containing more than 10 distinct mature cell types, stands on one specific cell type, hematopoietic stem cell (HSC). Within the system, only HSCs p..."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "hybrid",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 0.0328,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      },
+      {
+        "doc_id": "15728433",
+        "chunk_id": "15728433::c0",
+        "score": 0.0318,
+        "text": "Tightrope act: autophagy in stem cell renewal, differentiation, proliferation, and aging Autophagy is a constitutive lysosomal catabolic pathway that degrades damaged organelles and protein aggregates. Stem cells are characterized by sel..."
+      },
+      {
+        "doc_id": "52887689",
+        "chunk_id": "52887689::c1",
+        "score": 0.031,
+        "text": "Accordingly, it is important to update these guidelines for monitoring autophagy in different organisms. Various reviews have described the range of assays that have been used for this purpose. Nevertheless, there continues to be confusi..."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "rerank",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 4.0975,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c1",
+        "score": 2.0102,
+        "text": "We administered BrdU to newborn mice, mice treated with cyclophosphamide and granulocyte colony-stimulating factor, and normal adult mice for 4 to 10 days, followed by 70 days without BrdU. In each case, less than 6% of HSCs retained Brd..."
+      },
+      {
+        "doc_id": "13116880",
+        "chunk_id": "13116880::c0",
+        "score": -0.0918,
+        "text": "Hematopoietic stem cell: self-renewal versus differentiation. The mammalian blood system, containing more than 10 distinct mature cell types, stands on one specific cell type, hematopoietic stem cell (HSC). Within the system, only HSCs p..."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "rerank",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 7.0873,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      },
+      {
+        "doc_id": "15728433",
+        "chunk_id": "15728433::c0",
+        "score": 0.7655,
+        "text": "Tightrope act: autophagy in stem cell renewal, differentiation, proliferation, and aging Autophagy is a constitutive lysosomal catabolic pathway that degrades damaged organelles and protein aggregates. Stem cells are characterized by sel..."
+      },
+      {
+        "doc_id": "56528795",
+        "chunk_id": "56528795::c1",
+        "score": -0.392,
+        "text": "However, the underlying mechanisms still remain unclear. The serine protease Omi/HtrA2 belongs to the HtrA family and promotes apoptosis through either the caspase-dependent or caspase-independent pathway. Mice lacking Omi/HtrA2 exhibite..."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "hyde",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "14550841",
+        "chunk_id": "14550841::c1",
+        "score": 0.731,
+        "text": "After 8\u201310 d, the number of cells in primary cultures varied from 10,000 cells. Single cells in slow growing colonies were recloned upon reaching a 100\u2013200 cell stage. Strikingly, the number of cells in subclones varied widely again. The..."
+      },
+      {
+        "doc_id": "92499",
+        "chunk_id": "92499::c0",
+        "score": 0.6566,
+        "text": "The journey of developing hematopoietic stem cells. Hematopoietic stem cells (HSCs) develop during embryogenesis in a complex process that involves multiple anatomical sites. Once HSC precursors have been specified from mesoderm, they ha..."
+      },
+      {
+        "doc_id": "13116880",
+        "chunk_id": "13116880::c0",
+        "score": 0.6386,
+        "text": "Hematopoietic stem cell: self-renewal versus differentiation. The mammalian blood system, containing more than 10 distinct mature cell types, stands on one specific cell type, hematopoietic stem cell (HSC). Within the system, only HSCs p..."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "hyde",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "15728433",
+        "chunk_id": "15728433::c0",
+        "score": 0.6839,
+        "text": "Tightrope act: autophagy in stem cell renewal, differentiation, proliferation, and aging Autophagy is a constitutive lysosomal catabolic pathway that degrades damaged organelles and protein aggregates. Stem cells are characterized by sel..."
+      },
+      {
+        "doc_id": "33569870",
+        "chunk_id": "33569870::c1",
+        "score": 0.6571,
+        "text": "In a chronic model of lipid excess, we analyzed atherosclerotic burden in ApoE(-/-) mice with or without endothelial autophagic flux. The absence of endothelial autophagy markedly increased atherosclerotic burden. Thus, in both an acute ..."
+      },
+      {
+        "doc_id": "1084345",
+        "chunk_id": "1084345::c0",
+        "score": 0.6569,
+        "text": "Restoration of chaperone-mediated autophagy in aging liver improves cellular maintenance and hepatic function Chaperone-mediated autophagy (CMA), a selective mechanism for degradation of cytosolic proteins in lysosomes, contributes to th..."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "rag_fusion",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "14550841",
+        "chunk_id": "14550841::c1",
+        "score": 0.0656,
+        "text": "After 8\u201310 d, the number of cells in primary cultures varied from 10,000 cells. Single cells in slow growing colonies were recloned upon reaching a 100\u2013200 cell stage. Strikingly, the number of cells in subclones varied widely again. The..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 0.0638,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "34982259",
+        "chunk_id": "34982259::c1",
+        "score": 0.0635,
+        "text": "Interest is also focused on developmental signals that induce the adult hematopoietic stem cell program, as these may prove useful for generating and expanding these clinically important cell populations ex vivo. This review presents a h..."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "rag_fusion",
+    "query_id": "148",
+    "query": "Autophagy declines in aged organisms.",
+    "hits": [
+      {
+        "doc_id": "15728433",
+        "chunk_id": "15728433::c0",
+        "score": 0.0648,
+        "text": "Tightrope act: autophagy in stem cell renewal, differentiation, proliferation, and aging Autophagy is a constitutive lysosomal catabolic pathway that degrades damaged organelles and protein aggregates. Stem cells are characterized by sel..."
+      },
+      {
+        "doc_id": "52887689",
+        "chunk_id": "52887689::c0",
+        "score": 0.063,
+        "text": "Guidelines for the use and interpretation of assays for monitoring autophagy. In 2008 we published the first set of guidelines for standardizing research in autophagy. Since then, research on this topic has continued to accelerate, and m..."
+      },
+      {
+        "doc_id": "26952804",
+        "chunk_id": "26952804::c0",
+        "score": 0.063,
+        "text": "The role of autophagy in cancer development and response to therapy Autophagy is a process in which subcellular membranes undergo dynamic morphological changes that lead to the degradation of cellular proteins and cytoplasmic organelles...."
+      }
+    ]
+  }
+]
