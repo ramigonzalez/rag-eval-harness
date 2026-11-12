@@ -91,6 +91,7 @@ def test_shipped_configs_parse():
     scifact = load_config(ROOT / "configs" / "scifact.yaml")
     smoke = load_config(ROOT / "configs" / "smoke.yaml")
     generation = load_config(ROOT / "configs" / "generation.yaml")
+    generation_100 = load_config(ROOT / "configs" / "generation_100.yaml")
     assert [spec.name for spec in scifact.chunkers] == ["whole", "fixed", "recursive", "semantic"]
     assert scifact.retrievers == ["bm25", "dense", "hybrid", "rerank"]
     assert scifact.llm_retrievers == ["hyde", "rag_fusion"]
@@ -111,6 +112,14 @@ def test_shipped_configs_parse():
         ("semantic", "rerank"),
     ]
     assert str(generation.output_dir).startswith(str(ROOT / "results"))
+    assert generation_100.max_queries == 100
+    assert generation_100.generation.mode == "on"
+    assert generation_100.generation.max_queries == 100
+    assert generation_100.generation.k == 5
+    assert generation_100.output_dir == ROOT / "results" / "generation-100"
+    assert generation_100.retrievers == ["bm25", "rerank"]
+    assert generation_100.llm_retrievers == []
+    assert generation_100.generation.pairs == generation.generation.pairs
 
 
 def test_generation_config_refuses_to_start_without_a_key(tmp_path):
@@ -143,6 +152,11 @@ def test_hyde_and_generation_use_the_injected_client(tmp_path, monkeypatch):
             self.api_base = "https://openrouter.ai/api/v1"
             self.usage = TokenUsage()
             self.prompts = []
+
+        def set_budget(self, max_estimated_usd, input_usd_per_million, output_usd_per_million):
+            self.max_estimated_usd = max_estimated_usd
+            self.input_usd_per_million = input_usd_per_million
+            self.output_usd_per_million = output_usd_per_million
 
         def complete(self, prompt, temperature=0.0, use_cache=True):
             self.prompts.append(prompt)
@@ -185,3 +199,15 @@ def test_hyde_and_generation_use_the_injected_client(tmp_path, monkeypatch):
     assert result["llm"]["pre_run_estimate"]["hyde_calls"] == 2
     assert result["llm"]["pre_run_estimate"]["generation_calls"] == 2 * 1 * 3
     assert "sk-or-test" not in json.dumps(result["llm"])
+    answers_path = tmp_path / "out" / "answers.jsonl"
+    saved_answers = [
+        json.loads(line)
+        for line in answers_path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    assert result["generation"]["answers_path"] == str(answers_path)
+    assert len(saved_answers) == 2
+    assert saved_answers[0]["contexts"]
+    assert saved_answers[0]["claims"][0]["supported"] is True
+    assert saved_answers[0]["chunker"] == "whole"
+    assert saved_answers[0]["retriever"] == "bm25"

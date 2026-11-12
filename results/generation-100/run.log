@@ -1,0 +1,632 @@
+Loaded SciFact: 5,183 documents, 1,109 queries in the file, 300 labeled test queries
+Loading embedding model sentence-transformers/all-MiniLM-L6-v2
+HTTP Request: GET https://huggingface.co/api/models/Qdrant/all-MiniLM-L6-v2-onnx "HTTP/1.1 200 OK"
+HTTP Request: GET https://huggingface.co/api/models/Qdrant/all-MiniLM-L6-v2-onnx/tree/d13954661f83248295ba75c1ed411eef3b7b936e?recursive=true&expand=false "HTTP/1.1 200 OK"
+HTTP Request: GET https://huggingface.co/api/models/Qdrant/all-MiniLM-L6-v2-onnx/revision/main "HTTP/1.1 200 OK"
+HTTP Request: GET https://huggingface.co/api/models/Qdrant/all-MiniLM-L6-v2-onnx/tree/d13954661f83248295ba75c1ed411eef3b7b936e?recursive=true&expand=false "HTTP/1.1 200 OK"
+Fetching 5 files:   0%|          | 0/5 [00:00<?, ?it/s]HTTP Request: HEAD https://huggingface.co/Qdrant/all-MiniLM-L6-v2-onnx/resolve/d13954661f83248295ba75c1ed411eef3b7b936e/model.onnx "HTTP/1.1 302 Found"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+HTTP Request: HEAD https://huggingface.co/Qdrant/all-MiniLM-L6-v2-onnx/resolve/d13954661f83248295ba75c1ed411eef3b7b936e/tokenizer.json "HTTP/1.1 307 Temporary Redirect"
+HTTP Request: HEAD https://huggingface.co/Qdrant/all-MiniLM-L6-v2-onnx/resolve/d13954661f83248295ba75c1ed411eef3b7b936e/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qdrant/all-MiniLM-L6-v2-onnx/d13954661f83248295ba75c1ed411eef3b7b936e/tokenizer.json?%2FQdrant%2Fall-MiniLM-L6-v2-onnx%2Fresolve%2Fd13954661f83248295ba75c1ed411eef3b7b936e%2Ftokenizer.json=&etag=%224eade387f6f3ade6a663a25642ed27843081a772%22 "HTTP/1.1 200 OK"
+HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qdrant/all-MiniLM-L6-v2-onnx/d13954661f83248295ba75c1ed411eef3b7b936e/tokenizer_config.json?%2FQdrant%2Fall-MiniLM-L6-v2-onnx%2Fresolve%2Fd13954661f83248295ba75c1ed411eef3b7b936e%2Ftokenizer_config.json=&etag=%22954add25cc0792a2226b11d8ed5c9c39578084f0%22 "HTTP/1.1 200 OK"
+HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qdrant/all-MiniLM-L6-v2-onnx/d13954661f83248295ba75c1ed411eef3b7b936e/tokenizer.json?%2FQdrant%2Fall-MiniLM-L6-v2-onnx%2Fresolve%2Fd13954661f83248295ba75c1ed411eef3b7b936e%2Ftokenizer.json=&etag=%224eade387f6f3ade6a663a25642ed27843081a772%22 "HTTP/1.1 200 OK"
+Fetching 5 files:  20%|██        | 1/5 [00:00<00:00,  6.02it/s]HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qdrant/all-MiniLM-L6-v2-onnx/d13954661f83248295ba75c1ed411eef3b7b936e/tokenizer_config.json?%2FQdrant%2Fall-MiniLM-L6-v2-onnx%2Fresolve%2Fd13954661f83248295ba75c1ed411eef3b7b936e%2Ftokenizer_config.json=&etag=%22954add25cc0792a2226b11d8ed5c9c39578084f0%22 "HTTP/1.1 200 OK"
+HTTP Request: HEAD https://huggingface.co/Qdrant/all-MiniLM-L6-v2-onnx/resolve/d13954661f83248295ba75c1ed411eef3b7b936e/special_tokens_map.json "HTTP/1.1 307 Temporary Redirect"
+HTTP Request: HEAD https://huggingface.co/Qdrant/all-MiniLM-L6-v2-onnx/resolve/d13954661f83248295ba75c1ed411eef3b7b936e/config.json "HTTP/1.1 307 Temporary Redirect"
+HTTP Request: GET https://huggingface.co/api/models/Qdrant/all-MiniLM-L6-v2-onnx/xet-read-token/d13954661f83248295ba75c1ed411eef3b7b936e "HTTP/1.1 200 OK"
+HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qdrant/all-MiniLM-L6-v2-onnx/d13954661f83248295ba75c1ed411eef3b7b936e/config.json?%2FQdrant%2Fall-MiniLM-L6-v2-onnx%2Fresolve%2Fd13954661f83248295ba75c1ed411eef3b7b936e%2Fconfig.json=&etag=%2256c8c186de9040d4fea8daac2ca110f9d412bf04%22 "HTTP/1.1 200 OK"
+HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qdrant/all-MiniLM-L6-v2-onnx/d13954661f83248295ba75c1ed411eef3b7b936e/special_tokens_map.json?%2FQdrant%2Fall-MiniLM-L6-v2-onnx%2Fresolve%2Fd13954661f83248295ba75c1ed411eef3b7b936e%2Fspecial_tokens_map.json=&etag=%229bbecc17cabbcbd3112c14d6982b51403b264bfa%22 "HTTP/1.1 200 OK"
+HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qdrant/all-MiniLM-L6-v2-onnx/d13954661f83248295ba75c1ed411eef3b7b936e/special_tokens_map.json?%2FQdrant%2Fall-MiniLM-L6-v2-onnx%2Fresolve%2Fd13954661f83248295ba75c1ed411eef3b7b936e%2Fspecial_tokens_map.json=&etag=%229bbecc17cabbcbd3112c14d6982b51403b264bfa%22 "HTTP/1.1 200 OK"
+HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qdrant/all-MiniLM-L6-v2-onnx/d13954661f83248295ba75c1ed411eef3b7b936e/config.json?%2FQdrant%2Fall-MiniLM-L6-v2-onnx%2Fresolve%2Fd13954661f83248295ba75c1ed411eef3b7b936e%2Fconfig.json=&etag=%2256c8c186de9040d4fea8daac2ca110f9d412bf04%22 "HTTP/1.1 200 OK"
+Fetching 5 files: 100%|██████████| 5/5 [00:07<00:00,  1.54s/it]Fetching 5 files: 100%|██████████| 5/5 [00:07<00:00,  1.46s/it]
+Loading reranker Xenova/ms-marco-MiniLM-L-6-v2
+HTTP Request: GET https://huggingface.co/api/models/Xenova/ms-marco-MiniLM-L-6-v2 "HTTP/1.1 200 OK"
+HTTP Request: GET https://huggingface.co/api/models/Xenova/ms-marco-MiniLM-L-6-v2/tree/a09144355adeed5f58c8ed011d209bf8ee5a1fec?recursive=true&expand=false "HTTP/1.1 200 OK"
+HTTP Request: GET https://huggingface.co/api/models/Xenova/ms-marco-MiniLM-L-6-v2/revision/main "HTTP/1.1 200 OK"
+HTTP Request: GET https://huggingface.co/api/models/Xenova/ms-marco-MiniLM-L-6-v2/tree/a09144355adeed5f58c8ed011d209bf8ee5a1fec?recursive=true&expand=false "HTTP/1.1 200 OK"
+Fetching 5 files:   0%|          | 0/5 [00:00<?, ?it/s]HTTP Request: HEAD https://huggingface.co/Xenova/ms-marco-MiniLM-L-6-v2/resolve/a09144355adeed5f58c8ed011d209bf8ee5a1fec/config.json "HTTP/1.1 307 Temporary Redirect"
+HTTP Request: HEAD https://huggingface.co/Xenova/ms-marco-MiniLM-L-6-v2/resolve/a09144355adeed5f58c8ed011d209bf8ee5a1fec/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Xenova/ms-marco-MiniLM-L-6-v2/a09144355adeed5f58c8ed011d209bf8ee5a1fec/config.json?%2FXenova%2Fms-marco-MiniLM-L-6-v2%2Fresolve%2Fa09144355adeed5f58c8ed011d209bf8ee5a1fec%2Fconfig.json=&etag=%22e94e433dc05771d74530b4a5fdaf8f398da30cab%22 "HTTP/1.1 200 OK"
+HTTP Request: HEAD https://huggingface.co/Xenova/ms-marco-MiniLM-L-6-v2/resolve/a09144355adeed5f58c8ed011d209bf8ee5a1fec/tokenizer.json "HTTP/1.1 307 Temporary Redirect"
+HTTP Request: GET https://huggingface.co/api/models/Xenova/ms-marco-MiniLM-L-6-v2/xet-read-token/a09144355adeed5f58c8ed011d209bf8ee5a1fec "HTTP/1.1 200 OK"
+HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Xenova/ms-marco-MiniLM-L-6-v2/a09144355adeed5f58c8ed011d209bf8ee5a1fec/tokenizer_config.json?%2FXenova%2Fms-marco-MiniLM-L-6-v2%2Fresolve%2Fa09144355adeed5f58c8ed011d209bf8ee5a1fec%2Ftokenizer_config.json=&etag=%2275305659f7795d4549f0e23688b52fa20a32f925%22 "HTTP/1.1 200 OK"
+HTTP Request: HEAD https://huggingface.co/Xenova/ms-marco-MiniLM-L-6-v2/resolve/a09144355adeed5f58c8ed011d209bf8ee5a1fec/special_tokens_map.json "HTTP/1.1 307 Temporary Redirect"
+HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Xenova/ms-marco-MiniLM-L-6-v2/a09144355adeed5f58c8ed011d209bf8ee5a1fec/tokenizer.json?%2FXenova%2Fms-marco-MiniLM-L-6-v2%2Fresolve%2Fa09144355adeed5f58c8ed011d209bf8ee5a1fec%2Ftokenizer.json=&etag=%22688882a79f44442ddc1f60d70334a7ff5df0fb47%22 "HTTP/1.1 200 OK"
+HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Xenova/ms-marco-MiniLM-L-6-v2/a09144355adeed5f58c8ed011d209bf8ee5a1fec/tokenizer_config.json?%2FXenova%2Fms-marco-MiniLM-L-6-v2%2Fresolve%2Fa09144355adeed5f58c8ed011d209bf8ee5a1fec%2Ftokenizer_config.json=&etag=%2275305659f7795d4549f0e23688b52fa20a32f925%22 "HTTP/1.1 200 OK"
+Fetching 5 files:  20%|██        | 1/5 [00:00<00:00,  6.48it/s]HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Xenova/ms-marco-MiniLM-L-6-v2/a09144355adeed5f58c8ed011d209bf8ee5a1fec/special_tokens_map.json?%2FXenova%2Fms-marco-MiniLM-L-6-v2%2Fresolve%2Fa09144355adeed5f58c8ed011d209bf8ee5a1fec%2Fspecial_tokens_map.json=&etag=%22a8b3208c2884c4efb86e49300fdd3dc877220cdf%22 "HTTP/1.1 200 OK"
+HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Xenova/ms-marco-MiniLM-L-6-v2/a09144355adeed5f58c8ed011d209bf8ee5a1fec/config.json?%2FXenova%2Fms-marco-MiniLM-L-6-v2%2Fresolve%2Fa09144355adeed5f58c8ed011d209bf8ee5a1fec%2Fconfig.json=&etag=%22e94e433dc05771d74530b4a5fdaf8f398da30cab%22 "HTTP/1.1 200 OK"
+HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Xenova/ms-marco-MiniLM-L-6-v2/a09144355adeed5f58c8ed011d209bf8ee5a1fec/tokenizer.json?%2FXenova%2Fms-marco-MiniLM-L-6-v2%2Fresolve%2Fa09144355adeed5f58c8ed011d209bf8ee5a1fec%2Ftokenizer.json=&etag=%22688882a79f44442ddc1f60d70334a7ff5df0fb47%22 "HTTP/1.1 200 OK"
+HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Xenova/ms-marco-MiniLM-L-6-v2/a09144355adeed5f58c8ed011d209bf8ee5a1fec/special_tokens_map.json?%2FXenova%2Fms-marco-MiniLM-L-6-v2%2Fresolve%2Fa09144355adeed5f58c8ed011d209bf8ee5a1fec%2Fspecial_tokens_map.json=&etag=%22a8b3208c2884c4efb86e49300fdd3dc877220cdf%22 "HTTP/1.1 200 OK"
+Fetching 5 files: 100%|██████████| 5/5 [00:07<00:00,  1.54s/it]Fetching 5 files: 100%|██████████| 5/5 [00:07<00:00,  1.46s/it]
+Scoring 100 labeled queries over 5,183 documents
+Pre-run LLM estimate: 1500 calls (HyDE 0, RAG-Fusion 0, generation 1500) on 100 retrieval queries and 100 judged queries across 5 pairs. About 946,000 input tokens and 135,000 output tokens (~$0.2229 at $0.15/$0.60 per million). Method: 80-character questions, 600-character chunks, context_k=5, about 4 characters per token. Not a bill.
+Chunking with whole
+whole produced 5,183 chunks in 0.0s
+Using 5,183 cached embeddings
+Evaluating whole / bm25
+whole / bm25  recall@10=0.790  mrr@10=0.677  ndcg@10=0.696  context_precision@10=0.671  online=7.4ms
+Evaluating whole / rerank
+Reranking 2,000 query-chunk pairs
+whole / rerank  recall@10=0.820  mrr@10=0.657  ndcg@10=0.687  context_precision@10=0.645  online=520.3ms
+Chunking with fixed
+fixed produced 15,596 chunks in 0.1s
+Using 15,596 cached embeddings
+Evaluating fixed / bm25
+fixed / bm25  recall@10=0.775  mrr@10=0.639  ndcg@10=0.665  context_precision@10=0.575  online=17.6ms
+Evaluating fixed / rerank
+Reranking 2,000 query-chunk pairs
+fixed / rerank  recall@10=0.840  mrr@10=0.675  ndcg@10=0.708  context_precision@10=0.621  online=242.7ms
+Chunking with recursive
+recursive produced 15,727 chunks in 0.3s
+Using 15,727 cached embeddings
+Evaluating recursive / bm25
+recursive / bm25  recall@10=0.785  mrr@10=0.635  ndcg@10=0.666  context_precision@10=0.578  online=16.9ms
+Evaluating recursive / rerank
+Reranking 2,000 query-chunk pairs
+recursive / rerank  recall@10=0.850  mrr@10=0.671  ndcg@10=0.708  context_precision@10=0.618  online=223.4ms
+Chunking with semantic
+Semantic chunking is embedding 51,309 sentences
+Using 51,309 cached embeddings
+semantic produced 9,879 chunks in 0.7s
+Using 9,879 cached embeddings
+Evaluating semantic / bm25
+semantic / bm25  recall@10=0.807  mrr@10=0.650  ndcg@10=0.683  context_precision@10=0.625  online=11.7ms
+Evaluating semantic / rerank
+Reranking 2,000 query-chunk pairs
+semantic / rerank  recall@10=0.807  mrr@10=0.666  ndcg@10=0.696  context_precision@10=0.631  online=376.4ms
+Running generation metrics
+Writing per-query answers to /workspace/linkedin/proofs/runs/gen-100/results/gen-100/answers.jsonl (0 prior rows)
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Generation judge failed for 218 (The read operation timed out)
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Embedding 3 texts with sentence-transformers/all-MiniLM-L6-v2
+Using 3 cached embeddings
+Using 3 cached embeddings
+Using 3 cached embeddings
+LLM usage (openrouter, openai/gpt-4o-mini): 1122 calls, 376 cache hits, 1,260,305 input tokens, 46,274 output tokens, ~$0.2168 at $0.15/$0.60 per million (provider usage).
+Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
+generated new fontManager
+Wrote results to /workspace/linkedin/proofs/runs/gen-100/results/gen-100
+# scifact retrieval results
+
+5,183 documents, 100 labeled queries, mean 1.15 relevant documents per query, mean document length 214.6 words.
+
+## Chunking
+
+| Chunker | Chunks | Avg words | Chunks per doc | Chunk time (s) | Index time (s) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| whole | 5,183 | 214.6 | 1.00 | 0.0 | 0.6 |
+| fixed | 15,596 | 88.0 | 3.01 | 0.1 | 0.9 |
+| recursive | 15,727 | 78.1 | 3.03 | 0.3 | 0.9 |
+| semantic | 9,879 | 112.6 | 1.91 | 0.7 | 0.9 |
+
+Index time is shared by every retriever on that chunker. It includes embedding when a dense index is built.
+
+## Retrieval
+
+| Chunker | Retriever | Recall@10 | MRR@10 | nDCG@10 | Context precision@10 | Online latency (ms) |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| whole | bm25 | 0.790 | 0.677 | 0.696 | 0.671 | 7.4 |
+| whole | rerank | 0.820 | 0.657 | 0.687 | 0.645 | 520.3 |
+| fixed | bm25 | 0.775 | 0.639 | 0.665 | 0.575 | 17.6 |
+| fixed | rerank | 0.840 | 0.675 | 0.708 | 0.621 | 242.7 |
+| recursive | bm25 | 0.785 | 0.635 | 0.666 | 0.578 | 16.9 |
+| recursive | rerank | 0.850 | 0.671 | 0.708 | 0.618 | 223.4 |
+| semantic | bm25 | 0.807 | 0.650 | 0.683 | 0.625 | 11.7 |
+| semantic | rerank | 0.807 | 0.666 | 0.696 | 0.631 | 376.4 |
+
+Online latency is the mean of up to 3 single-query calls on this machine, including query embedding. It is not the batched throughput of the full eval.
+
+Metrics are macro-averaged over labeled queries. Recall, MRR, and nDCG are computed after mapping chunks back to documents. Context precision scores the chunks in the order they were retrieved.
+
+## Generation
+
+Model `openai/gpt-4o-mini`, provider `openrouter` judged 100 queries.
+Retrieval grid size: 100 queries. Generation sample: 100 queries, context_k=5.
+Token counts from the provider: 1260305 input, 46274 output, 1122 calls, 376 cache hits. Estimated cost $0.2168 at $0.15/$0.60 per million.
+
+| Chunker | Retriever | Faithfulness | Answer relevancy | Hallucination rate | Errors |
+| --- | --- | ---: | ---: | ---: | ---: |
+| whole | bm25 | 0.596 | 0.375 | 0.404 | 0 |
+| whole | rerank | 0.598 | 0.363 | 0.402 | 0 |
+| fixed | rerank | 0.606 | 0.406 | 0.394 | 1 |
+| recursive | rerank | 0.644 | 0.441 | 0.356 | 0 |
+| semantic | rerank | 0.635 | 0.451 | 0.365 | 0 |
+
+![nDCG@10 by chunker and retriever](ndcg_at_10.png)
+

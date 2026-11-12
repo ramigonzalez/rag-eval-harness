@@ -1,0 +1,418 @@
+[
+  {
+    "chunker": "whole",
+    "retriever": "bm25",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 33.9323,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "4398832",
+        "chunk_id": "4398832::c0",
+        "score": 17.6642,
+        "text": "Cyclin A Regulates Kinetochore-Microtubules to Promote Faithful Chromosome Segregation The most conspicuous event in the cell cycle is the alignment of chromosomes in metaphase. Chromosome alignment fosters faithful segregation through t..."
+      },
+      {
+        "doc_id": "25516011",
+        "chunk_id": "25516011::c0",
+        "score": 16.6686,
+        "text": "Purification and characterization of mouse hematopoietic stem cells. Mouse bone marrow hematopoietic stem cells were isolated with the use of a variety of phenotypic markers. These cells can proliferate and differentiate with approximate..."
+      }
+    ]
+  },
+  {
+    "chunker": "whole",
+    "retriever": "bm25",
+    "query_id": "300",
+    "query": "Cytosolic proteins bind to iron-responsive elements on mRNAs coding for DMT1. Cytosolic proteins bind to iron-responsive elements on mRNAs coding for proteins involved in iron uptake.",
+    "hits": [
+      {
+        "doc_id": "16120395",
+        "chunk_id": "16120395::c0",
+        "score": 30.7727,
+        "text": "Multiple RNA surveillance pathways limit aberrant expression of iron uptake mRNAs and prevent iron toxicity in S. cerevisiae. Tight regulation of the expression of mRNAs encoding iron uptake proteins is essential to control iron homeosta..."
+      },
+      {
+        "doc_id": "15551129",
+        "chunk_id": "15551129::c0",
+        "score": 27.2507,
+        "text": "The role of iron in Mycobacterium smegmatis biofilm formation: the exochelin siderophore is essential in limiting iron conditions for biofilm formation but not for planktonic growth Many species of mycobacteria form structured biofilm co..."
+      },
+      {
+        "doc_id": "6828370",
+        "chunk_id": "6828370::c0",
+        "score": 21.4671,
+        "text": "A coding-independent function of gene and pseudogene mRNAs regulates tumour biology The canonical role of messenger RNA (mRNA) is to deliver protein-coding information to sites of protein synthesis. However, given that microRNAs bind to ..."
+      }
+    ]
+  },
+  {
+    "chunker": "whole",
+    "retriever": "rerank",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 6.0278,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "2701077",
+        "chunk_id": "2701077::c0",
+        "score": 0.1726,
+        "text": "Hematopoietic stem cell quiescence promotes error-prone DNA repair and mutagenesis. Most adult stem cells, including hematopoietic stem cells (HSCs), are maintained in a quiescent or resting state in vivo. Quiescence is widely considered..."
+      },
+      {
+        "doc_id": "14550841",
+        "chunk_id": "14550841::c0",
+        "score": -0.7865,
+        "text": "Asymmetric Cell Divisions Sustain Long-Term Hematopoiesis from Single-sorted Human Fetal Liver Cells Hematopoietic stem cells (HSCs) in adult marrow are believed to be derived from fetal liver precursors. To study cell kinetics involved ..."
+      }
+    ]
+  },
+  {
+    "chunker": "whole",
+    "retriever": "rerank",
+    "query_id": "300",
+    "query": "Cytosolic proteins bind to iron-responsive elements on mRNAs coding for DMT1. Cytosolic proteins bind to iron-responsive elements on mRNAs coding for proteins involved in iron uptake.",
+    "hits": [
+      {
+        "doc_id": "16120395",
+        "chunk_id": "16120395::c0",
+        "score": -0.2111,
+        "text": "Multiple RNA surveillance pathways limit aberrant expression of iron uptake mRNAs and prevent iron toxicity in S. cerevisiae. Tight regulation of the expression of mRNAs encoding iron uptake proteins is essential to control iron homeosta..."
+      },
+      {
+        "doc_id": "935538",
+        "chunk_id": "935538::c0",
+        "score": -0.6891,
+        "text": "The mitochondrial RNA-binding protein GRSF1 localizes to RNA granules and is required for posttranscriptional mitochondrial gene expression. RNA-binding proteins are at the heart of posttranscriptional gene regulation, coordinating the p..."
+      },
+      {
+        "doc_id": "3553087",
+        "chunk_id": "3553087::c0",
+        "score": -0.8402,
+        "text": "Mitochondrial iron chelation ameliorates cigarette-smoke induced bronchitis and emphysema in mice Chronic obstructive pulmonary disease (COPD) is linked to both cigarette smoking and genetic determinants. We have previously identified ir..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "bm25",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 29.4705,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c2",
+        "score": 26.8331,
+        "text": "less than 6% of HSCs retained BrdU and less than 0.5% of all BrdU-retaining haematopoietic cells were HSCs, revealing that BrdU has poor specificity and poor sensitivity as an HSC marker. Sequential administration of 5-chloro-2-deoxyurid..."
+      },
+      {
+        "doc_id": "34982259",
+        "chunk_id": "34982259::c0",
+        "score": 18.618,
+        "text": "Of lineage and legacy: the development of mammalian hematopoietic stem cells The hematopoietic system is one of the first complex tissues to develop in the mammalian conceptus. Of particular interest in the field of developmental hematop..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "bm25",
+    "query_id": "300",
+    "query": "Cytosolic proteins bind to iron-responsive elements on mRNAs coding for DMT1. Cytosolic proteins bind to iron-responsive elements on mRNAs coding for proteins involved in iron uptake.",
+    "hits": [
+      {
+        "doc_id": "16120395",
+        "chunk_id": "16120395::c0",
+        "score": 32.6291,
+        "text": "Multiple RNA surveillance pathways limit aberrant expression of iron uptake mRNAs and prevent iron toxicity in S. cerevisiae. Tight regulation of the expression of mRNAs encoding iron uptake proteins is essential to control iron homeosta..."
+      },
+      {
+        "doc_id": "15551129",
+        "chunk_id": "15551129::c1",
+        "score": 29.6679,
+        "text": "that iron-responsive genes \u2013 especially those involved in siderophore synthesis and iron uptake \u2013 are strongly induced during biofilm formation reflecting a response to iron deprivation, even when 2 \u03bcM iron is present. The acquisition of..."
+      },
+      {
+        "doc_id": "15551129",
+        "chunk_id": "15551129::c0",
+        "score": 27.0082,
+        "text": "The role of iron in Mycobacterium smegmatis biofilm formation: the exochelin siderophore is essential in limiting iron conditions for biofilm formation but not for planktonic growth Many species of mycobacteria form structured biofilm co..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "rerank",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c2",
+        "score": 5.2352,
+        "text": "less than 6% of HSCs retained BrdU and less than 0.5% of all BrdU-retaining haematopoietic cells were HSCs, revealing that BrdU has poor specificity and poor sensitivity as an HSC marker. Sequential administration of 5-chloro-2-deoxyurid..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 3.9022,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "30714190",
+        "chunk_id": "30714190::c0",
+        "score": -0.1127,
+        "text": "Genome-wide lineage-specific transcriptional networks underscore Ikaros-dependent lymphoid priming in hematopoietic stem cells. The mechanisms regulating lineage potential during early hematopoiesis were investigated. First, a cascade of..."
+      }
+    ]
+  },
+  {
+    "chunker": "fixed",
+    "retriever": "rerank",
+    "query_id": "300",
+    "query": "Cytosolic proteins bind to iron-responsive elements on mRNAs coding for DMT1. Cytosolic proteins bind to iron-responsive elements on mRNAs coding for proteins involved in iron uptake.",
+    "hits": [
+      {
+        "doc_id": "16120395",
+        "chunk_id": "16120395::c0",
+        "score": 0.7328,
+        "text": "Multiple RNA surveillance pathways limit aberrant expression of iron uptake mRNAs and prevent iron toxicity in S. cerevisiae. Tight regulation of the expression of mRNAs encoding iron uptake proteins is essential to control iron homeosta..."
+      },
+      {
+        "doc_id": "10423989",
+        "chunk_id": "10423989::c1",
+        "score": -1.0456,
+        "text": "form a complex that is required for the splicing of specific pre-mRNAs. The SRm160/300 complex associates with splicing complexes and promotes splicing through interactions with SR family proteins. Binding of SRm160/300 to pre-mRNA is no..."
+      },
+      {
+        "doc_id": "3553087",
+        "chunk_id": "3553087::c0",
+        "score": -1.2693,
+        "text": "Mitochondrial iron chelation ameliorates cigarette-smoke induced bronchitis and emphysema in mice Chronic obstructive pulmonary disease (COPD) is linked to both cigarette smoking and genetic determinants. We have previously identified ir..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "bm25",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c2",
+        "score": 29.1658,
+        "text": "Sequential administration of 5-chloro-2-deoxyuridine and 5-iodo-2-deoxyuridine indicated that all HSCs segregate their chromosomes randomly. Division of individual HSCs in culture revealed no asymmetric segregation of the label. Thus, HS..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 29.0445,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c1",
+        "score": 25.0006,
+        "text": "Here we tested these hypotheses in haematopoietic stem cells (HSCs), which can be highly purified using well characterized markers. We administered BrdU to newborn mice, mice treated with cyclophosphamide and granulocyte colony-stimulati..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "bm25",
+    "query_id": "300",
+    "query": "Cytosolic proteins bind to iron-responsive elements on mRNAs coding for DMT1. Cytosolic proteins bind to iron-responsive elements on mRNAs coding for proteins involved in iron uptake.",
+    "hits": [
+      {
+        "doc_id": "16120395",
+        "chunk_id": "16120395::c0",
+        "score": 33.9311,
+        "text": "Multiple RNA surveillance pathways limit aberrant expression of iron uptake mRNAs and prevent iron toxicity in S. cerevisiae. Tight regulation of the expression of mRNAs encoding iron uptake proteins is essential to control iron homeosta..."
+      },
+      {
+        "doc_id": "15551129",
+        "chunk_id": "15551129::c1",
+        "score": 31.0763,
+        "text": "Microarray analysis of the M. smegmatis transcriptome shows that iron-responsive genes \u2013 especially those involved in siderophore synthesis and iron uptake \u2013 are strongly induced during biofilm formation reflecting a response to iron dep..."
+      },
+      {
+        "doc_id": "6828370",
+        "chunk_id": "6828370::c0",
+        "score": 22.6047,
+        "text": "A coding-independent function of gene and pseudogene mRNAs regulates tumour biology The canonical role of messenger RNA (mRNA) is to deliver protein-coding information to sites of protein synthesis. However, given that microRNAs bind to ..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "rerank",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c2",
+        "score": 6.6827,
+        "text": "Sequential administration of 5-chloro-2-deoxyuridine and 5-iodo-2-deoxyuridine indicated that all HSCs segregate their chromosomes randomly. Division of individual HSCs in culture revealed no asymmetric segregation of the label. Thus, HS..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c1",
+        "score": 4.6537,
+        "text": "Here we tested these hypotheses in haematopoietic stem cells (HSCs), which can be highly purified using well characterized markers. We administered BrdU to newborn mice, mice treated with cyclophosphamide and granulocyte colony-stimulati..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 4.1148,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      }
+    ]
+  },
+  {
+    "chunker": "recursive",
+    "retriever": "rerank",
+    "query_id": "300",
+    "query": "Cytosolic proteins bind to iron-responsive elements on mRNAs coding for DMT1. Cytosolic proteins bind to iron-responsive elements on mRNAs coding for proteins involved in iron uptake.",
+    "hits": [
+      {
+        "doc_id": "16120395",
+        "chunk_id": "16120395::c0",
+        "score": 0.5939,
+        "text": "Multiple RNA surveillance pathways limit aberrant expression of iron uptake mRNAs and prevent iron toxicity in S. cerevisiae. Tight regulation of the expression of mRNAs encoding iron uptake proteins is essential to control iron homeosta..."
+      },
+      {
+        "doc_id": "15551129",
+        "chunk_id": "15551129::c1",
+        "score": -0.4736,
+        "text": "Microarray analysis of the M. smegmatis transcriptome shows that iron-responsive genes \u2013 especially those involved in siderophore synthesis and iron uptake \u2013 are strongly induced during biofilm formation reflecting a response to iron dep..."
+      },
+      {
+        "doc_id": "8496132",
+        "chunk_id": "8496132::c1",
+        "score": -0.6232,
+        "text": "Previously, it was found that the RNA binding proteins nucleolin and Ebp1 have a role in stabilizing bcl-2 mRNA in HL60 cells. Here, we have identified HuR as a component of bcl-2 messenger ribonucleoprotein (mRNP) complexes. RNA coimmun..."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "bm25",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 28.7901,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c1",
+        "score": 24.902,
+        "text": "We administered BrdU to newborn mice, mice treated with cyclophosphamide and granulocyte colony-stimulating factor, and normal adult mice for 4 to 10 days, followed by 70 days without BrdU. In each case, less than 6% of HSCs retained Brd..."
+      },
+      {
+        "doc_id": "34982259",
+        "chunk_id": "34982259::c0",
+        "score": 18.0526,
+        "text": "Of lineage and legacy: the development of mammalian hematopoietic stem cells The hematopoietic system is one of the first complex tissues to develop in the mammalian conceptus. Of particular interest in the field of developmental hematop..."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "bm25",
+    "query_id": "300",
+    "query": "Cytosolic proteins bind to iron-responsive elements on mRNAs coding for DMT1. Cytosolic proteins bind to iron-responsive elements on mRNAs coding for proteins involved in iron uptake.",
+    "hits": [
+      {
+        "doc_id": "16120395",
+        "chunk_id": "16120395::c0",
+        "score": 31.1232,
+        "text": "Multiple RNA surveillance pathways limit aberrant expression of iron uptake mRNAs and prevent iron toxicity in S. cerevisiae. Tight regulation of the expression of mRNAs encoding iron uptake proteins is essential to control iron homeosta..."
+      },
+      {
+        "doc_id": "15551129",
+        "chunk_id": "15551129::c0",
+        "score": 27.0796,
+        "text": "The role of iron in Mycobacterium smegmatis biofilm formation: the exochelin siderophore is essential in limiting iron conditions for biofilm formation but not for planktonic growth Many species of mycobacteria form structured biofilm co..."
+      },
+      {
+        "doc_id": "6828370",
+        "chunk_id": "6828370::c0",
+        "score": 23.2766,
+        "text": "A coding-independent function of gene and pseudogene mRNAs regulates tumour biology The canonical role of messenger RNA (mRNA) is to deliver protein-coding information to sites of protein synthesis. However, given that microRNAs bind to ..."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "rerank",
+    "query_id": "100",
+    "query": "All hematopoietic stem cells segregate their chromosomes randomly.",
+    "hits": [
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c0",
+        "score": 4.0975,
+        "text": "Haematopoietic stem cells do not asymmetrically segregate chromosomes or retain BrdU Stem cells are proposed to segregate chromosomes asymmetrically during self-renewing divisions so that older (\u2018immortal\u2019) DNA strands are retained in da..."
+      },
+      {
+        "doc_id": "4381486",
+        "chunk_id": "4381486::c1",
+        "score": 2.0102,
+        "text": "We administered BrdU to newborn mice, mice treated with cyclophosphamide and granulocyte colony-stimulating factor, and normal adult mice for 4 to 10 days, followed by 70 days without BrdU. In each case, less than 6% of HSCs retained Brd..."
+      },
+      {
+        "doc_id": "13116880",
+        "chunk_id": "13116880::c0",
+        "score": -0.0918,
+        "text": "Hematopoietic stem cell: self-renewal versus differentiation. The mammalian blood system, containing more than 10 distinct mature cell types, stands on one specific cell type, hematopoietic stem cell (HSC). Within the system, only HSCs p..."
+      }
+    ]
+  },
+  {
+    "chunker": "semantic",
+    "retriever": "rerank",
+    "query_id": "300",
+    "query": "Cytosolic proteins bind to iron-responsive elements on mRNAs coding for DMT1. Cytosolic proteins bind to iron-responsive elements on mRNAs coding for proteins involved in iron uptake.",
+    "hits": [
+      {
+        "doc_id": "16120395",
+        "chunk_id": "16120395::c0",
+        "score": -0.2111,
+        "text": "Multiple RNA surveillance pathways limit aberrant expression of iron uptake mRNAs and prevent iron toxicity in S. cerevisiae. Tight regulation of the expression of mRNAs encoding iron uptake proteins is essential to control iron homeosta..."
+      },
+      {
+        "doc_id": "935538",
+        "chunk_id": "935538::c0",
+        "score": -0.6891,
+        "text": "The mitochondrial RNA-binding protein GRSF1 localizes to RNA granules and is required for posttranscriptional mitochondrial gene expression. RNA-binding proteins are at the heart of posttranscriptional gene regulation, coordinating the p..."
+      },
+      {
+        "doc_id": "3553087",
+        "chunk_id": "3553087::c0",
+        "score": -1.1543,
+        "text": "Mitochondrial iron chelation ameliorates cigarette-smoke induced bronchitis and emphysema in mice Chronic obstructive pulmonary disease (COPD) is linked to both cigarette smoking and genetic determinants. We have previously identified ir..."
+      }
+    ]
+  }
+]

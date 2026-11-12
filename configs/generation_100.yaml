@@ -1,0 +1,60 @@
+# 100-query generation + 3-step LLM judge run.
+# Retrieval grid is limited to bm25 and rerank (needed by the five generation
+# stacks). HyDE and RAG-Fusion are off so those calls do not consume the
+# $2 spend cap. Requires OPENROUTER_API_KEY.
+# Outputs, including per-query answers.jsonl, go to results/generation-100/.
+dataset: scifact
+seed: 7
+max_queries: 100
+k_values: [5, 10]
+hit_k: 60
+fusion_pool: 80
+rerank_pool: 20
+rrf_k: 60
+latency_queries: 3
+bm25:
+  k1: 1.5
+  b: 0.75
+embedder:
+  kind: fastembed
+  model: sentence-transformers/all-MiniLM-L6-v2
+  batch_size: 128
+reranker:
+  kind: fastembed
+  model: Xenova/ms-marco-MiniLM-L-6-v2
+  batch_size: 32
+chunkers:
+  - name: whole
+  - name: fixed
+    chunk_size: 100
+    overlap: 25
+  - name: recursive
+    chunk_size: 100
+    overlap: 25
+  - name: semantic
+    breakpoint_percentile: 95
+    max_chunk_words: 220
+    min_chunk_words: 40
+retrievers: [bm25, rerank]
+llm_retrievers: []
+rag_fusion_queries: 3
+generation:
+  mode: "on"
+  max_queries: 100
+  k: 5
+  pairs:
+    - [whole, bm25]
+    - [whole, rerank]
+    - [fixed, rerank]
+    - [recursive, rerank]
+    - [semantic, rerank]
+llm:
+  # List rates for openai/gpt-4o-mini, used only to turn token counts into
+  # a dollar estimate. OpenRouter's own price can differ; the token counts
+  # in the results are the part to trust.
+  input_usd_per_million: 0.15
+  output_usd_per_million: 0.60
+output_dir: results/generation-100
+data_dir: data
+cache_dir: data/cache
+plugins: []

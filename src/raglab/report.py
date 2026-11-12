@@ -157,9 +157,7 @@ def render_markdown(result: dict) -> str:
         [
             "## Generation",
             "",
-            result["generation"]["reason"]
-            if result["generation"]["status"] != "ok"
-            else _generation_markdown(result["generation"]),
+            _generation_section(result["generation"]),
             "",
             "![nDCG@10 by chunker and retriever](ndcg_at_10.png)",
             "",
@@ -283,6 +281,16 @@ def _write_csv(rows: list[dict], path: Path) -> None:
             for field in METRIC_FIELDS:
                 flat[field] = _csv_float(metrics.get(field))
             writer.writerow(flat)
+
+
+def _generation_section(generation: dict) -> str:
+    if generation.get("status") == "skipped":
+        return generation["reason"]
+    text = _generation_markdown(generation)
+    message = generation.get("budget_message")
+    if message:
+        text = f"{text}\n\n{message}"
+    return text
 
 
 def _generation_markdown(generation: dict) -> str:

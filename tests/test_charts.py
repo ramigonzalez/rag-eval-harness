@@ -20,6 +20,8 @@ def test_charts_come_from_result_files_and_linkedin_size_is_exact():
     linkedin = ROOT / "results" / "scifact" / "ndcg_vs_latency_linkedin.png"
     quality = ROOT / "results" / "scifact" / "ndcg_vs_latency.png"
     judge = ROOT / "results" / "generation" / "faithfulness_hallucination.png"
+    judge_100 = ROOT / "results" / "generation-100" / "faithfulness_hallucination.png"
     assert quality.stat().st_size > 0
     assert judge.stat().st_size > 0
+    assert judge_100.stat().st_size > 0
     assert module.png_size(linkedin) == (1200, 627)

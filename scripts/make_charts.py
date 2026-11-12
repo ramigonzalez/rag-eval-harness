@@ -2,11 +2,12 @@
 
     python scripts/make_charts.py
 
-Reads results/scifact/metrics.csv and results/generation/metrics.json.
-Writes:
+Reads results/scifact/metrics.csv, results/generation/metrics.json, and
+results/generation-100/metrics.json. Writes:
     results/scifact/ndcg_vs_latency.png
     results/scifact/ndcg_vs_latency_linkedin.png   (1200 x 627)
-    results/generation/faithfulness_hallucination.png
+    results/generation/faithfulness_hallucination.png          (20-query sample)
+    results/generation-100/faithfulness_hallucination.png      (headline chart)
 """
 
 from __future__ import annotations
@@ -64,8 +65,10 @@ def main() -> None:
     root = Path(__file__).resolve().parents[1]
     scifact_csv = root / "results" / "scifact" / "metrics.csv"
     generation_json = root / "results" / "generation" / "metrics.json"
+    generation_100_json = root / "results" / "generation-100" / "metrics.json"
     rows = _load_csv(scifact_csv)
     generation = json.loads(generation_json.read_text(encoding="utf-8"))
+    generation_100 = json.loads(generation_100_json.read_text(encoding="utf-8"))
     _quality_latency(rows, root / "results" / "scifact" / "ndcg_vs_latency.png")
     _quality_latency_linkedin(
         rows,
@@ -74,6 +77,10 @@ def main() -> None:
     _faithfulness(
         generation,
         root / "results" / "generation" / "faithfulness_hallucination.png",
+    )
+    _faithfulness(
+        generation_100,
+        root / "results" / "generation-100" / "faithfulness_hallucination.png",
     )
 
 
