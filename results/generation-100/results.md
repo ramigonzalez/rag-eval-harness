@@ -36,12 +36,18 @@ Model `openai/gpt-4o-mini`, provider `openrouter` judged 100 queries.
 Retrieval grid size: 100 queries. Generation sample: 100 queries, context_k=5.
 Token counts from the provider: 1260305 input, 46274 output, 1122 calls, 376 cache hits. Estimated cost $0.2168 at $0.15/$0.60 per million.
 
-| Chunker | Retriever | Faithfulness | Answer relevancy | Hallucination rate | Errors |
-| --- | --- | ---: | ---: | ---: | ---: |
-| whole | bm25 | 0.596 | 0.375 | 0.404 | 0 |
-| whole | rerank | 0.598 | 0.363 | 0.402 | 0 |
-| fixed | rerank | 0.606 | 0.406 | 0.394 | 1 |
-| recursive | rerank | 0.644 | 0.441 | 0.356 | 0 |
-| semantic | rerank | 0.635 | 0.451 | 0.365 | 0 |
+An exact answer `I do not know.` is an abstention: no claims, and it is left out of faithfulness, hallucination rate, and answer relevancy. Refusal rate is abstentions divided by the generation sample. n is the number of answered queries that have a score. Hallucination rate is 1 minus faithfulness on those claims.
+
+| Chunker | Retriever | Refusal rate | n | Faithfulness | Hallucination rate | Answer relevancy | Errors |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| whole | bm25 | 0.540 | 46 | 0.953 | 0.047 | 0.791 | 0 |
+| whole | rerank | 0.560 | 44 | 0.909 | 0.091 | 0.798 | 0 |
+| fixed | rerank | 0.500 | 49 | 0.918 | 0.082 | 0.796 | 1 |
+| recursive | rerank | 0.460 | 54 | 0.957 | 0.043 | 0.797 | 0 |
+| semantic | rerank | 0.440 | 56 | 0.950 | 0.050 | 0.787 | 0 |
+
+Means that scored every row, including abstentions, are in `all_rows` on each pair in metrics.json.
+
+154/250 refusals had a gold-relevant document in the 5 contexts (whole/bm25 35/54, whole/rerank 33/56, fixed/rerank 29/50, recursive/rerank 29/46, semantic/rerank 28/44). Each context is matched to a document by its alphanumeric tokens, then checked against the SciFact test qrels.
 
 ![nDCG@10 by chunker and retriever](ndcg_at_10.png)

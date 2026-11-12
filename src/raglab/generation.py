@@ -8,9 +8,18 @@ addressing. Similarities are clipped at 0 so the score stays in [0, 1].
 Embeddings for that step are local. The LLM is used to write the answer, the
 claims, and the proposed questions.
 
+An answer that is exactly ``I do not know.`` is an abstention. It has no
+claims, and it is left out of faithfulness, hallucination rate, and answer
+relevancy. Those three scores are means over answered queries only.
+``all_rows`` keeps the means of whatever scores are stored on the rows,
+including abstentions that an older judge scored, so the previous definition
+stays traceable.
+
 When ``answers_path`` is set, each judged query is appended to that JSONL file
 (question, contexts, answer, claims, verdicts, and the three scores). A later
 run with the same path reuses those rows instead of calling the model again.
+Abstentions in that file are still excluded even if an older row stored a
+faithfulness score.
 """
 
 from __future__ import annotations
@@ -61,6 +70,13 @@ Write 3 questions that this answer is addressing. Return JSON only:
 Answer: {answer}
 """
 
+# The answer prompt tells the model to say this when the context is not enough.
+ABSTENTION_ANSWER = "I do not know."
+
+
+def is_abstention(answer: object) -> bool:
+    return isinstance(answer, str) and answer.strip() == ABSTENTION_ANSWER
+
 
 def run_generation(
     indexes: dict[str, SearchIndex],
@@ -92,26 +108,12 @@ def run_generation(
             import raglab.retrieval  # noqa: F401  registers built-in retrievers
 
             retriever = build_retriever(retriever_name)
-            faithfulness: list[float] = []
-            hallucination: list[float] = []
-            relevancy: list[float] = []
-            errors = 0
-            empty_claims = 0
+            records: list[dict] = []
             skipped_budget = 0
             for query in chosen:
                 key = (chunker_name, retriever_name, query.query_id)
                 if key in prior:
-                    record = prior[key]
-                    if record.get("faithfulness") is not None:
-                        faithfulness.append(float(record["faithfulness"]))
-                    if record.get("hallucination_rate") is not None:
-                        hallucination.append(float(record["hallucination_rate"]))
-                    if record.get("answer_relevancy") is not None:
-                        relevancy.append(float(record["answer_relevancy"]))
-                    if record.get("error"):
-                        errors += 1
-                    if record.get("claims") == []:
-                        empty_claims += 1
+                    records.append(prior[key])
                     continue
                 hits = retriever.retrieve(indexes[chunker_name], query.text, k, services)
                 contexts = [hit.text for hit in hits]
@@ -129,6 +131,7 @@ def run_generation(
                     "faithfulness": None,
                     "hallucination_rate": None,
                     "answer_relevancy": None,
+                    "abstained": False,
                     "error": None,
                 }
                 try:
@@ -136,34 +139,32 @@ def run_generation(
                         ANSWER_PROMPT.format(question=query.text, context=context)
                     ).strip()
                     record["answer"] = answer
-                    claims = _parse_claims(
-                        services.llm.complete(
-                            CLAIMS_PROMPT.format(
-                                question=query.text, context=context, answer=answer
+                    if is_abstention(answer):
+                        record["abstained"] = True
+                    else:
+                        claims = _parse_claims(
+                            services.llm.complete(
+                                CLAIMS_PROMPT.format(
+                                    question=query.text, context=context, answer=answer
+                                )
                             )
                         )
-                    )
-                    record["claims"] = claims
-                    if not claims:
-                        empty_claims += 1
-                    else:
-                        supported = sum(1 for claim in claims if claim["supported"])
-                        score = supported / len(claims)
-                        record["faithfulness"] = score
-                        record["hallucination_rate"] = 1.0 - score
-                        faithfulness.append(score)
-                        hallucination.append(1.0 - score)
-                    questions = _questions(
-                        services.llm.complete(QUESTIONS_PROMPT.format(answer=answer))
-                    )
-                    record["proposed_questions"] = questions
-                    if questions:
-                        rel = _answer_relevancy(query.text, questions, services.embedder)
-                        record["answer_relevancy"] = rel
-                        relevancy.append(rel)
+                        record["claims"] = claims
+                        if claims:
+                            supported = sum(1 for claim in claims if claim["supported"])
+                            score = supported / len(claims)
+                            record["faithfulness"] = score
+                            record["hallucination_rate"] = 1.0 - score
+                        questions = _questions(
+                            services.llm.complete(QUESTIONS_PROMPT.format(answer=answer))
+                        )
+                        record["proposed_questions"] = questions
+                        if questions:
+                            record["answer_relevancy"] = _answer_relevancy(
+                                query.text, questions, services.embedder
+                            )
                 except BudgetExceeded as exc:
                     record["error"] = str(exc)
-                    errors += 1
                     skipped_budget += 1
                     budget_stopped = True
                     budget_message = str(exc)
@@ -176,28 +177,25 @@ def run_generation(
                     )
                     _finalize_record(record, services.llm, tokens_before)
                     _write_record(answers_file, record)
+                    prior[key] = record
+                    records.append(record)
                     break
                 except Exception as exc:
                     record["error"] = f"{type(exc).__name__}: {exc}"
-                    errors += 1
                     logger.warning("Generation judge failed for %s (%s)", query.query_id, exc)
                 _finalize_record(record, services.llm, tokens_before)
                 _write_record(answers_file, record)
                 prior[key] = record
+                records.append(record)
             pair_reports.append(
-                {
-                    "chunker": chunker_name,
-                    "retriever": retriever_name,
-                    "num_queries": len(chosen),
-                    "num_scored": len(faithfulness),
-                    "num_errors": errors,
-                    "num_empty_claims": empty_claims,
-                    "num_skipped_budget": skipped_budget,
-                    "faithfulness": _mean(faithfulness),
-                    "answer_relevancy": _mean(relevancy),
-                    "hallucination_rate": _mean(hallucination),
-                    "context_k": k,
-                }
+                summarize_answer_records(
+                    records,
+                    chunker=chunker_name,
+                    retriever=retriever_name,
+                    num_queries=len(chosen),
+                    context_k=k,
+                    num_skipped_budget=skipped_budget,
+                )
             )
             if budget_stopped:
                 break
@@ -215,6 +213,88 @@ def run_generation(
         "answers_path": str(answers_path) if answers_path is not None else None,
         "pairs": pair_reports,
     }
+
+
+def summarize_answer_records(
+    records: list[dict],
+    *,
+    chunker: str,
+    retriever: str,
+    num_queries: int,
+    context_k: int,
+    num_skipped_budget: int = 0,
+) -> dict:
+    """Score a stack. Abstentions stay out of the headline means.
+
+    ``all_rows`` averages every stored score, so a file that scored
+    ``I do not know.`` as unfaithful can still show that older number.
+    """
+    answered_faith: list[float] = []
+    answered_hall: list[float] = []
+    answered_rel: list[float] = []
+    all_faith: list[float] = []
+    all_hall: list[float] = []
+    all_rel: list[float] = []
+    num_refusals = 0
+    num_answered = 0
+    errors = 0
+    empty_claims = 0
+    all_empty_claims = 0
+    for record in records:
+        if record.get("answer") is not None:
+            abstained = is_abstention(record.get("answer"))
+        else:
+            abstained = bool(record.get("abstained"))
+        if abstained:
+            num_refusals += 1
+        else:
+            num_answered += 1
+        if record.get("error"):
+            errors += 1
+        elif not record.get("claims"):
+            all_empty_claims += 1
+            if not abstained:
+                empty_claims += 1
+        _collect(all_faith, record.get("faithfulness"))
+        _collect(all_hall, record.get("hallucination_rate"))
+        _collect(all_rel, record.get("answer_relevancy"))
+        if abstained:
+            continue
+        _collect(answered_faith, record.get("faithfulness"))
+        _collect(answered_hall, record.get("hallucination_rate"))
+        _collect(answered_rel, record.get("answer_relevancy"))
+    refusal_rate = (num_refusals / num_queries) if num_queries else None
+    return {
+        "chunker": chunker,
+        "retriever": retriever,
+        "num_queries": num_queries,
+        "num_refusals": num_refusals,
+        "refusal_rate": refusal_rate,
+        "num_answered": num_answered,
+        "num_scored": len(answered_faith),
+        "num_relevancy": len(answered_rel),
+        "num_errors": errors,
+        "num_empty_claims": empty_claims,
+        "num_skipped_budget": num_skipped_budget,
+        "faithfulness": _mean(answered_faith),
+        "answer_relevancy": _mean(answered_rel),
+        "hallucination_rate": _mean(answered_hall),
+        "context_k": context_k,
+        "all_rows": {
+            "num_scored": len(all_faith),
+            "num_relevancy": len(all_rel),
+            "num_empty_claims": all_empty_claims,
+            "faithfulness": _mean(all_faith),
+            "answer_relevancy": _mean(all_rel),
+            "hallucination_rate": _mean(all_hall),
+        },
+    }
+
+
+def _collect(bucket: list[float], value: object) -> None:
+    if value is None:
+        return
+    bucket.append(float(value))
 
 
 def _usage_snapshot(llm: object) -> dict:

@@ -315,7 +315,13 @@ def _faithfulness(payload: dict, path: Path) -> None:
     pairs = payload["generation"]["pairs"]
     if not pairs:
         raise SystemExit("generation metrics.json has no judged pairs")
-    labels = [f"{pair['chunker']}\n{pair['retriever']}" for pair in pairs]
+    answered_only = any("num_refusals" in pair for pair in pairs)
+    if answered_only:
+        labels = [
+            f"{pair['chunker']}\n{pair['retriever']}\nn={pair['num_scored']}" for pair in pairs
+        ]
+    else:
+        labels = [f"{pair['chunker']}\n{pair['retriever']}" for pair in pairs]
     faithfulness = [float(pair["faithfulness"]) for pair in pairs]
     hallucination = [float(pair["hallucination_rate"]) for pair in pairs]
     judged = payload["generation"]["num_queries"]
@@ -343,12 +349,11 @@ def _faithfulness(payload: dict, path: Path) -> None:
     axis.set_ylim(0, 1)
     axis.set_ylabel("Score")
     model = payload["generation"].get("model", "")
-    axis.set_title(
-        f"Judge scores, n={judged} queries, {model}",
-        loc="left",
-        fontsize=12,
-        pad=10,
-    )
+    if answered_only:
+        title = f"Answered queries, refusals excluded, {model}"
+    else:
+        title = f"Judge scores, n={judged} queries, {model}"
+    axis.set_title(title, loc="left", fontsize=12, pad=10)
     axis.spines["top"].set_visible(False)
     axis.spines["right"].set_visible(False)
     axis.yaxis.grid(True, linestyle="--", linewidth=0.6, alpha=0.35)

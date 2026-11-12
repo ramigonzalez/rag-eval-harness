@@ -40,16 +40,46 @@ def test_readme_retrieval_table_matches_the_csv():
 
 def test_readme_generation_table_matches_the_judge_file():
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    results = (ROOT / "results" / "generation-100" / "results.md").read_text(encoding="utf-8")
     recorded = json.loads((ROOT / "results" / "generation-100" / "metrics.json").read_text())
-    shown = _table(readme, "| Chunker | Retriever | Faithfulness |")
+    shown = _table(readme, "| Chunker | Retriever | Refusal rate |")
+    in_file = _table(results, "| Chunker | Retriever | Refusal rate |")
     pairs = {(pair["chunker"], pair["retriever"]): pair for pair in recorded["generation"]["pairs"]}
+    assert shown == in_file
     assert len(shown) == len(pairs) == 5
+    faith_values = []
     for cells in shown:
         source = pairs[(cells[0], cells[1])]
-        assert cells[2] == f"{float(source['faithfulness']):.3f}"
-        assert cells[3] == f"{float(source['answer_relevancy']):.3f}"
-        assert cells[4] == f"{float(source['hallucination_rate']):.3f}"
-        assert cells[5] == str(source["num_errors"])
+        assert cells[2] == f"{float(source['refusal_rate']):.3f}"
+        assert cells[3] == str(source["num_scored"])
+        assert cells[4] == f"{float(source['faithfulness']):.3f}"
+        assert cells[5] == f"{float(source['hallucination_rate']):.3f}"
+        assert cells[6] == f"{float(source['answer_relevancy']):.3f}"
+        assert cells[7] == str(source["num_errors"])
+        assert source["all_rows"]["faithfulness"] < source["faithfulness"]
+        faith_values.append(float(source["faithfulness"]))
+    low = f"{min(faith_values):.3f}"
+    high = f"{max(faith_values):.3f}"
+    assert low in readme and high in readme
+    assert "from **0.596**" not in readme
+    assert "to **0.644**" not in readme
+    fixed = pairs[("fixed", "rerank")]
+    assert (
+        f"{fixed['num_answered']} answered queries and {fixed['num_errors']} error, "
+        f"so n is {fixed['num_scored']}"
+    ) in readme
+    gold = recorded["generation"]["refusal_gold"]
+    stacks = ", ".join(
+        f"{stack['chunker']}/{stack['retriever']} "
+        f"{stack['num_with_gold_doc']}/{stack['num_refusals']}"
+        for stack in gold["stacks"]
+    )
+    gold_sentence = (
+        f"{gold['num_with_gold_doc']}/{gold['num_refusals']} refusals had a "
+        f"gold-relevant document in the 5 contexts ({stacks})."
+    )
+    assert gold_sentence in readme
+    assert gold_sentence in results
     assert recorded["generation"]["num_queries"] == 100
     assert recorded["generation"]["model"] == "openai/gpt-4o-mini"
     assert recorded["generation"]["context_k"] == 5
@@ -58,56 +88,12 @@ def test_readme_generation_table_matches_the_judge_file():
     assert "results/generation-100/results.md" in readme
     assert "not yet validated against human labels" in readme
     assert "RAGAS agreement is pending" in readme
-    assert "overstated faithfulness" in readme
     assert "did not run" not in readme
     assert "rag-eval-harness" in readme
     assert "raglab run --config configs/generation.yaml" in readme
     assert "raglab run --config configs/generation_100.yaml" in readme
     assert recorded["dataset"]["num_queries"] == 100
     assert recorded["environment"]["cpu_count"] == 8
-    _assert_readme_refusal_counts(readme)
-
-
-def _assert_readme_refusal_counts(readme: str) -> None:
-    """The low answer-relevancy note has to match answers.jsonl, not a typed guess."""
-    answers = ROOT / "results" / "generation-100" / "answers.jsonl"
-    rows = [
-        json.loads(line)
-        for line in answers.read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    ]
-    order = [
-        ("whole", "bm25"),
-        ("whole", "rerank"),
-        ("fixed", "rerank"),
-        ("recursive", "rerank"),
-        ("semantic", "rerank"),
-    ]
-    parts = []
-    refusal_means = []
-    other_means = []
-    total = 0
-    for chunker, retriever in order:
-        stack = [row for row in rows if row["chunker"] == chunker and row["retriever"] == retriever]
-        refusals = [row for row in stack if (row.get("answer") or "").strip() == "I do not know."]
-        others = [
-            row["answer_relevancy"]
-            for row in stack
-            if (row.get("answer") or "").strip() != "I do not know."
-            and row.get("answer_relevancy") is not None
-        ]
-        total += len(refusals)
-        parts.append(f"{chunker}/{retriever} {len(refusals)}/100")
-        refusal_means.append(
-            f"{sum(row['answer_relevancy'] for row in refusals) / len(refusals):.3f}"
-        )
-        other_means.append(f"{sum(others) / len(others):.3f}")
-        assert all(row["answer_relevancy"] < 0.2 for row in refusals)
-    sentence = "Exact answer `I do not know.`: " + ", ".join(parts) + "."
-    assert sentence in readme
-    assert f"Those {total} rows" in readme
-    assert "means " + ", ".join(refusal_means) in readme
-    assert "average " + ", ".join(other_means) in readme
 
 
 def test_readme_ablation_table_matches_the_csv():

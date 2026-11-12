@@ -553,66 +553,126 @@
         "chunker": "whole",
         "retriever": "bm25",
         "num_queries": 100,
-        "num_scored": 100,
+        "num_refusals": 54,
+        "refusal_rate": 0.54,
+        "num_answered": 46,
+        "num_scored": 46,
+        "num_relevancy": 46,
         "num_errors": 0,
         "num_empty_claims": 0,
         "num_skipped_budget": 0,
-        "faithfulness": 0.595948051948052,
-        "answer_relevancy": 0.3754821688060959,
-        "hallucination_rate": 0.40405194805194805,
-        "context_k": 5
+        "faithfulness": 0.953416149068323,
+        "answer_relevancy": 0.7913476768611133,
+        "hallucination_rate": 0.046583850931677016,
+        "context_k": 5,
+        "all_rows": {
+          "num_scored": 100,
+          "num_relevancy": 100,
+          "num_empty_claims": 0,
+          "faithfulness": 0.595948051948052,
+          "answer_relevancy": 0.3754821688060959,
+          "hallucination_rate": 0.40405194805194805
+        }
       },
       {
         "chunker": "whole",
         "retriever": "rerank",
         "num_queries": 100,
-        "num_scored": 98,
+        "num_refusals": 56,
+        "refusal_rate": 0.56,
+        "num_answered": 44,
+        "num_scored": 44,
+        "num_relevancy": 44,
         "num_errors": 0,
-        "num_empty_claims": 2,
+        "num_empty_claims": 0,
         "num_skipped_budget": 0,
-        "faithfulness": 0.5979591836734695,
-        "answer_relevancy": 0.36320111372818553,
-        "hallucination_rate": 0.4020408163265306,
-        "context_k": 5
+        "faithfulness": 0.9090909090909091,
+        "answer_relevancy": 0.7980461504423257,
+        "hallucination_rate": 0.09090909090909091,
+        "context_k": 5,
+        "all_rows": {
+          "num_scored": 98,
+          "num_relevancy": 100,
+          "num_empty_claims": 2,
+          "faithfulness": 0.5979591836734695,
+          "answer_relevancy": 0.36320111372818553,
+          "hallucination_rate": 0.4020408163265306
+        }
       },
       {
         "chunker": "fixed",
         "retriever": "rerank",
         "num_queries": 100,
-        "num_scored": 99,
+        "num_refusals": 50,
+        "refusal_rate": 0.5,
+        "num_answered": 50,
+        "num_scored": 49,
+        "num_relevancy": 49,
         "num_errors": 1,
         "num_empty_claims": 0,
         "num_skipped_budget": 0,
-        "faithfulness": 0.6063732563732563,
-        "answer_relevancy": 0.405720146604961,
-        "hallucination_rate": 0.39362674362674366,
-        "context_k": 5
+        "faithfulness": 0.9176870748299321,
+        "answer_relevancy": 0.7964448320622347,
+        "hallucination_rate": 0.08231292517006802,
+        "context_k": 5,
+        "all_rows": {
+          "num_scored": 99,
+          "num_relevancy": 99,
+          "num_empty_claims": 0,
+          "faithfulness": 0.6063732563732563,
+          "answer_relevancy": 0.405720146604961,
+          "hallucination_rate": 0.39362674362674366
+        }
       },
       {
         "chunker": "recursive",
         "retriever": "rerank",
         "num_queries": 100,
-        "num_scored": 100,
+        "num_refusals": 46,
+        "refusal_rate": 0.46,
+        "num_answered": 54,
+        "num_scored": 54,
+        "num_relevancy": 54,
         "num_errors": 0,
         "num_empty_claims": 0,
         "num_skipped_budget": 0,
-        "faithfulness": 0.6437976190476191,
-        "answer_relevancy": 0.44116687190408505,
-        "hallucination_rate": 0.35620238095238094,
-        "context_k": 5
+        "faithfulness": 0.95679012345679,
+        "answer_relevancy": 0.7973645609102132,
+        "hallucination_rate": 0.04320987654320988,
+        "context_k": 5,
+        "all_rows": {
+          "num_scored": 100,
+          "num_relevancy": 100,
+          "num_empty_claims": 0,
+          "faithfulness": 0.6437976190476191,
+          "answer_relevancy": 0.44116687190408505,
+          "hallucination_rate": 0.35620238095238094
+        }
       },
       {
         "chunker": "semantic",
         "retriever": "rerank",
         "num_queries": 100,
-        "num_scored": 100,
+        "num_refusals": 44,
+        "refusal_rate": 0.44,
+        "num_answered": 56,
+        "num_scored": 56,
+        "num_relevancy": 56,
         "num_errors": 0,
         "num_empty_claims": 0,
         "num_skipped_budget": 0,
-        "faithfulness": 0.6353855311355311,
-        "answer_relevancy": 0.4510005452421805,
-        "hallucination_rate": 0.36461446886446885,
-        "context_k": 5
+        "faithfulness": 0.9498299319727891,
+        "answer_relevancy": 0.7867091291007542,
+        "hallucination_rate": 0.05017006802721089,
+        "context_k": 5,
+        "all_rows": {
+          "num_scored": 100,
+          "num_relevancy": 100,
+          "num_empty_claims": 0,
+          "faithfulness": 0.6353855311355311,
+          "answer_relevancy": 0.4510005452421805,
+          "hallucination_rate": 0.36461446886446885
+        }
       }
     ],
     "retrieval_queries": 100,
@@ -627,7 +687,43 @@
       "estimated_usd": 0.21681
     },
     "provider": "openrouter",
-    "api_base": "https://openrouter.ai/api/v1"
+    "api_base": "https://openrouter.ai/api/v1",
+    "refusal_gold": {
+      "num_refusals": 250,
+      "num_with_gold_doc": 154,
+      "stacks": [
+        {
+          "chunker": "whole",
+          "retriever": "bm25",
+          "num_refusals": 54,
+          "num_with_gold_doc": 35
+        },
+        {
+          "chunker": "whole",
+          "retriever": "rerank",
+          "num_refusals": 56,
+          "num_with_gold_doc": 33
+        },
+        {
+          "chunker": "fixed",
+          "retriever": "rerank",
+          "num_refusals": 50,
+          "num_with_gold_doc": 29
+        },
+        {
+          "chunker": "recursive",
+          "retriever": "rerank",
+          "num_refusals": 46,
+          "num_with_gold_doc": 29
+        },
+        {
+          "chunker": "semantic",
+          "retriever": "rerank",
+          "num_refusals": 44,
+          "num_with_gold_doc": 28
+        }
+      ]
+    }
   },
   "llm": {
     "provider": "openrouter",

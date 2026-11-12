@@ -6,7 +6,7 @@ Measured comparison of chunking and retrieval for RAG. The CLI and Python packag
 
 ## TL;DR
 
-On SciFact (5,183 abstracts, 300 labeled queries, 4 CPUs), fixed-size chunks plus a cross-encoder reach nDCG@10 **0.708** at **379.3 ms** per query. Hybrid retrieval on the same chunks reaches **0.693** at **36.8 ms**. A 100-query judge pass (`openai/gpt-4o-mini` via OpenRouter, temperature 0, context_k=5) scored faithfulness from **0.596** to **0.644** on the five stacks in `results/generation-100/results.md`. Recursive + rerank is the highest of those five (**0.644**) and whole + BM25 is the lowest (**0.596**). The judge is not yet validated against human labels, and RAGAS agreement is pending.
+On SciFact (5,183 abstracts, 300 labeled queries, 4 CPUs), fixed-size chunks plus a cross-encoder reach nDCG@10 **0.708** at **379.3 ms** per query. Hybrid retrieval on the same chunks reaches **0.693** at **36.8 ms**. On the 100-query judge pass (`openai/gpt-4o-mini` via OpenRouter, temperature 0, context_k=5), an exact `I do not know.` is an abstention and is left out of faithfulness. Answered-query faithfulness in `results/generation-100/results.md` runs from **0.909** (whole + rerank, n=44) to **0.957** (recursive + rerank, n=54). The judge is not yet validated against human labels, and RAGAS agreement is pending.
 
 ![nDCG@10 versus online latency, 300 SciFact queries](results/scifact/ndcg_vs_latency.png)
 
@@ -55,23 +55,23 @@ The 300-query run did not include HyDE or RAG-Fusion. Those are in the 50-query 
 
 The scores in this section are the generation block of `results/generation-100/results.md`. Same five stacks, judge `openai/gpt-4o-mini` via OpenRouter, temperature 0, context_k=5. The judge is not yet validated against human labels. RAGAS agreement is pending: `scripts/ragas_agreement.py` can score `results/generation-100/answers.jsonl`, and that comparison has not been run.
 
-Hallucination rate in that file is 1 minus faithfulness on the same claims, so the two columns move together. Answer relevancy does not.
+The retrieval grid under these scores is 100 queries drawn with seed 7 from the 300, on the full 5,183-document corpus (mean 1.15 relevant documents per query in that sample). From `results/generation-100/results.md`: model `openai/gpt-4o-mini`, provider `openrouter`, 100 queries, context_k=5. Token counts from the provider: 1260305 input, 46274 output, 1122 calls, 376 cache hits. Estimated cost $0.2168 at $0.15/$0.60 per million.
 
-The retrieval grid under these scores is 100 queries drawn with seed 7 from the 300, on the full 5,183-document corpus (mean 1.15 relevant documents per query in that sample). Five stacks were judged, with 5 chunks of context. One judge error, on fixed + rerank. From `results/generation-100/results.md`: model `openai/gpt-4o-mini`, provider `openrouter`, 100 queries, context_k=5. Token counts from the provider: 1260305 input, 46274 output, 1122 calls, 376 cache hits. Estimated cost $0.2168 at $0.15/$0.60 per million.
+An exact answer `I do not know.` is an abstention: no claims, and it is left out of faithfulness, hallucination rate, and answer relevancy. Refusal rate is abstentions divided by the generation sample. n is the number of answered queries that have a score. Hallucination rate is 1 minus faithfulness on those claims. fixed + rerank has 50 answered queries and 1 error, so n is 49.
 
-| Chunker | Retriever | Faithfulness | Answer relevancy | Hallucination rate | Errors |
-| --- | --- | ---: | ---: | ---: | ---: |
-| whole | bm25 | 0.596 | 0.375 | 0.404 | 0 |
-| whole | rerank | 0.598 | 0.363 | 0.402 | 0 |
-| fixed | rerank | 0.606 | 0.406 | 0.394 | 1 |
-| recursive | rerank | 0.644 | 0.441 | 0.356 | 0 |
-| semantic | rerank | 0.635 | 0.451 | 0.365 | 0 |
+| Chunker | Retriever | Refusal rate | n | Faithfulness | Hallucination rate | Answer relevancy | Errors |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| whole | bm25 | 0.540 | 46 | 0.953 | 0.047 | 0.791 | 0 |
+| whole | rerank | 0.560 | 44 | 0.909 | 0.091 | 0.798 | 0 |
+| fixed | rerank | 0.500 | 49 | 0.918 | 0.082 | 0.796 | 1 |
+| recursive | rerank | 0.460 | 54 | 0.957 | 0.043 | 0.797 | 0 |
+| semantic | rerank | 0.440 | 56 | 0.950 | 0.050 | 0.787 | 0 |
 
-![Faithfulness and hallucination rate, 100 judged queries](results/generation-100/faithfulness_hallucination.png)
+![Faithfulness and hallucination rate on answered queries](results/generation-100/faithfulness_hallucination.png)
 
-Answer relevancy is 0.363–0.451 because many answers are the refusal the prompt asks for when the context is not enough. Exact answer `I do not know.`: whole/bm25 54/100, whole/rerank 56/100, fixed/rerank 50/100, recursive/rerank 46/100, semantic/rerank 44/100. Those 250 rows are in `results/generation-100/answers.jsonl`. Every one of them has answer relevancy below 0.2 (means 0.021, 0.022, 0.023, 0.023, 0.024, in that stack order). They all store the same proposed questions ("What is the capital of France?", "Who won the last World Series?", "What is the meaning of life?"), so the cosine against the SciFact claim collapses. Scored answers that are not that refusal average 0.791, 0.798, 0.796, 0.797, 0.787 on the same stacks.
+154/250 refusals had a gold-relevant document in the 5 contexts (whole/bm25 35/54, whole/rerank 33/56, fixed/rerank 29/50, recursive/rerank 29/46, semantic/rerank 28/44). Each context is matched to a document by its alphanumeric tokens, then checked against the SciFact test qrels. Most abstentions still had a labeled abstract in the window, so the strict answer prompt is doing the refusing along with retrieval misses. Means that scored every row, including abstentions, are in `all_rows` on each pair in `results/generation-100/metrics.json`.
 
-An earlier 20-query judge pass on a 50-query retrieval sample (`results/generation/results.md`, same five stacks and the same model) reported faithfulness from 0.780 to 0.855. That small sample overstated faithfulness. The 100-query file is the one to cite.
+An earlier 20-query pass (`results/generation/results.md`, same five stacks and the same model) reported faithfulness from 0.780 to 0.855. That file counted abstentions as unfaithful. It is not the headline.
 
 On that 50-query retrieval sample, whole-document hybrid nDCG@10 is 0.745, HyDE is 0.703, and RAG-Fusion is 0.707. Warm-cache online latency for whole-document HyDE is 39.9 ms and for RAG-Fusion is 22.8 ms. The result file states that those latency figures do not include the chat call. The full 50-query grid, including every chunker, is in `results/generation/results.md`. The 100-query run did not include HyDE or RAG-Fusion.
 
@@ -123,7 +123,7 @@ CI (`.github/workflows/ci.yml`) runs on push and pull request: ruff, pytest, and
 ## Limitations
 
 - One dataset. The abstracts are short (mean 214.6 words), so this does not say what happens on long documents.
-- The judge covers 100 queries in `results/generation-100/results.md` and was not checked against human labels. RAGAS agreement is pending. A 20-query sample overstated faithfulness; it is not the headline.
+- The judge covers 100 queries in `results/generation-100/results.md` and was not checked against human labels. RAGAS agreement is pending. Faithfulness excludes exact `I do not know.` abstentions. The 20-query file still uses the older scoring.
 - Hallucination rate in these files is 1 minus faithfulness, not a second judge.
 - Latency from the 300-query run and the 50-query run comes from different machines (4 CPUs and 8 CPUs).
 - HyDE and RAG-Fusion were not part of the 300-query grid.
