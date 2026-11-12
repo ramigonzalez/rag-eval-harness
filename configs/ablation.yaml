@@ -1,0 +1,47 @@
+# Local stage-wise ablation. No API key.
+# Dev selection uses a seeded subset of the SciFact train qrels.
+# The winner of each stage is scored on the official test qrels.
+dataset: scifact
+seed: 7
+dev_split: train
+test_split: test
+dev_max_queries: 80
+test_max_queries: null
+baseline:
+  chunking: whole
+  query_transform: none
+  retrieval: bm25
+  rerank: none
+stages:
+  chunking: [whole, fixed, recursive, semantic, markdown]
+  query_transform: [none]
+  retrieval: [bm25, dense, rrf, union]
+  rerank: [none, cross_encoder, mmr]
+params:
+  chunk_size: 100
+  overlap: 25
+  top_k: 10
+  hit_k: 60
+  fusion_pool: 80
+  rrf_k: 60
+  bm25_weight: 1.0
+  dense_weight: 1.0
+  rerank_pool: 20
+  mmr_lambda: 0.7
+  semantic_percentile: 95
+  semantic_max_words: 220
+  semantic_min_words: 40
+embedder:
+  kind: fastembed
+  model: sentence-transformers/all-MiniLM-L6-v2
+  batch_size: 128
+reranker:
+  kind: fastembed
+  model: Xenova/ms-marco-MiniLM-L-6-v2
+  batch_size: 32
+llm:
+  input_usd_per_million: 0.15
+  output_usd_per_million: 0.60
+output_dir: results/ablation
+data_dir: data
+cache_dir: data/cache

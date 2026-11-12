@@ -29,6 +29,12 @@ def main(argv: list[str] | None = None) -> int:
     run.add_argument("--chunkers", help="Comma-separated chunkers, replacing the config list")
     run.add_argument("--generation", choices=["auto", "on", "off"])
     run.set_defaults(func=_cmd_run)
+    ablate = commands.add_parser(
+        "ablate",
+        help="Choose each pipeline stage on a dev split and score it on held-out test",
+    )
+    ablate.add_argument("--config", default="configs/ablation.yaml")
+    ablate.set_defaults(func=_cmd_ablate)
     args = parser.parse_args(argv)
     try:
         return args.func(args)
@@ -39,6 +45,16 @@ def main(argv: list[str] | None = None) -> int:
         logging.getLogger("raglab").exception("raglab failed")
         print(f"error: {exc}", file=sys.stderr)
         return 1
+
+
+def _cmd_ablate(args: argparse.Namespace) -> int:
+    logging.basicConfig(level=logging.INFO, format="%(message)s", force=True)
+    from raglab.ablation import load_ablation_config, run_ablation
+    from raglab.ablation_report import _markdown
+
+    result = run_ablation(load_ablation_config(args.config))
+    print(_markdown(result))
+    return 0
 
 
 def _cmd_run(args: argparse.Namespace) -> int:

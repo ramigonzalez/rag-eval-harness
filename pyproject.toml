@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "ruff>=0.6"]
+dev = ["pytest>=8", "ruff>=0.6", "rank-bm25>=0.2.2", "pytrec_eval>=0.5"]
 
 [project.scripts]
 raglab = "raglab.cli:main"

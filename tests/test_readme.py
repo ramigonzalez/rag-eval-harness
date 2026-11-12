@@ -58,3 +58,22 @@ def test_readme_generation_table_matches_the_judge_file():
     assert "raglab run --config configs/generation.yaml" in readme
     assert recorded["dataset"]["num_queries"] == 50
     assert recorded["environment"]["cpu_count"] == 8
+
+
+def test_readme_ablation_table_matches_the_csv():
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    with (ROOT / "results" / "ablation" / "metrics.csv").open(encoding="utf-8") as handle:
+        recorded = list(csv.DictReader(handle))
+    shown = _table(readme, "| Stage | Chosen | Dev nDCG@10 |")
+    assert len(shown) == len(recorded)
+    for cells, source in zip(shown, recorded, strict=True):
+        assert cells[0] == source["stage"]
+        assert cells[1] == source["chosen"]
+        assert cells[2] == f"{float(source['dev_ndcg@10']):.3f}"
+        assert cells[3] == f"{float(source['test_ndcg@10']):.3f}"
+        if source["delta_test_ndcg@10"] == "":
+            assert cells[4] == ""
+        else:
+            assert cells[4] == f"{float(source['delta_test_ndcg@10']):.3f}"
+        assert cells[5] == f"{float(source['test_latency_ms']):.1f}"
+        assert cells[6] == f"{float(source['estimated_usd']):.2f}"

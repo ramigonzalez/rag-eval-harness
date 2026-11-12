@@ -1,0 +1,6 @@
+stage,chosen,dev_ndcg@10,test_ndcg@10,delta_test_ndcg@10,test_latency_ms,estimated_usd
+baseline,whole/none/bm25/none,0.596530,0.664451,,6.650297,0.000000
+chunking,whole,0.596530,0.664451,0.000000,6.689705,0.000000
+query_transform,none,0.596530,0.664451,0.000000,7.404137,0.000000
+retrieval,rrf,0.637094,0.684984,0.020533,11.916087,0.000000
+rerank,cross_encoder,0.637244,0.693428,0.008445,654.190412,0.000000

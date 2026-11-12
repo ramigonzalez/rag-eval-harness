@@ -57,7 +57,7 @@ def load_fixture(path: Path) -> Dataset:
     )
 
 
-def load_scifact(data_dir: Path) -> Dataset:
+def load_scifact(data_dir: Path, split: str = "test") -> Dataset:
     root = data_dir / "beir" / "scifact"
     corpus_path = root / "corpus.jsonl"
     if not corpus_path.exists():
@@ -84,9 +84,12 @@ def load_scifact(data_dir: Path) -> Dataset:
         text = str(row.get("text") or "").strip()
         if text:
             queries.append(Query(query_id=str(row["_id"]), text=text))
-    qrels = _load_qrels(root / "qrels" / "test.tsv")
+    if split not in {"train", "test"}:
+        raise ValueError(f"SciFact split must be train or test, got {split!r}")
+    qrels = _load_qrels(root / "qrels" / f"{split}.tsv")
     logger.info(
-        "Loaded SciFact: %s documents, %s queries in the file, %s labeled test queries",
+        "Loaded SciFact %s split: %s documents, %s queries in the file, %s labeled queries",
+        split,
         f"{len(documents):,}",
         f"{len(queries):,}",
         f"{len(qrels):,}",

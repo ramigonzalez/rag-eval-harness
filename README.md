@@ -69,6 +69,26 @@ The retrieval grid under these scores is 50 queries drawn with seed 7 from the 3
 
 On that same 50-query sample, whole-document hybrid nDCG@10 is 0.745, HyDE is 0.703, and RAG-Fusion is 0.707. Warm-cache online latency for whole-document HyDE is 39.9 ms and for RAG-Fusion is 22.8 ms. The result file states that those latency figures do not include the chat call. The full 50-query grid, including every chunker, is in `results/generation/results.md`.
 
+## Stage-wise ablation
+
+`raglab ablate` turns chunking, query transform, retrieval, and rerank on and off from `configs/ablation.yaml`. It picks each stage on a dev split, then scores that choice on a held-out test split. This local run used 80 of the 809 SciFact train queries as dev (seed 7) and all 300 official test queries as the held-out set. HyDE, RAG-Fusion, and step-back were not in the config. Every local stage is $0.
+
+| Stage | Chosen | Dev nDCG@10 | Test nDCG@10 | Delta test nDCG@10 | Test latency (ms) | Est. USD |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| baseline | whole/none/bm25/none | 0.597 | 0.664 |  | 6.7 | 0.00 |
+| chunking | whole | 0.597 | 0.664 | 0.000 | 6.7 | 0.00 |
+| query_transform | none | 0.597 | 0.664 | 0.000 | 7.4 | 0.00 |
+| retrieval | rrf | 0.637 | 0.685 | 0.021 | 11.9 | 0.00 |
+| rerank | cross_encoder | 0.637 | 0.693 | 0.008 | 654.2 | 0.00 |
+
+Dev kept whole-document chunking. Switching retrieval from BM25 to RRF raised test nDCG@10 by 0.021, to 0.685. The cross-encoder then added 0.008 on the test set, at 654.2 ms per query in this run. Those three test scores match the 300-query table's whole/bm25, whole/hybrid, and whole/rerank rows. The latency column is the mean over all 300 test queries in `results/ablation/metrics.csv`, not the 10-query sample in the table above. Markdown chunking was one of the dev candidates and was not chosen. Sentence-window and parent-document chunkers are implemented and were not part of this run, so they have no numbers here.
+
+```bash
+raglab ablate --config configs/ablation.yaml
+```
+
+Parity tests in `tests/test_parity.py` compare our nDCG@10, MRR@10, and Recall@10 to `pytrec_eval` within 1e-8, and compare BM25 to `rank_bm25` up to a stated IDF difference (`log(1+x)` here, `log(x)` with an epsilon floor there). `scripts/ragas_agreement.py` can compare our judge to RAGAS, but the committed generation run did not save per-query answers and no key is required for the rest of the repo, so that script has not produced any numbers.
+
 ## How to reproduce
 
 ```bash
