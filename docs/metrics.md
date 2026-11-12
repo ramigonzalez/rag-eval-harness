@@ -8,23 +8,23 @@ Published tables show the cutoff k = 10. The scorer also writes @5 (`recall@5`, 
 
 ## If you only have a minute
 
-| Name | Column | What it means | Better |
-| --- | --- | --- | --- |
-| Recall@10 | `recall@10` | Of the documents labeled relevant, how many showed up anywhere in the first 10? 1.0 = all of them did. | Higher |
-| MRR@10 | `mrr@10` | How close to the top is the first relevant document? 1.0 = it is rank 1. 0 = it is not in the first 10. | Higher |
-| nDCG@10 | `ndcg@10` | Are the relevant documents near the top of the first 10 results? 1.0 = perfect order. | Higher |
-| Context precision@10 | `context_precision@10` | Are the chunks the model would read the labeled ones, and are those chunks near the front? 1.0 = relevant chunks packed at the top. | Higher |
-| Online latency | `online_latency_ms` | Once the index is built, how many milliseconds does one question take? | Lower |
-| Chunk time | `chunk_seconds` | How long did it take to split the corpus into chunks, paid once before any question? | Lower |
-| Index time | `index_seconds` | How long did it take to build the search index for that chunking, including embeddings when a dense index is built? | Lower |
-| Batched eval time | `eval_seconds` | How long did scoring every query in one batch take? This is not the per-question response time. | Lower |
-| Ablation test latency | `test_latency_ms` | On the ablation, how many milliseconds per query did the full test split take when run as a batch? | Lower |
-| Estimated USD | `estimated_usd` | What is the estimated model bill? 0 means this stage did not count a paid model call. | Lower |
-| Refusal rate | `refusal_rate` | How often was the answer exactly "I do not know."? 0 = it always tried. 1 = it abstained every time. | Depends |
-| Faithfulness | `faithfulness` | Of the claims in the answer, what fraction did the judge say the retrieved context supports? 1.0 = every scored claim supported. | Higher |
-| Hallucination rate | `hallucination_rate` | Of those same claims, what fraction did the judge mark unsupported? 0 = none. This is 1 minus faithfulness, not a second judge. | Lower |
-| Answer relevancy | `answer_relevancy` | Does the answer address the question the user asked? 1.0 = it stays on that question. | Higher |
-| Delta test nDCG@10 | `delta_test_ndcg@10` | After a stage was chosen on dev, how much did test nDCG@10 move versus the previous stage? Positive means the test score rose. | Higher |
+| Group | Name | Column | What it means | Better |
+| --- | --- | --- | --- | --- |
+| Retrieval quality | Recall@10 | `recall@10` | Recall is the share of all relevant documents that the system retrieved; @10 looks only at the first 10 results. 1.0 = all relevant docs are in the top 10. | Higher |
+| Retrieval quality | MRR@10 | `mrr@10` | Mean Reciprocal Rank is the average over queries of 1 divided by the rank of the first relevant result; @10 scores a miss past rank 10 as 0. 1.0 = that document is rank 1. | Higher |
+| Retrieval quality | nDCG@10 | `ndcg@10` | Normalized Discounted Cumulative Gain scores a ranking by giving each relevant result a gain that shrinks with its position (log discount), divided by the score of the ideal order. 1.0 = perfect order in the first 10. | Higher |
+| Retrieval quality | Context precision@10 | `context_precision@10` | Context precision asks whether the chunks a generator would read come from relevant documents, and it counts that more when those chunks sit near the front; @10 uses the first 10 chunks. 1.0 = relevant chunks packed at the top. | Higher |
+| Latency & cost | Online latency | `online_latency_ms` | Online latency is the milliseconds for one question after the index is already built. Lower means a faster answer. | Lower |
+| Latency & cost | Chunk time | `chunk_seconds` | Chunk time is how long it took to split the corpus into chunks, paid once before any question. | Lower |
+| Latency & cost | Index time | `index_seconds` | Index time is how long it took to build the search index for that chunking, including embeddings when a dense index is built. | Lower |
+| Latency & cost | Batched eval time | `eval_seconds` | Batched eval time is how long scoring every query in one batch took. It is not the per-question response time. | Lower |
+| Latency & cost | Ablation test latency | `test_latency_ms` | Ablation test latency is the batched milliseconds per query to score the full test split. | Lower |
+| Latency & cost | Estimated USD | `estimated_usd` | Estimated USD is the model bill implied by token counts and the listed price. 0 means no paid model call was counted. | Lower |
+| Generation quality | Refusal rate | `refusal_rate` | Refusal rate is the share of answers that are the exact abstention "I do not know." 0 = the model always tried to answer; 1 = it abstained every time. | Depends |
+| Generation quality | Faithfulness | `faithfulness` | Faithfulness is the fraction of claims in the answer that the judge says the retrieved context supports. 1.0 = every scored claim is supported. | Higher |
+| Generation quality | Hallucination rate | `hallucination_rate` | Hallucination rate is the fraction of those same claims the judge marks unsupported, defined here as 1 minus faithfulness, not a second judge. 0 = none unsupported. | Lower |
+| Generation quality | Answer relevancy | `answer_relevancy` | Answer relevancy is how well the answer addresses the question that was asked, measured by similarity between that question and questions the answer appears to be answering. 1.0 = it stays on the user's question. | Higher |
+| Ablation | Delta test nDCG@10 | `delta_test_ndcg@10` | Delta test nDCG@10 is the change in test nDCG@10 after a stage chosen on the dev split, versus the previous stage. Positive means the test score rose. | Higher |
 
 Retrieval metrics are a macro-average: each labeled query counts once, then we take the mean. A query with one relevant abstract counts the same as a query with two.
 
