@@ -24,6 +24,8 @@ Which chunking policy and which retriever put the labeled evidence highest, and 
 
 **Two machines, recorded separately.** The 300-query retrieval run is Python 3.12.3 on 4 CPUs. The generation runs are Python 3.13.5 on 8 CPUs. Do not compare milliseconds across those two tables.
 
+How each number below is computed: [docs/metrics.md](docs/metrics.md).
+
 ## Retrieval results (300 queries)
 
 Macro-average on all 300 labeled SciFact test queries. Recall, MRR, and nDCG are document-level after collapsing chunks to their source document. Context precision uses the gold document label on each chunk, not an LLM. Online latency is the mean of 10 single-query calls on that machine.
