@@ -1,4 +1,5 @@
 import json
+import math
 from pathlib import Path
 
 import numpy as np
@@ -279,10 +280,19 @@ def test_published_generation_100_matches_saved_verdicts():
             context_k=pair["context_k"],
             num_skipped_budget=pair["num_skipped_budget"],
         )
-        assert pair["faithfulness"] == summary["faithfulness"]
-        assert pair["hallucination_rate"] == summary["hallucination_rate"]
-        assert pair["answer_relevancy"] == summary["answer_relevancy"]
+        assert _same_number(pair["faithfulness"], summary["faithfulness"])
+        assert _same_number(pair["hallucination_rate"], summary["hallucination_rate"])
+        assert _same_number(pair["answer_relevancy"], summary["answer_relevancy"])
         assert pair["num_scored"] == summary["num_scored"]
         assert pair["num_refusals"] == summary["num_refusals"]
-        assert pair["refusal_rate"] == summary["refusal_rate"]
-        assert pair["all_rows"] == summary["all_rows"]
+        assert _same_number(pair["refusal_rate"], summary["refusal_rate"])
+        assert pair["all_rows"].keys() == summary["all_rows"].keys()
+        for key, value in summary["all_rows"].items():
+            assert _same_number(pair["all_rows"][key], value)
+
+
+def _same_number(stored: object, fresh: object) -> bool:
+    """JSON round-trip can move a mean by one ulp across Python versions."""
+    if isinstance(fresh, float):
+        return math.isclose(float(stored), fresh, rel_tol=0.0, abs_tol=1e-12)
+    return stored == fresh
