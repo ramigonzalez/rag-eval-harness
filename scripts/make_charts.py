@@ -2,11 +2,12 @@
 
     python scripts/make_charts.py
 
-Reads results/scifact/metrics.csv and results/generation/metrics.json.
-Writes:
+Reads results/scifact/metrics.csv, results/generation/metrics.json, and
+results/generation-100/metrics.json. Writes:
     results/scifact/ndcg_vs_latency.png
     results/scifact/ndcg_vs_latency_linkedin.png   (1200 x 627)
-    results/generation/faithfulness_hallucination.png
+    results/generation/faithfulness_hallucination.png          (20-query sample)
+    results/generation-100/faithfulness_hallucination.png      (headline chart)
 """
 
 from __future__ import annotations
@@ -64,8 +65,10 @@ def main() -> None:
     root = Path(__file__).resolve().parents[1]
     scifact_csv = root / "results" / "scifact" / "metrics.csv"
     generation_json = root / "results" / "generation" / "metrics.json"
+    generation_100_json = root / "results" / "generation-100" / "metrics.json"
     rows = _load_csv(scifact_csv)
     generation = json.loads(generation_json.read_text(encoding="utf-8"))
+    generation_100 = json.loads(generation_100_json.read_text(encoding="utf-8"))
     _quality_latency(rows, root / "results" / "scifact" / "ndcg_vs_latency.png")
     _quality_latency_linkedin(
         rows,
@@ -74,6 +77,10 @@ def main() -> None:
     _faithfulness(
         generation,
         root / "results" / "generation" / "faithfulness_hallucination.png",
+    )
+    _faithfulness(
+        generation_100,
+        root / "results" / "generation-100" / "faithfulness_hallucination.png",
     )
 
 
@@ -308,7 +315,13 @@ def _faithfulness(payload: dict, path: Path) -> None:
     pairs = payload["generation"]["pairs"]
     if not pairs:
         raise SystemExit("generation metrics.json has no judged pairs")
-    labels = [f"{pair['chunker']}\n{pair['retriever']}" for pair in pairs]
+    answered_only = any("num_refusals" in pair for pair in pairs)
+    if answered_only:
+        labels = [
+            f"{pair['chunker']}\n{pair['retriever']}\nn={pair['num_scored']}" for pair in pairs
+        ]
+    else:
+        labels = [f"{pair['chunker']}\n{pair['retriever']}" for pair in pairs]
     faithfulness = [float(pair["faithfulness"]) for pair in pairs]
     hallucination = [float(pair["hallucination_rate"]) for pair in pairs]
     judged = payload["generation"]["num_queries"]
@@ -336,12 +349,11 @@ def _faithfulness(payload: dict, path: Path) -> None:
     axis.set_ylim(0, 1)
     axis.set_ylabel("Score")
     model = payload["generation"].get("model", "")
-    axis.set_title(
-        f"Judge scores, n={judged} queries, {model}",
-        loc="left",
-        fontsize=12,
-        pad=10,
-    )
+    if answered_only:
+        title = f"Answered queries, refusals excluded, {model}"
+    else:
+        title = f"Judge scores, n={judged} queries, {model}"
+    axis.set_title(title, loc="left", fontsize=12, pad=10)
     axis.spines["top"].set_visible(False)
     axis.spines["right"].set_visible(False)
     axis.yaxis.grid(True, linestyle="--", linewidth=0.6, alpha=0.35)

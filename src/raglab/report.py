@@ -157,9 +157,7 @@ def render_markdown(result: dict) -> str:
         [
             "## Generation",
             "",
-            result["generation"]["reason"]
-            if result["generation"]["status"] != "ok"
-            else _generation_markdown(result["generation"]),
+            _generation_section(result["generation"]),
             "",
             "![nDCG@10 by chunker and retriever](ndcg_at_10.png)",
             "",
@@ -285,6 +283,16 @@ def _write_csv(rows: list[dict], path: Path) -> None:
             writer.writerow(flat)
 
 
+def _generation_section(generation: dict) -> str:
+    if generation.get("status") == "skipped":
+        return generation["reason"]
+    text = _generation_markdown(generation)
+    message = generation.get("budget_message")
+    if message:
+        text = f"{text}\n\n{message}"
+    return text
+
+
 def _generation_markdown(generation: dict) -> str:
     provider = generation.get("provider", "")
     provider_bit = f", provider `{provider}`" if provider else ""
@@ -314,23 +322,62 @@ def _generation_markdown(generation: dict) -> str:
         [
             "",
             (
-                "| Chunker | Retriever | Faithfulness | Answer relevancy | "
-                "Hallucination rate | Errors |"
+                "An exact answer `I do not know.` is an abstention: no claims, and it is "
+                "left out of faithfulness, hallucination rate, and answer relevancy. "
+                "Refusal rate is abstentions divided by the generation sample. "
+                "n is the number of answered queries that have a score. "
+                "Hallucination rate is 1 minus faithfulness on those claims."
             ),
-            "| --- | --- | ---: | ---: | ---: | ---: |",
+            "",
+            (
+                "| Chunker | Retriever | Refusal rate | n | Faithfulness | "
+                "Hallucination rate | Answer relevancy | Errors |"
+            ),
+            "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |",
         ]
     )
     for pair in generation["pairs"]:
         lines.append(
-            "| {chunker} | {retriever} | {faithfulness} | {answer_relevancy} | "
-            "{hallucination_rate} | {num_errors} |".format(
+            "| {chunker} | {retriever} | {refusal_rate} | {n} | {faithfulness} | "
+            "{hallucination_rate} | {answer_relevancy} | {num_errors} |".format(
                 chunker=pair["chunker"],
                 retriever=pair["retriever"],
-                faithfulness=_fmt(pair["faithfulness"]),
-                answer_relevancy=_fmt(pair["answer_relevancy"]),
-                hallucination_rate=_fmt(pair["hallucination_rate"]),
-                num_errors=pair["num_errors"],
+                refusal_rate=_fmt(pair.get("refusal_rate")),
+                n=pair.get("num_scored", ""),
+                faithfulness=_fmt(pair.get("faithfulness")),
+                hallucination_rate=_fmt(pair.get("hallucination_rate")),
+                answer_relevancy=_fmt(pair.get("answer_relevancy")),
+                num_errors=pair.get("num_errors", ""),
             )
+        )
+    if any(pair.get("all_rows") for pair in generation["pairs"]):
+        lines.extend(
+            [
+                "",
+                (
+                    "Means that scored every row, including abstentions, are in "
+                    "`all_rows` on each pair in metrics.json."
+                ),
+            ]
+        )
+    gold = generation.get("refusal_gold")
+    if gold:
+        stacks = ", ".join(
+            f"{stack['chunker']}/{stack['retriever']} "
+            f"{stack['num_with_gold_doc']}/{stack['num_refusals']}"
+            for stack in gold["stacks"]
+        )
+        lines.extend(
+            [
+                "",
+                (
+                    f"{gold['num_with_gold_doc']}/{gold['num_refusals']} refusals had a "
+                    "gold-relevant document in the 5 contexts "
+                    f"({stacks}). "
+                    "Each context is matched to a document by its alphanumeric tokens, "
+                    "then checked against the SciFact test qrels."
+                ),
+            ]
         )
     return "\n".join(lines)
 

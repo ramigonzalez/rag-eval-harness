@@ -16,3 +16,6 @@ bench:
 
 generation:
 	$(PYTHON) -m raglab run --config configs/generation.yaml
+
+generation-100:
+	$(PYTHON) -m raglab run --config configs/generation_100.yaml

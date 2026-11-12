@@ -7,15 +7,30 @@ similarity between the user question and questions an LLM says the answer is
 addressing. Similarities are clipped at 0 so the score stays in [0, 1].
 Embeddings for that step are local. The LLM is used to write the answer, the
 claims, and the proposed questions.
+
+An answer that is exactly ``I do not know.`` is an abstention. It has no
+claims, and it is left out of faithfulness, hallucination rate, and answer
+relevancy. Those three scores are means over answered queries only.
+``all_rows`` keeps the means of whatever scores are stored on the rows,
+including abstentions that an older judge scored, so the previous definition
+stays traceable.
+
+When ``answers_path`` is set, each judged query is appended to that JSONL file
+(question, contexts, answer, claims, verdicts, and the three scores). A later
+run with the same path reuses those rows instead of calling the model again.
+Abstentions in that file are still excluded even if an older row stored a
+faithfulness score.
 """
 
 from __future__ import annotations
 
+import json
 import logging
+from pathlib import Path
 
 import numpy as np
 
-from raglab.llm import parse_json_object
+from raglab.llm import BudgetExceeded, parse_json_object
 from raglab.retrieval.index import SearchIndex, Services
 from raglab.retrieval.registry import build_retriever
 from raglab.types import Hit, Query
@@ -55,6 +70,13 @@ Write 3 questions that this answer is addressing. Return JSON only:
 Answer: {answer}
 """
 
+# The answer prompt tells the model to say this when the context is not enough.
+ABSTENTION_ANSWER = "I do not know."
+
+
+def is_abstention(answer: object) -> bool:
+    return isinstance(answer, str) and answer.strip() == ABSTENTION_ANSWER
+
 
 def run_generation(
     indexes: dict[str, SearchIndex],
@@ -65,71 +87,255 @@ def run_generation(
     k: int,
     max_queries: int,
     seed: int,
+    answers_path: Path | None = None,
 ) -> dict:
     if services.llm is None or services.embedder is None:
         raise RuntimeError("generation metrics need an LLM and an embedder")
     chosen = _sample(queries, max_queries, seed)
+    prior = _load_prior_answers(answers_path)
+    answers_file = None
+    if answers_path is not None:
+        answers_path.parent.mkdir(parents=True, exist_ok=True)
+        answers_file = answers_path.open("a", encoding="utf-8")
+        logger.info("Writing per-query answers to %s (%s prior rows)", answers_path, len(prior))
     pair_reports = []
-    for chunker_name, retriever_name in pairs:
-        if chunker_name not in indexes:
-            raise RuntimeError(f"generation pair uses unknown chunker '{chunker_name}'")
-        import raglab.retrieval  # noqa: F401  registers built-in retrievers
+    budget_stopped = False
+    budget_message = None
+    try:
+        for chunker_name, retriever_name in pairs:
+            if chunker_name not in indexes:
+                raise RuntimeError(f"generation pair uses unknown chunker '{chunker_name}'")
+            import raglab.retrieval  # noqa: F401  registers built-in retrievers
 
-        retriever = build_retriever(retriever_name)
-        faithfulness: list[float] = []
-        hallucination: list[float] = []
-        relevancy: list[float] = []
-        errors = 0
-        empty_claims = 0
-        for query in chosen:
-            hits = retriever.retrieve(indexes[chunker_name], query.text, k, services)
-            context = _format_context(hits)
-            try:
-                answer = services.llm.complete(
-                    ANSWER_PROMPT.format(question=query.text, context=context)
-                ).strip()
-                claims = _claims(
-                    services.llm.complete(
-                        CLAIMS_PROMPT.format(question=query.text, context=context, answer=answer)
+            retriever = build_retriever(retriever_name)
+            records: list[dict] = []
+            skipped_budget = 0
+            for query in chosen:
+                key = (chunker_name, retriever_name, query.query_id)
+                if key in prior:
+                    records.append(prior[key])
+                    continue
+                hits = retriever.retrieve(indexes[chunker_name], query.text, k, services)
+                contexts = [hit.text for hit in hits]
+                context = _format_context(hits)
+                tokens_before = _usage_snapshot(services.llm)
+                record = {
+                    "query_id": query.query_id,
+                    "chunker": chunker_name,
+                    "retriever": retriever_name,
+                    "question": query.text,
+                    "contexts": contexts,
+                    "answer": None,
+                    "claims": [],
+                    "proposed_questions": [],
+                    "faithfulness": None,
+                    "hallucination_rate": None,
+                    "answer_relevancy": None,
+                    "abstained": False,
+                    "error": None,
+                }
+                try:
+                    answer = services.llm.complete(
+                        ANSWER_PROMPT.format(question=query.text, context=context)
+                    ).strip()
+                    record["answer"] = answer
+                    if is_abstention(answer):
+                        record["abstained"] = True
+                    else:
+                        claims = _parse_claims(
+                            services.llm.complete(
+                                CLAIMS_PROMPT.format(
+                                    question=query.text, context=context, answer=answer
+                                )
+                            )
+                        )
+                        record["claims"] = claims
+                        if claims:
+                            supported = sum(1 for claim in claims if claim["supported"])
+                            score = supported / len(claims)
+                            record["faithfulness"] = score
+                            record["hallucination_rate"] = 1.0 - score
+                        questions = _questions(
+                            services.llm.complete(QUESTIONS_PROMPT.format(answer=answer))
+                        )
+                        record["proposed_questions"] = questions
+                        if questions:
+                            record["answer_relevancy"] = _answer_relevancy(
+                                query.text, questions, services.embedder
+                            )
+                except BudgetExceeded as exc:
+                    record["error"] = str(exc)
+                    skipped_budget += 1
+                    budget_stopped = True
+                    budget_message = str(exc)
+                    logger.warning(
+                        "Budget cap hit during %s/%s query %s: %s",
+                        chunker_name,
+                        retriever_name,
+                        query.query_id,
+                        exc,
                     )
+                    _finalize_record(record, services.llm, tokens_before)
+                    _write_record(answers_file, record)
+                    prior[key] = record
+                    records.append(record)
+                    break
+                except Exception as exc:
+                    record["error"] = f"{type(exc).__name__}: {exc}"
+                    logger.warning("Generation judge failed for %s (%s)", query.query_id, exc)
+                _finalize_record(record, services.llm, tokens_before)
+                _write_record(answers_file, record)
+                prior[key] = record
+                records.append(record)
+            pair_reports.append(
+                summarize_answer_records(
+                    records,
+                    chunker=chunker_name,
+                    retriever=retriever_name,
+                    num_queries=len(chosen),
+                    context_k=k,
+                    num_skipped_budget=skipped_budget,
                 )
-                if not claims:
-                    empty_claims += 1
-                else:
-                    supported = sum(1 for claim in claims if claim)
-                    score = supported / len(claims)
-                    faithfulness.append(score)
-                    hallucination.append(1.0 - score)
-                questions = _questions(
-                    services.llm.complete(QUESTIONS_PROMPT.format(answer=answer))
-                )
-                if questions:
-                    relevancy.append(_answer_relevancy(query.text, questions, services.embedder))
-            except Exception as exc:
-                errors += 1
-                logger.warning("Generation judge failed for %s (%s)", query.query_id, exc)
-        pair_reports.append(
-            {
-                "chunker": chunker_name,
-                "retriever": retriever_name,
-                "num_queries": len(chosen),
-                "num_scored": len(faithfulness),
-                "num_errors": errors,
-                "num_empty_claims": empty_claims,
-                "faithfulness": _mean(faithfulness),
-                "answer_relevancy": _mean(relevancy),
-                "hallucination_rate": _mean(hallucination),
-                "context_k": k,
-            }
-        )
+            )
+            if budget_stopped:
+                break
+    finally:
+        if answers_file is not None:
+            answers_file.close()
+    status = "budget_exceeded" if budget_stopped else "ok"
     return {
-        "status": "ok",
+        "status": status,
+        "budget_message": budget_message,
         "model": getattr(services.llm, "model", None),
         "num_queries": len(chosen),
         "query_ids": [query.query_id for query in chosen],
         "context_k": k,
+        "answers_path": str(answers_path) if answers_path is not None else None,
         "pairs": pair_reports,
     }
+
+
+def summarize_answer_records(
+    records: list[dict],
+    *,
+    chunker: str,
+    retriever: str,
+    num_queries: int,
+    context_k: int,
+    num_skipped_budget: int = 0,
+) -> dict:
+    """Score a stack. Abstentions stay out of the headline means.
+
+    ``all_rows`` averages every stored score, so a file that scored
+    ``I do not know.`` as unfaithful can still show that older number.
+    """
+    answered_faith: list[float] = []
+    answered_hall: list[float] = []
+    answered_rel: list[float] = []
+    all_faith: list[float] = []
+    all_hall: list[float] = []
+    all_rel: list[float] = []
+    num_refusals = 0
+    num_answered = 0
+    errors = 0
+    empty_claims = 0
+    all_empty_claims = 0
+    for record in records:
+        if record.get("answer") is not None:
+            abstained = is_abstention(record.get("answer"))
+        else:
+            abstained = bool(record.get("abstained"))
+        if abstained:
+            num_refusals += 1
+        else:
+            num_answered += 1
+        if record.get("error"):
+            errors += 1
+        elif not record.get("claims"):
+            all_empty_claims += 1
+            if not abstained:
+                empty_claims += 1
+        _collect(all_faith, record.get("faithfulness"))
+        _collect(all_hall, record.get("hallucination_rate"))
+        _collect(all_rel, record.get("answer_relevancy"))
+        if abstained:
+            continue
+        _collect(answered_faith, record.get("faithfulness"))
+        _collect(answered_hall, record.get("hallucination_rate"))
+        _collect(answered_rel, record.get("answer_relevancy"))
+    refusal_rate = (num_refusals / num_queries) if num_queries else None
+    return {
+        "chunker": chunker,
+        "retriever": retriever,
+        "num_queries": num_queries,
+        "num_refusals": num_refusals,
+        "refusal_rate": refusal_rate,
+        "num_answered": num_answered,
+        "num_scored": len(answered_faith),
+        "num_relevancy": len(answered_rel),
+        "num_errors": errors,
+        "num_empty_claims": empty_claims,
+        "num_skipped_budget": num_skipped_budget,
+        "faithfulness": _mean(answered_faith),
+        "answer_relevancy": _mean(answered_rel),
+        "hallucination_rate": _mean(answered_hall),
+        "context_k": context_k,
+        "all_rows": {
+            "num_scored": len(all_faith),
+            "num_relevancy": len(all_rel),
+            "num_empty_claims": all_empty_claims,
+            "faithfulness": _mean(all_faith),
+            "answer_relevancy": _mean(all_rel),
+            "hallucination_rate": _mean(all_hall),
+        },
+    }
+
+
+def _collect(bucket: list[float], value: object) -> None:
+    if value is None:
+        return
+    bucket.append(float(value))
+
+
+def _usage_snapshot(llm: object) -> dict:
+    usage = getattr(llm, "usage", None)
+    if usage is None:
+        return {"calls": 0, "prompt_tokens": 0, "completion_tokens": 0, "cache_hits": 0}
+    return {
+        "calls": int(usage.calls),
+        "prompt_tokens": int(usage.prompt_tokens),
+        "completion_tokens": int(usage.completion_tokens),
+        "cache_hits": int(usage.cache_hits),
+    }
+
+
+def _finalize_record(record: dict, llm: object, before: dict) -> None:
+    after = _usage_snapshot(llm)
+    record["prompt_tokens"] = after["prompt_tokens"] - before["prompt_tokens"]
+    record["completion_tokens"] = after["completion_tokens"] - before["completion_tokens"]
+    record["llm_calls"] = after["calls"] - before["calls"]
+    estimated = getattr(llm, "estimated_usd", None)
+    record["estimated_usd_cumulative"] = estimated() if callable(estimated) else None
+
+
+def _write_record(handle, record: dict) -> None:
+    if handle is None:
+        return
+    handle.write(json.dumps(record, ensure_ascii=False) + "\n")
+    handle.flush()
+
+
+def _load_prior_answers(path: Path | None) -> dict[tuple[str, str, str], dict]:
+    prior: dict[tuple[str, str, str], dict] = {}
+    if path is None or not path.exists():
+        return prior
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        row = json.loads(line)
+        key = (row["chunker"], row["retriever"], row["query_id"])
+        prior[key] = row
+    return prior
 
 
 def _sample(queries: list[Query], max_queries: int, seed: int) -> list[Query]:
@@ -151,17 +357,20 @@ def _format_context(hits: list[Hit]) -> str:
     return "\n\n".join(f"[{index}] {hit.text}" for index, hit in enumerate(hits, start=1))
 
 
-def _claims(text: str) -> list[bool]:
+def _parse_claims(text: str) -> list[dict]:
     payload = parse_json_object(text)
     claims = payload.get("claims", [])
     if not isinstance(claims, list):
         raise ValueError("claims was not a list")
-    verdicts: list[bool] = []
+    parsed: list[dict] = []
     for claim in claims:
         if not isinstance(claim, dict) or "supported" not in claim:
             raise ValueError("a claim is missing the supported field")
-        verdicts.append(_as_bool(claim["supported"]))
-    return verdicts
+        claim_text = claim.get("claim", "")
+        if not isinstance(claim_text, str):
+            claim_text = str(claim_text)
+        parsed.append({"claim": claim_text, "supported": _as_bool(claim["supported"])})
+    return parsed
 
 
 def _questions(text: str) -> list[str]:
