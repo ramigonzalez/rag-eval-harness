@@ -8,18 +8,23 @@ Published tables show the cutoff k = 10. The scorer also writes @5 (`recall@5`, 
 
 ## If you only have a minute
 
-| Name | Column | Better | One line |
+| Name | Column | What it means | Better |
 | --- | --- | --- | --- |
-| Recall@10 | `recall@10` | Higher | Share of labeled documents that appear in the top 10. |
-| MRR@10 | `mrr@10` | Higher | How close to rank 1 the first labeled document is. |
-| nDCG@10 | `ndcg@10` | Higher | Ranking quality in the top 10, with higher ranks counting more. |
-| Context precision@10 | `context_precision@10` | Higher | Whether the chunks a generator would read are the labeled ones, and near the top. |
-| Online latency | `online_latency_ms` | Lower | Milliseconds for one query against an index that is already built. |
-| Indexing cost | `chunk_seconds`, `index_seconds` | Lower | Time to chunk and to build the index, paid once before queries. |
-| Refusal rate | `refusal_rate` | Depends | Share of answers that are the exact abstention `I do not know.` |
-| Faithfulness | `faithfulness` | Higher | Share of answer claims the retrieved context supports. |
-| Hallucination rate | `hallucination_rate` | Lower | One minus faithfulness on the same claims. Not a second judge. |
-| Answer relevancy | `answer_relevancy` | Higher | Whether the answer is about the question that was asked. |
+| Recall@10 | `recall@10` | Of the documents labeled relevant, how many showed up anywhere in the first 10? 1.0 = all of them did. | Higher |
+| MRR@10 | `mrr@10` | How close to the top is the first relevant document? 1.0 = it is rank 1. 0 = it is not in the first 10. | Higher |
+| nDCG@10 | `ndcg@10` | Are the relevant documents near the top of the first 10 results? 1.0 = perfect order. | Higher |
+| Context precision@10 | `context_precision@10` | Are the chunks the model would read the labeled ones, and are those chunks near the front? 1.0 = relevant chunks packed at the top. | Higher |
+| Online latency | `online_latency_ms` | Once the index is built, how many milliseconds does one question take? | Lower |
+| Chunk time | `chunk_seconds` | How long did it take to split the corpus into chunks, paid once before any question? | Lower |
+| Index time | `index_seconds` | How long did it take to build the search index for that chunking, including embeddings when a dense index is built? | Lower |
+| Batched eval time | `eval_seconds` | How long did scoring every query in one batch take? This is not the per-question response time. | Lower |
+| Ablation test latency | `test_latency_ms` | On the ablation, how many milliseconds per query did the full test split take when run as a batch? | Lower |
+| Estimated USD | `estimated_usd` | What is the estimated model bill? 0 means this stage did not count a paid model call. | Lower |
+| Refusal rate | `refusal_rate` | How often was the answer exactly "I do not know."? 0 = it always tried. 1 = it abstained every time. | Depends |
+| Faithfulness | `faithfulness` | Of the claims in the answer, what fraction did the judge say the retrieved context supports? 1.0 = every scored claim supported. | Higher |
+| Hallucination rate | `hallucination_rate` | Of those same claims, what fraction did the judge mark unsupported? 0 = none. This is 1 minus faithfulness, not a second judge. | Lower |
+| Answer relevancy | `answer_relevancy` | Does the answer address the question the user asked? 1.0 = it stays on that question. | Higher |
+| Delta test nDCG@10 | `delta_test_ndcg@10` | After a stage was chosen on dev, how much did test nDCG@10 move versus the previous stage? Positive means the test score rose. | Higher |
 
 Retrieval metrics are a macro-average: each labeled query counts once, then we take the mean. A query with one relevant abstract counts the same as a query with two.
 
