@@ -19,6 +19,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
@@ -29,6 +30,10 @@ class LLMNotConfigured(RuntimeError):
 
 
 class LLMError(RuntimeError):
+    pass
+
+
+class BudgetExceeded(LLMError):
     pass
 
 
@@ -152,10 +157,40 @@ class LLMClient:
         self.timeout = timeout
         self.usage = TokenUsage()
         self._cache: dict[tuple[str, float, str], str] = {}
+        self.max_estimated_usd: float | None = None
+        self.input_usd_per_million = 0.15
+        self.output_usd_per_million = 0.60
+
+    def set_budget(
+        self,
+        max_estimated_usd: float | None,
+        input_usd_per_million: float,
+        output_usd_per_million: float,
+    ) -> None:
+        self.max_estimated_usd = max_estimated_usd
+        self.input_usd_per_million = input_usd_per_million
+        self.output_usd_per_million = output_usd_per_million
+
+    def estimated_usd(self) -> float:
+        return (self.usage.prompt_tokens / 1_000_000) * self.input_usd_per_million + (
+            self.usage.completion_tokens / 1_000_000
+        ) * self.output_usd_per_million
+
+    def _raise_if_over_budget(self) -> None:
+        if self.max_estimated_usd is None:
+            return
+        spent = self.estimated_usd()
+        if spent > self.max_estimated_usd:
+            raise BudgetExceeded(
+                f"Estimated spend ${spent:.4f} passed the ${self.max_estimated_usd:.2f} cap "
+                f"after {self.usage.calls} calls "
+                f"({self.usage.prompt_tokens} input, {self.usage.completion_tokens} output tokens)."
+            )
 
     def complete(self, prompt: str, temperature: float = 0.0, *, use_cache: bool = True) -> str:
         if not self.api_key:
             raise LLMNotConfigured(SKIP_REASON)
+        self._raise_if_over_budget()
         cache_key = (self.model, float(temperature), prompt)
         if use_cache and cache_key in self._cache:
             self.usage.cache_hits += 1
@@ -168,6 +203,7 @@ class LLMClient:
             self.usage.estimated_calls += 1
         if use_cache:
             self._cache[cache_key] = text
+        self._raise_if_over_budget()
         return text
 
     def _post(self, prompt: str, temperature: float) -> tuple[str, int, int, bool]:
@@ -190,20 +226,34 @@ class LLMClient:
             referer = os.environ.get("RAGBENCH_HTTP_REFERER")
             if referer:
                 headers["HTTP-Referer"] = referer
-        request = urllib.request.Request(
-            f"{self.api_base}/chat/completions",
-            data=json.dumps(payload).encode(),
-            headers=headers,
-            method="POST",
-        )
-        try:
-            with urllib.request.urlopen(request, timeout=self.timeout) as response:
-                body = json.loads(response.read().decode())
-        except urllib.error.HTTPError as exc:
-            detail = exc.read().decode(errors="replace")[:500]
-            raise LLMError(f"LLM request failed ({exc.code}): {detail}") from exc
-        except urllib.error.URLError as exc:
-            raise LLMError(f"LLM request failed: {exc.reason}") from exc
+        body = None
+        last_error: Exception | None = None
+        for attempt in range(6):
+            request = urllib.request.Request(
+                f"{self.api_base}/chat/completions",
+                data=json.dumps(payload).encode(),
+                headers=headers,
+                method="POST",
+            )
+            try:
+                with urllib.request.urlopen(request, timeout=self.timeout) as response:
+                    body = json.loads(response.read().decode())
+                break
+            except urllib.error.HTTPError as exc:
+                detail = exc.read().decode(errors="replace")[:500]
+                last_error = LLMError(f"LLM request failed ({exc.code}): {detail}")
+                if exc.code in {429, 500, 502, 503, 529} and attempt < 5:
+                    time.sleep(min(2**attempt, 30))
+                    continue
+                raise last_error from exc
+            except urllib.error.URLError as exc:
+                last_error = LLMError(f"LLM request failed: {exc.reason}")
+                if attempt < 5:
+                    time.sleep(min(2**attempt, 30))
+                    continue
+                raise last_error from exc
+        if body is None:
+            raise last_error or LLMError("LLM request failed")
         try:
             text = body["choices"][0]["message"]["content"]
         except (KeyError, IndexError, TypeError) as exc:

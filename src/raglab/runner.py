@@ -18,7 +18,7 @@ from raglab.cost import estimate_pre_run, format_actual, format_pre_run, plan_ll
 from raglab.datasets import load_dataset
 from raglab.embeddings import load_embedder
 from raglab.generation import run_generation
-from raglab.llm import SKIP_REASON, LLMClient, llm_configured
+from raglab.llm import SKIP_REASON, BudgetExceeded, LLMClient, llm_configured
 from raglab.metrics import score_rankings
 from raglab.report import check_thresholds, write_outputs
 from raglab.retrieval import RETRIEVERS, build_retriever
@@ -28,6 +28,9 @@ from raglab.textutil import word_count
 from raglab.types import Document, Query
 
 logger = logging.getLogger("raglab")
+
+# Paid runs stop here. configs/generation_100.yaml was sized to stay under it.
+LLM_SPEND_CAP_USD = 2.0
 
 
 def run_benchmark(config: RunConfig) -> dict:
@@ -63,6 +66,12 @@ def run_benchmark(config: RunConfig) -> dict:
         )
     reranker = _load_reranker(config) if needs_reranker else None
     llm = LLMClient() if needs_llm else None
+    if llm is not None and hasattr(llm, "set_budget"):
+        llm.set_budget(
+            LLM_SPEND_CAP_USD,
+            config.llm_input_usd_per_million,
+            config.llm_output_usd_per_million,
+        )
     services = Services(
         embedder=embedder,
         reranker=reranker,
@@ -103,6 +112,12 @@ def run_benchmark(config: RunConfig) -> dict:
             output_usd_per_million=config.llm_output_usd_per_million,
         )
         logger.info(format_pre_run(pre_run_estimate))
+        if pre_run_estimate["estimated_usd"] > LLM_SPEND_CAP_USD:
+            raise BudgetExceeded(
+                "Pre-run estimate $"
+                f"{pre_run_estimate['estimated_usd']:.4f} passed the "
+                f"${LLM_SPEND_CAP_USD:.2f} cap. The run was not started."
+            )
 
     for spec in config.chunkers:
         try:
@@ -176,6 +191,7 @@ def run_benchmark(config: RunConfig) -> dict:
 
     if generation_mode == "on":
         logger.info("Running generation metrics")
+        answers_path = config.output_dir / "answers.jsonl"
         generation = run_generation(
             indexes,
             queries,
@@ -184,6 +200,7 @@ def run_benchmark(config: RunConfig) -> dict:
             k=config.generation.k,
             max_queries=config.generation.max_queries,
             seed=config.seed,
+            answers_path=answers_path,
         )
         generation["retrieval_queries"] = len(queries)
     else:

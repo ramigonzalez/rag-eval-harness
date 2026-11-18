@@ -1,8 +1,8 @@
 """Compare this repo's judge to RAGAS on a saved answer file.
 
-The committed ``results/generation`` run stores aggregate scores only. It does
-not store the per-query answers, so this script cannot score that run. Point
-``--answers`` at a JSONL file written by a future run, with one object per line:
+``results/generation-100/answers.jsonl`` stores one object per judged query
+from the 100-query run. The earlier ``results/generation`` run does not.
+Point ``--answers`` at a JSONL file with one object per line:
 
     {"question": "...", "answer": "...", "contexts": ["..."],
      "faithfulness": 0.8, "answer_relevancy": 0.5}
@@ -10,10 +10,11 @@ not store the per-query answers, so this script cannot score that run. Point
 ``faithfulness`` and ``answer_relevancy`` are this repo's scores. The script
 asks RAGAS for the same two metrics and prints the mean absolute difference.
 It does not run without an API key, without the ``ragas`` package, or without
-the answers file, and it never invents scores.
+the answers file, and it never invents scores. Agreement on the 100-query
+file has not been computed in this repository.
 
     export OPENROUTER_API_KEY=...   # or OPENAI_API_KEY
-    python scripts/ragas_agreement.py --answers path/to/answers.jsonl
+    python scripts/ragas_agreement.py --answers results/generation-100/answers.jsonl
 """
 
 from __future__ import annotations
@@ -31,8 +32,8 @@ def main(argv: list[str] | None = None) -> int:
     if not args.answers.exists():
         print(
             f"No answers file at {args.answers}. "
-            "The committed results/generation run did not save per-query answers, "
-            "so there is nothing to score. No numbers were computed.",
+            "Pass results/generation-100/answers.jsonl to score the 100-query run. "
+            "No numbers were computed.",
             file=sys.stderr,
         )
         return 0
