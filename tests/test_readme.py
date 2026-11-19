@@ -38,25 +38,29 @@ def test_readme_retrieval_table_matches_the_csv():
     assert "5,183" in readme
 
 
+def _json_number(value: object) -> str:
+    return json.dumps(value)
+
+
 def test_readme_generation_table_matches_the_judge_file():
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
-    results = (ROOT / "results" / "generation-100" / "results.md").read_text(encoding="utf-8")
-    recorded = json.loads((ROOT / "results" / "generation-100" / "metrics.json").read_text())
-    shown = _table(readme, "| Chunker | Retriever | Refusal rate |")
-    in_file = _table(results, "| Chunker | Retriever | Refusal rate |")
-    pairs = {(pair["chunker"], pair["retriever"]): pair for pair in recorded["generation"]["pairs"]}
+    results = (ROOT / "results" / "gen-100-judge-v2" / "results.md").read_text(encoding="utf-8")
+    recorded = json.loads((ROOT / "results" / "gen-100-judge-v2" / "metrics.json").read_text())
+    v1 = json.loads((ROOT / "results" / "generation-100" / "metrics.json").read_text())
+    shown = _table(readme, "| Chunker | Retriever | Refusal rate | Answered |")
+    in_file = _table(results, "| Chunker | Retriever | Refusal rate | Answered |")
     assert shown == in_file
+    pairs = {(pair["chunker"], pair["retriever"]): pair for pair in recorded["pairs"]}
     assert len(shown) == len(pairs) == 5
     faith_values = []
     for cells in shown:
         source = pairs[(cells[0], cells[1])]
-        assert cells[2] == f"{float(source['refusal_rate']):.3f}"
-        assert cells[3] == str(source["num_scored"])
+        assert cells[2] == f"{float(source['refusal_rate']):.2f}"
+        assert cells[3] == str(source["num_answered"])
         assert cells[4] == f"{float(source['faithfulness']):.3f}"
         assert cells[5] == f"{float(source['hallucination_rate']):.3f}"
         assert cells[6] == f"{float(source['answer_relevancy']):.3f}"
-        assert cells[7] == str(source["num_errors"])
-        assert source["all_rows"]["faithfulness"] < source["faithfulness"]
+        assert cells[7] == f"{float(source['faithfulness_v1_answered_only']):.3f}"
         faith_values.append(float(source["faithfulness"]))
     low = f"{min(faith_values):.3f}"
     high = f"{max(faith_values):.3f}"
@@ -64,11 +68,16 @@ def test_readme_generation_table_matches_the_judge_file():
     assert "from **0.596**" not in readme
     assert "to **0.644**" not in readme
     fixed = pairs[("fixed", "rerank")]
-    assert (
-        f"{fixed['num_answered']} answered queries and {fixed['num_errors']} error, "
-        f"so n is {fixed['num_scored']}"
-    ) in readme
-    gold = recorded["generation"]["refusal_gold"]
+    assert fixed["num_faithfulness_scored"] == 50
+    assert "n=50" in readme
+    v1_fixed = next(
+        pair
+        for pair in v1["generation"]["pairs"]
+        if pair["chunker"] == "fixed" and pair["retriever"] == "rerank"
+    )
+    assert v1_fixed["num_scored"] == 49
+    assert "n=49" in readme
+    gold = v1["generation"]["refusal_gold"]
     stacks = ", ".join(
         f"{stack['chunker']}/{stack['retriever']} "
         f"{stack['num_with_gold_doc']}/{stack['num_refusals']}"
@@ -79,21 +88,40 @@ def test_readme_generation_table_matches_the_judge_file():
         f"gold-relevant document in the 5 contexts ({stacks})."
     )
     assert gold_sentence in readme
-    assert gold_sentence in results
-    assert recorded["generation"]["num_queries"] == 100
-    assert recorded["generation"]["model"] == "openai/gpt-4o-mini"
-    assert recorded["generation"]["context_k"] == 5
-    assert recorded["llm"]["provider"] == "openrouter"
-    assert recorded["llm"]["usage"]["calls"] == 1122
+    analysis = json.loads(
+        (ROOT / "results" / "judge-validation" / "analysis_opus_v2.json").read_text()
+    )
+    validation = _table(readme, "| Judge | n | MAE |")
+    blocks = {
+        "v1": analysis["faithfulness"]["old_judge_v1"],
+        "v2": analysis["faithfulness"]["new_judge_v2"],
+        "RAGAS": analysis["faithfulness"]["ragas"],
+    }
+    assert [row[0] for row in validation] == ["v1", "v2", "RAGAS"]
+    for row in validation:
+        block = blocks[row[0]]
+        assert row[1:] == [
+            _json_number(block["n"]),
+            _json_number(block["mae"]),
+            _json_number(block["agreement_within_0.25"]),
+            _json_number(block["spearman"]),
+            _json_number(block["accuracy_at_0.5"]),
+        ]
+    for item in analysis["contradiction_items"]:
+        old = _json_number(item["old"])
+        new = _json_number(item["new"])
+        assert f"item {item['item']}, {old} to {new}" in readme
+    assert "not human annotation" in readme
+    assert "not against human labels" in readme or "not human" in readme
+    assert recorded["judge_model"] == "openai/gpt-4o-mini"
+    assert recorded["context_k"] == 5
     assert "results/generation-100/results.md" in readme
-    assert "not yet validated against human labels" in readme
-    assert "RAGAS agreement is pending" in readme
     assert "did not run" not in readme
     assert "rag-eval-harness" in readme
     assert "raglab run --config configs/generation.yaml" in readme
     assert "raglab run --config configs/generation_100.yaml" in readme
-    assert recorded["dataset"]["num_queries"] == 100
-    assert recorded["environment"]["cpu_count"] == 8
+    assert v1["dataset"]["num_queries"] == 100
+    assert v1["environment"]["cpu_count"] == 8
 
 
 def test_readme_ablation_table_matches_the_csv():

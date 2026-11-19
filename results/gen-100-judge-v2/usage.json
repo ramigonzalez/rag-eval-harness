@@ -1,0 +1,12 @@
+{
+  "model": "openai/gpt-4o-mini",
+  "judge": "v2",
+  "scored_rows": 250,
+  "llm_calls": 398,
+  "prompt_tokens": 380403,
+  "completion_tokens": 19616,
+  "input_usd_per_million": 0.15,
+  "output_usd_per_million": 0.6,
+  "estimated_usd": 0.06883,
+  "note": "Token counts from OpenRouter responses. Identical prompts were served from an in-process cache and cost nothing. USD uses list rates, not the OpenRouter invoice."
+}

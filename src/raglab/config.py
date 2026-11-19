@@ -33,6 +33,7 @@ class GenerationSpec:
     max_queries: int
     k: int
     pairs: list[tuple[str, str]]
+    faithfulness_judge: str = "v1"
 
 
 @dataclass
@@ -99,6 +100,7 @@ class RunConfig:
                 "max_queries": self.generation.max_queries,
                 "k": self.generation.k,
                 "pairs": [list(pair) for pair in self.generation.pairs],
+                "faithfulness_judge": self.generation.faithfulness_judge,
             },
             "latency_queries": self.latency_queries,
             "plugins": list(self.plugins),
@@ -226,11 +228,15 @@ def _generation(value: dict[str, Any]) -> GenerationSpec:
         pairs.append((str(item[0]), str(item[1])))
     if not pairs:
         raise ConfigError("generation.pairs must not be empty")
+    judge = str(value.get("faithfulness_judge", "v1"))
+    if judge not in {"v1", "v2"}:
+        raise ConfigError("generation.faithfulness_judge must be v1 or v2")
     return GenerationSpec(
         mode=mode,
         max_queries=int(value.get("max_queries", 20)),
         k=int(value.get("k", 5)),
         pairs=pairs,
+        faithfulness_judge=judge,
     )
 
 

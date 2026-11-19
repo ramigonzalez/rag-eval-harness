@@ -201,6 +201,7 @@ def run_benchmark(config: RunConfig) -> dict:
             max_queries=config.generation.max_queries,
             seed=config.seed,
             answers_path=answers_path,
+            faithfulness_judge=config.generation.faithfulness_judge,
         )
         generation["retrieval_queries"] = len(queries)
     else:
