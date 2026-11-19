@@ -6,7 +6,7 @@ Measured comparison of chunking and retrieval for RAG. The CLI and Python packag
 
 ## TL;DR
 
-On SciFact (5,183 abstracts, 300 labeled queries, 4 CPUs), fixed-size chunks plus a cross-encoder reach nDCG@10 **0.708** at **379.3 ms** per query. Hybrid retrieval on the same chunks reaches **0.693** at **36.8 ms**. On the 100-query judge pass (`openai/gpt-4o-mini` via OpenRouter, temperature 0, context_k=5), an exact `I do not know.` is an abstention and is left out of faithfulness. Answered-query faithfulness in `results/generation-100/results.md` runs from **0.909** (whole + rerank, n=44) to **0.957** (recursive + rerank, n=54). The judge is not yet validated against human labels, and RAGAS agreement is pending.
+On SciFact (5,183 abstracts, 300 labeled queries, 4 CPUs), fixed-size chunks plus a cross-encoder reach nDCG@10 **0.708** at **379.3 ms** per query. Hybrid retrieval on the same chunks reaches **0.693** at **36.8 ms**. On the 100-query judge pass (`openai/gpt-4o-mini` via OpenRouter, temperature 0, context_k=5), an exact `I do not know.` is an abstention and is left out of faithfulness. Answered-query faithfulness with judge v2 in `results/gen-100-judge-v2/results.md` runs from **0.792** (semantic + rerank, n=56) to **0.920** (whole + rerank, n=44). The v1 numbers on the same answers were higher. A 40-item check against Claude Opus labels, which is one model and not human annotation, is below.
 
 ![nDCG@10 versus online latency, 300 SciFact queries](results/scifact/ndcg_vs_latency.png)
 
@@ -55,25 +55,41 @@ The 300-query run did not include HyDE or RAG-Fusion. Those are in the 50-query 
 
 ## Generation results (100 judged queries)
 
-The scores in this section are the generation block of `results/generation-100/results.md`. Same five stacks, judge `openai/gpt-4o-mini` via OpenRouter, temperature 0, context_k=5. The judge is not yet validated against human labels. RAGAS agreement is pending: `scripts/ragas_agreement.py` can score `results/generation-100/answers.jsonl`, and that comparison has not been run.
+Faithfulness and hallucination rate below are judge v2, from `results/gen-100-judge-v2/results.md`. Same five stacks, same answers, judge `openai/gpt-4o-mini` via OpenRouter, temperature 0, context_k=5. Refusal rate and answer relevancy are unchanged from the v1 answered-only scores. v2 re-scored every answered row, so fixed + rerank is n=50. The v1 judge left that stack at n=49 because one row had no claim verdict (`results/generation-100/metrics.json`).
 
-The retrieval grid under these scores is 100 queries drawn with seed 7 from the 300, on the full 5,183-document corpus (mean 1.15 relevant documents per query in that sample). From `results/generation-100/results.md`: model `openai/gpt-4o-mini`, provider `openrouter`, 100 queries, context_k=5. Token counts from the provider: 1260305 input, 46274 output, 1122 calls, 376 cache hits. Estimated cost $0.2168 at $0.15/$0.60 per million.
+The retrieval grid under these scores is 100 queries drawn with seed 7 from the 300, on the full 5,183-document corpus (mean 1.15 relevant documents per query in that sample). From `results/generation-100/results.md`: model `openai/gpt-4o-mini`, provider `openrouter`, 100 queries, context_k=5. Token counts from the provider: 1260305 input, 46274 output, 1122 calls, 376 cache hits. Estimated cost $0.2168 at $0.15/$0.60 per million. Re-scoring faithfulness with v2 cost 398 calls, 380403 input and 19616 output tokens, about $0.0688 (`results/gen-100-judge-v2/results.md`).
 
-An exact answer `I do not know.` is an abstention: no claims, and it is left out of faithfulness, hallucination rate, and answer relevancy. Refusal rate is abstentions divided by the generation sample. n is the number of answered queries that have a score. Hallucination rate is 1 minus faithfulness on those claims. fixed + rerank has 50 answered queries and 1 error, so n is 49.
+An exact answer `I do not know.` is an abstention and is left out of faithfulness, hallucination rate, and answer relevancy. Judge v1 extracted claims in one step and often dropped the answer's yes/no polarity, so the v1 faithfulness column below is inflated. v2 keeps that polarity, then marks each claim supported, contradicted, or not_found. The score is the share marked supported.
 
-| Chunker | Retriever | Refusal rate | n | Faithfulness | Hallucination rate | Answer relevancy | Errors |
+| Chunker | Retriever | Refusal rate | Answered | Faithfulness v2 | Hallucination rate v2 | Answer relevancy | Faithfulness v1 |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| whole | bm25 | 0.540 | 46 | 0.953 | 0.047 | 0.791 | 0 |
-| whole | rerank | 0.560 | 44 | 0.909 | 0.091 | 0.798 | 0 |
-| fixed | rerank | 0.500 | 49 | 0.918 | 0.082 | 0.796 | 1 |
-| recursive | rerank | 0.460 | 54 | 0.957 | 0.043 | 0.797 | 0 |
-| semantic | rerank | 0.440 | 56 | 0.950 | 0.050 | 0.787 | 0 |
+| whole | bm25 | 0.54 | 46 | 0.851 | 0.149 | 0.791 | 0.953 |
+| whole | rerank | 0.56 | 44 | 0.920 | 0.080 | 0.798 | 0.909 |
+| fixed | rerank | 0.50 | 50 | 0.877 | 0.123 | 0.796 | 0.918 |
+| recursive | rerank | 0.46 | 54 | 0.867 | 0.133 | 0.797 | 0.957 |
+| semantic | rerank | 0.44 | 56 | 0.792 | 0.208 | 0.787 | 0.950 |
 
-![Faithfulness and hallucination rate on answered queries](results/generation-100/faithfulness_hallucination.png)
+![Faithfulness and hallucination rate, judge v2, answered queries](results/gen-100-judge-v2/faithfulness_hallucination.png)
 
 154/250 refusals had a gold-relevant document in the 5 contexts (whole/bm25 35/54, whole/rerank 33/56, fixed/rerank 29/50, recursive/rerank 29/46, semantic/rerank 28/44). Each context is matched to a document by its alphanumeric tokens, then checked against the SciFact test qrels. Most abstentions still had a labeled abstract in the window, so the strict answer prompt is doing the refusing along with retrieval misses. Means that scored every row, including abstentions, are in `all_rows` on each pair in `results/generation-100/metrics.json`.
 
-An earlier 20-query pass (`results/generation/results.md`, same five stacks and the same model) reported faithfulness from 0.780 to 0.855. That file counted abstentions as unfaithful. It is not the headline.
+An earlier 20-query pass (`results/generation/results.md`, same five stacks and the same model) reported faithfulness from 0.780 to 0.855. That file used judge v1 and counted abstentions as unfaithful. It is not the headline.
+
+## Judge validation
+
+Forty answers from the 100-query run were labeled by Claude Opus, blind to the judge scores, with a strict rubric: supported by the 5 contexts only. This is one strong model, not human annotation. The sheet is 24 items where v1 and RAGAS disagreed most (12 on faithfulness, 12 on answer relevancy) and 16 random items, 8 per stack (`results/judge-validation/key.csv`).
+
+Agreement with those labels, from `results/judge-validation/analysis_opus_v2.json`. Yes maps to 1, partial to 0.5, no to 0. Within 0.25 is the share of items whose absolute error is at most 0.25. Accuracy at 0.5 treats a score of at least 0.5 as positive.
+
+| Judge | n | MAE | Within 0.25 | Spearman | Accuracy at 0.5 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| v1 | 40 | 0.2875 | 0.575 | -0.132946 | 0.825 |
+| v2 | 40 | 0.175 | 0.725 | 0.507453 | 0.875 |
+| RAGAS | 40 | 0.410417 | 0.4 | 0.310177 | 0.675 |
+
+Five items whose answer contradicted the contexts had reference label no. v1 scored them high; v2 did not. Old to new, from the same file: item 3, 1.0 to 0.0; item 7, 0.6666666666666666 to 0.0; item 22, 1.0 to 0.6666666666666666; item 35, 1.0 to 0.5; item 36, 1.0 to 0.0.
+
+v2 still has false alarms where the reference label is yes and the v2 score is below 0.5. Items 2 and 33 are answers that say the context does not provide enough information; v2 extracted that sentence as a claim and marked it not_found, so the score is 0.0. Item 9 is also 0.0: the West Nile claim was marked not_found. `scripts/ragas_agreement.py` has not been run on every row of `results/generation-100/answers.jsonl`.
 
 On that 50-query retrieval sample, whole-document hybrid nDCG@10 is 0.745, HyDE is 0.703, and RAG-Fusion is 0.707. Warm-cache online latency for whole-document HyDE is 39.9 ms and for RAG-Fusion is 22.8 ms. The result file states that those latency figures do not include the chat call. The full 50-query grid, including every chunker, is in `results/generation/results.md`. The 100-query run did not include HyDE or RAG-Fusion.
 
@@ -107,7 +123,7 @@ raglab run --config configs/scifact.yaml
 python scripts/make_charts.py
 ```
 
-Charts read only `results/scifact/metrics.csv`, `results/generation/metrics.json`, and `results/generation-100/metrics.json`. The faithfulness chart above is drawn from `results/generation-100/metrics.json`.
+Charts read `results/scifact/metrics.csv`, `results/generation/metrics.json`, `results/generation-100/metrics.json`, and `results/gen-100-judge-v2/metrics.json`. The faithfulness chart above is drawn from `results/gen-100-judge-v2/metrics.json`.
 
 100-query generation run. It writes `results/generation-100/`, including `answers.jsonl`:
 
@@ -125,11 +141,11 @@ CI (`.github/workflows/ci.yml`) runs on push and pull request: ruff, pytest, and
 ## Limitations
 
 - One dataset. The abstracts are short (mean 214.6 words), so this does not say what happens on long documents.
-- The judge covers 100 queries in `results/generation-100/results.md` and was not checked against human labels. RAGAS agreement is pending. Faithfulness excludes exact `I do not know.` abstentions. The 20-query file still uses the older scoring.
+- The headline faithfulness numbers are judge v2 on 100 queries (`results/gen-100-judge-v2/results.md`). They were checked against Claude Opus labels on 40 items, not against human labels. Faithfulness excludes exact `I do not know.` abstentions. The 20-query file still uses judge v1.
 - Hallucination rate in these files is 1 minus faithfulness, not a second judge.
 - Latency from the 300-query run and the 50-query run comes from different machines (4 CPUs and 8 CPUs).
 - HyDE and RAG-Fusion were not part of the 300-query grid.
 
 ## What's next
 
-Check the judge against human labels on a SciFact sample, and run `scripts/ragas_agreement.py` on `results/generation-100/answers.jsonl`. RAGAS agreement is pending. Run the same grid on a dataset with longer documents. Add another retriever through `register_retriever` and score it with `raglab run` before treating it as measured.
+Check the judge against human labels on a SciFact sample. The 40-item Opus sheet is not that check. Run the same grid on a dataset with longer documents. Add another retriever through `register_retriever` and score it with `raglab run` before treating it as measured.

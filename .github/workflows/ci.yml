@@ -17,7 +17,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y python3-dev build-essential
-          python -m pip install -e ".[dev]"
+          # pytrec_eval 0.5 is K&R C. GCC 15 defaults to C23, where an empty
+          # parameter list means (void) and the build fails. gnu17 restores it.
+          CFLAGS="-std=gnu17" python -m pip install -e ".[dev]"
       - name: Lint
         run: ruff check src tests scripts && ruff format --check src tests scripts
       - name: Unit tests

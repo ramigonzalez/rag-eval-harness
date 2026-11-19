@@ -62,6 +62,56 @@ Context:
 Answer: {answer}
 """
 
+# Judge v2. v1 above stays the default so earlier runs reproduce.
+# v1 extracted and verified claims in one call and often restated the
+# question's claim while dropping the answer's yes/no polarity, so an answer
+# that contradicted the context could still score 1.0. v2 splits the work:
+# extract claims that keep the answer's verdict and negations, then check each
+# claim against the context with an explicit "contradicted" outcome.
+CLAIMS_PROMPT_V2 = """Task: extract claims.
+
+Split the answer into short, self-contained factual claims. Rules:
+- Keep the answer's own position. If the answer says "Yes", "No", or gives a
+  verdict on the question, write that verdict as a full claim. Example: for
+  the question "X causes Y" and the answer "No, X does not cause Y", the claim
+  is "X does not cause Y", never "X causes Y".
+- Keep every negation, hedge, and qualifier ("not", "may", "only in mice").
+- Use the question only to resolve what "Yes", "No", "it", or "this" refer to.
+  Do not add claims the answer does not make.
+Return JSON only:
+{{"claims": ["...", "..."]}}
+
+Question: {question}
+
+Answer: {answer}
+"""
+
+VERIFY_PROMPT_V2 = """Task: verify claims.
+
+For each numbered claim, decide whether the context supports it. Use only the
+context, not outside knowledge.
+- supported: the context states the claim or directly implies it, with the
+  same direction and polarity. A claim that X does not do Y is supported only
+  if the context indicates X does not do Y.
+- contradicted: the context states or implies the opposite, for example the
+  context says X increases Y and the claim says X decreases Y or does not
+  affect Y.
+- not_found: the context does not settle the claim either way.
+Quote the deciding context text before giving the verdict.
+Return JSON only, one entry per claim in the same order:
+{{"verdicts": [{{"claim": 1, "evidence": "short quote or none", "verdict": "supported"}}]}}
+
+Context:
+{context}
+
+Claims:
+{claims}
+"""
+
+FAITHFULNESS_JUDGES = ("v1", "v2")
+VERDICTS = ("supported", "contradicted", "not_found")
+
+
 QUESTIONS_PROMPT = """Task: propose questions.
 
 Write 3 questions that this answer is addressing. Return JSON only:
@@ -88,7 +138,10 @@ def run_generation(
     max_queries: int,
     seed: int,
     answers_path: Path | None = None,
+    faithfulness_judge: str = "v1",
 ) -> dict:
+    if faithfulness_judge not in FAITHFULNESS_JUDGES:
+        raise ValueError(f"unknown faithfulness judge '{faithfulness_judge}'")
     if services.llm is None or services.embedder is None:
         raise RuntimeError("generation metrics need an LLM and an embedder")
     chosen = _sample(queries, max_queries, seed)
@@ -142,12 +195,12 @@ def run_generation(
                     if is_abstention(answer):
                         record["abstained"] = True
                     else:
-                        claims = _parse_claims(
-                            services.llm.complete(
-                                CLAIMS_PROMPT.format(
-                                    question=query.text, context=context, answer=answer
-                                )
-                            )
+                        claims = judge_claims(
+                            services.llm,
+                            query.text,
+                            context,
+                            answer,
+                            faithfulness_judge,
                         )
                         record["claims"] = claims
                         if claims:
@@ -211,6 +264,7 @@ def run_generation(
         "query_ids": [query.query_id for query in chosen],
         "context_k": k,
         "answers_path": str(answers_path) if answers_path is not None else None,
+        "faithfulness_judge": faithfulness_judge,
         "pairs": pair_reports,
     }
 
@@ -355,6 +409,90 @@ def _format_context(hits: list[Hit]) -> str:
     if not hits:
         return "(no context retrieved)"
     return "\n\n".join(f"[{index}] {hit.text}" for index, hit in enumerate(hits, start=1))
+
+
+def judge_claims(
+    llm,
+    question: str,
+    context: str,
+    answer: str,
+    version: str = "v1",
+) -> list[dict]:
+    """Return [{"claim", "supported", ...}] for one answer with the chosen judge.
+
+    v1 is one call that both extracts and marks support. v2 extracts claims
+    that keep the answer's polarity, then verifies each claim separately.
+    ``supported`` is true only for the verdict "supported", so contradicted
+    and not_found both lower the faithfulness score.
+    """
+    if version == "v1":
+        return _parse_claims(
+            llm.complete(CLAIMS_PROMPT.format(question=question, context=context, answer=answer))
+        )
+    if version != "v2":
+        raise ValueError(f"unknown faithfulness judge '{version}'")
+    claim_texts = _parse_claim_texts(
+        llm.complete(CLAIMS_PROMPT_V2.format(question=question, answer=answer))
+    )
+    if not claim_texts:
+        return []
+    numbered = "\n".join(f"{index}. {text}" for index, text in enumerate(claim_texts, start=1))
+    verdicts = _parse_verdicts(
+        llm.complete(VERIFY_PROMPT_V2.format(context=context, claims=numbered)),
+        len(claim_texts),
+    )
+    return [
+        {
+            "claim": text,
+            "supported": verdict["verdict"] == "supported",
+            "verdict": verdict["verdict"],
+            "evidence": verdict["evidence"],
+        }
+        for text, verdict in zip(claim_texts, verdicts, strict=True)
+    ]
+
+
+def format_context_texts(texts: list[str]) -> str:
+    """Same layout as ``_format_context``, for contexts saved as plain text."""
+    if not texts:
+        return "(no context retrieved)"
+    return "\n\n".join(f"[{index}] {text}" for index, text in enumerate(texts, start=1))
+
+
+def _parse_claim_texts(text: str) -> list[str]:
+    payload = parse_json_object(text)
+    claims = payload.get("claims", [])
+    if not isinstance(claims, list):
+        raise ValueError("claims was not a list")
+    out: list[str] = []
+    for claim in claims:
+        if isinstance(claim, dict):
+            claim = claim.get("claim", "")
+        if isinstance(claim, str) and claim.strip():
+            out.append(claim.strip())
+    return out
+
+
+def _parse_verdicts(text: str, expected: int) -> list[dict]:
+    payload = parse_json_object(text)
+    verdicts = payload.get("verdicts", [])
+    if not isinstance(verdicts, list) or len(verdicts) != expected:
+        raise ValueError(f"expected {expected} verdicts, got {verdicts!r:.200}")
+    parsed: list[dict] = []
+    for entry in verdicts:
+        if not isinstance(entry, dict):
+            raise ValueError("a verdict is not an object")
+        verdict = str(entry.get("verdict", "")).strip().lower().replace(" ", "_")
+        if verdict not in VERDICTS:
+            raise ValueError(f"cannot read verdict {entry.get('verdict')!r}")
+        evidence = entry.get("evidence", "")
+        parsed.append(
+            {
+                "verdict": verdict,
+                "evidence": evidence if isinstance(evidence, str) else str(evidence),
+            }
+        )
+    return parsed
 
 
 def _parse_claims(text: str) -> list[dict]:

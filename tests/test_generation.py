@@ -4,7 +4,7 @@ from pathlib import Path
 
 import numpy as np
 
-from raglab.generation import is_abstention, run_generation, summarize_answer_records
+from raglab.generation import is_abstention, judge_claims, run_generation, summarize_answer_records
 from raglab.llm import SKIP_REASON, BudgetExceeded, parse_json_object
 from raglab.retrieval.index import SearchIndex, Services
 from raglab.types import Chunk, Query
@@ -225,6 +225,96 @@ def test_exact_refusal_is_an_abstention_and_skips_the_claim_judge(tmp_path):
     assert refusal["faithfulness"] is None
     assert is_abstention("I do not know.")
     assert not is_abstention("I do not know")
+
+
+class _PolarityLLM:
+    """v2 judge: keep the answer's negation, then mark that claim contradicted."""
+
+    model = "fake-model"
+
+    def complete(self, prompt: str, temperature: float = 0.0) -> str:
+        if prompt.startswith("Task: extract claims."):
+            assert "No, X does not cause Y" in prompt
+            return '{"claims": ["X does not cause Y"]}'
+        if prompt.startswith("Task: verify claims."):
+            assert "X does not cause Y" in prompt
+            return (
+                '{"verdicts": [{"claim": 1, "evidence": "X causes Y", "verdict": "contradicted"}]}'
+            )
+        if prompt.startswith("Task: answer."):
+            return "No, X does not cause Y."
+        if prompt.startswith("Task: propose questions."):
+            return '{"questions": ["Does X cause Y?"]}'
+        raise AssertionError(prompt[:80])
+
+
+def test_v2_keeps_polarity_and_a_contradiction_lowers_the_score():
+    claims = judge_claims(
+        _PolarityLLM(),
+        "X causes Y",
+        "[1] X causes Y in mice.",
+        "No, X does not cause Y.",
+        "v2",
+    )
+    assert claims[0]["claim"] == "X does not cause Y"
+    assert "does not" in claims[0]["claim"]
+    assert claims[0]["verdict"] == "contradicted"
+    assert claims[0]["supported"] is False
+
+    mixed = _MixedVerdictLLM()
+    both = judge_claims(mixed, "Q", "context", "answer", "v2")
+    assert [item["verdict"] for item in both] == ["supported", "contradicted"]
+    score = sum(item["supported"] for item in both) / len(both)
+    assert score == 0.5
+
+
+class _MixedVerdictLLM:
+    def complete(self, prompt: str, temperature: float = 0.0) -> str:
+        if prompt.startswith("Task: extract claims."):
+            return '{"claims": ["The ice is old.", "The ice is new."]}'
+        if prompt.startswith("Task: verify claims."):
+            return json.dumps(
+                {
+                    "verdicts": [
+                        {"claim": 1, "evidence": "old", "verdict": "supported"},
+                        {"claim": 2, "evidence": "not new", "verdict": "contradicted"},
+                    ]
+                }
+            )
+        raise AssertionError(prompt[:40])
+
+
+def test_v2_abstention_is_not_scored(tmp_path):
+    chunks = [Chunk("ice::c0", "ice", "The ice is old.", 0)]
+    index = SearchIndex(
+        chunks=chunks,
+        embeddings=np.ones((1, 32), dtype=np.float32),
+        bm25=None,
+    )
+
+    class _AbstainV2:
+        model = "fake-model"
+
+        def complete(self, prompt: str, temperature: float = 0.0) -> str:
+            if prompt.startswith("Task: answer."):
+                return "I do not know."
+            raise AssertionError("an abstention must not call the v2 judge")
+
+    result = run_generation(
+        {"whole": index},
+        [Query("q1", "The ice is old.")],
+        [("whole", "dense")],
+        Services(embedder=_Embedder(), llm=_AbstainV2()),
+        k=1,
+        max_queries=1,
+        seed=1,
+        answers_path=tmp_path / "answers.jsonl",
+        faithfulness_judge="v2",
+    )
+    assert result["faithfulness_judge"] == "v2"
+    assert result["pairs"][0]["num_refusals"] == 1
+    assert result["pairs"][0]["faithfulness"] is None
+    assert result["pairs"][0]["num_scored"] == 0
 
 
 def test_stored_refusal_scores_stay_out_of_the_answered_mean():

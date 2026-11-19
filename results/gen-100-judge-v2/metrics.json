@@ -1,0 +1,93 @@
+{
+  "source_answers": "results/generation-100/answers.jsonl",
+  "faithfulness_judge": "v2",
+  "judge_model": "openai/gpt-4o-mini",
+  "temperature": 0,
+  "context_k": 5,
+  "abstention": "exact answer 'I do not know.' excluded from faithfulness, hallucination rate, relevancy",
+  "answer_relevancy": "unchanged from the v1 run (same answers, same proposed-question step); abstentions excluded",
+  "pairs": [
+    {
+      "chunker": "whole",
+      "retriever": "bm25",
+      "num_queries": 100,
+      "num_abstained": 54,
+      "refusal_rate": 0.54,
+      "num_answered": 46,
+      "num_faithfulness_scored": 46,
+      "faithfulness": 0.8514492753623187,
+      "hallucination_rate": 0.14855072463768126,
+      "answer_relevancy": 0.7913476768611133,
+      "faithfulness_v1_answered_only": 0.953416149068323,
+      "num_faithfulness_v1_scored": 46
+    },
+    {
+      "chunker": "whole",
+      "retriever": "rerank",
+      "num_queries": 100,
+      "num_abstained": 56,
+      "refusal_rate": 0.56,
+      "num_answered": 44,
+      "num_faithfulness_scored": 44,
+      "faithfulness": 0.9204545454545454,
+      "hallucination_rate": 0.07954545454545459,
+      "answer_relevancy": 0.7980461504423257,
+      "faithfulness_v1_answered_only": 0.9090909090909091,
+      "num_faithfulness_v1_scored": 44
+    },
+    {
+      "chunker": "fixed",
+      "retriever": "rerank",
+      "num_queries": 100,
+      "num_abstained": 50,
+      "refusal_rate": 0.5,
+      "num_answered": 50,
+      "num_faithfulness_scored": 50,
+      "faithfulness": 0.8766666666666667,
+      "hallucination_rate": 0.1233333333333333,
+      "answer_relevancy": 0.7964448320622347,
+      "faithfulness_v1_answered_only": 0.9176870748299321,
+      "num_faithfulness_v1_scored": 49
+    },
+    {
+      "chunker": "recursive",
+      "retriever": "rerank",
+      "num_queries": 100,
+      "num_abstained": 46,
+      "refusal_rate": 0.46,
+      "num_answered": 54,
+      "num_faithfulness_scored": 54,
+      "faithfulness": 0.867283950617284,
+      "hallucination_rate": 0.13271604938271597,
+      "answer_relevancy": 0.7973645609102132,
+      "faithfulness_v1_answered_only": 0.95679012345679,
+      "num_faithfulness_v1_scored": 54
+    },
+    {
+      "chunker": "semantic",
+      "retriever": "rerank",
+      "num_queries": 100,
+      "num_abstained": 44,
+      "refusal_rate": 0.44,
+      "num_answered": 56,
+      "num_faithfulness_scored": 56,
+      "faithfulness": 0.7916666666666667,
+      "hallucination_rate": 0.20833333333333326,
+      "answer_relevancy": 0.7867091291007542,
+      "faithfulness_v1_answered_only": 0.9498299319727891,
+      "num_faithfulness_v1_scored": 56
+    }
+  ],
+  "usage": {
+    "model": "openai/gpt-4o-mini",
+    "judge": "v2",
+    "scored_rows": 250,
+    "llm_calls": 398,
+    "prompt_tokens": 380403,
+    "completion_tokens": 19616,
+    "input_usd_per_million": 0.15,
+    "output_usd_per_million": 0.6,
+    "estimated_usd": 0.06883,
+    "note": "Token counts from OpenRouter responses. Identical prompts were served from an in-process cache and cost nothing. USD uses list rates, not the OpenRouter invoice."
+  }
+}

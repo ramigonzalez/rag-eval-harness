@@ -278,7 +278,9 @@ An abstention is not a judge error. `num_errors` counts exceptions (the generati
 
 The reported faithfulness is the macro-average of \(\mathrm{Faith}(q)\) over answered queries that have a score (`num_scored`, the column `n` in the generation table).
 
-Computed in `run_generation` (the claim loop) and `summarize_answer_records` in `src/raglab/generation.py`. The judge prompt is `CLAIMS_PROMPT`. The answer is produced with `ANSWER_PROMPT` at temperature 0 (`LLMClient.complete` defaults to 0). Context is `context_k` = 5 chunks.
+Computed in `judge_claims` and `summarize_answer_records` in `src/raglab/generation.py`. The answer is produced with `ANSWER_PROMPT` at temperature 0 (`LLMClient.complete` defaults to 0). Context is `context_k` = 5 chunks.
+
+Two judges share the formula above. v1 (`CLAIMS_PROMPT`) is the default: one call extracts claims and marks `supported` true or false. It often restates the question and drops the answer's yes/no polarity, so a contradictory answer can still score 1. v2 (`CLAIMS_PROMPT_V2` then `VERIFY_PROMPT_V2`) first writes claims that keep the answer's verdict and negations, then labels each claim `supported`, `contradicted`, or `not_found`. Only `supported` sets `supported` true, so contradicted and not_found both lower the score. Select v2 with `faithfulness_judge="v2"`. The published 100-query table uses v2 (`results/gen-100-judge-v2/results.md`). v1 on the same answered rows is the last column of that file and is higher.
 
 Handling of special rows:
 
@@ -296,7 +298,7 @@ The verdict is whatever the judge model returns (`supported` true or false). It 
 
 **Range.** 0 to 1. Higher is better. 1 means every scored claim was marked supported.
 
-**Limitations.** The judge has not been checked against human labels. RAGAS agreement has not been run (`scripts/ragas_agreement.py`). The judge can mark a claim supported when a person would not, or the reverse. Abstentions are out of the average, so a system can look highly faithful while refusing half the questions. Read `refusal_rate` beside faithfulness. Sparse qrels do not enter this formula; a claim can be faithful to a retrieved chunk that is the wrong document.
+**Limitations.** The 100-query v2 scores were compared with Claude Opus labels on 40 items, not with human labels. Opus is one model. The sheet is 24 items where v1 and RAGAS disagreed most (12 faithfulness, 12 answer relevancy) and 16 random, 8 per stack (`results/judge-validation/key.csv`). From `results/judge-validation/analysis_opus_v2.json`, mean absolute error against those labels is 0.2875 for v1, 0.175 for v2, and 0.410417 for RAGAS. Within 0.25 is 0.575, 0.725, and 0.4. Spearman is -0.132946, 0.507453, and 0.310177. Accuracy at 0.5 is 0.825, 0.875, and 0.675. Five reference-no items moved from a high v1 score toward a lower v2 score (items 3, 7, 22, 35, and 36 in that file). v2 still scores 0.0 on items 2 and 33, where the answer says the context does not provide enough information and the claim is marked not_found, and on item 9. Abstentions are out of the average, so a system can look highly faithful while refusing half the questions. Read `refusal_rate` beside faithfulness. Sparse qrels do not enter this formula; a claim can be faithful to a retrieved chunk that is the wrong document.
 
 ## Hallucination rate
 

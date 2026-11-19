@@ -2,12 +2,14 @@
 
     python scripts/make_charts.py
 
-Reads results/scifact/metrics.csv, results/generation/metrics.json, and
-results/generation-100/metrics.json. Writes:
+Reads results/scifact/metrics.csv, results/generation/metrics.json,
+results/generation-100/metrics.json, and results/gen-100-judge-v2/metrics.json.
+Writes:
     results/scifact/ndcg_vs_latency.png
     results/scifact/ndcg_vs_latency_linkedin.png   (1200 x 627)
     results/generation/faithfulness_hallucination.png          (20-query sample)
-    results/generation-100/faithfulness_hallucination.png      (headline chart)
+    results/generation-100/faithfulness_hallucination.png      (v1, answered only)
+    results/gen-100-judge-v2/faithfulness_hallucination.png   (v2, headline chart)
 """
 
 from __future__ import annotations
@@ -82,6 +84,12 @@ def main() -> None:
         generation_100,
         root / "results" / "generation-100" / "faithfulness_hallucination.png",
     )
+    judge_v2 = root / "results" / "gen-100-judge-v2" / "metrics.json"
+    if judge_v2.exists():
+        _faithfulness(
+            _v2_chart_payload(json.loads(judge_v2.read_text(encoding="utf-8"))),
+            root / "results" / "gen-100-judge-v2" / "faithfulness_hallucination.png",
+        )
 
 
 def _load_csv(path: Path) -> list[dict]:
@@ -303,6 +311,23 @@ def _legend(ax, points: list[dict]) -> None:
         handletextpad=0.4,
         borderaxespad=0.0,
     )
+
+
+def _v2_chart_payload(payload: dict) -> dict:
+    """Adapt the rescore metrics file to the shape ``_faithfulness`` reads."""
+    pairs = []
+    for pair in payload["pairs"]:
+        adapted = dict(pair)
+        adapted["num_scored"] = pair["num_faithfulness_scored"]
+        adapted["num_refusals"] = pair["num_abstained"]
+        pairs.append(adapted)
+    return {
+        "generation": {
+            "pairs": pairs,
+            "num_queries": pairs[0]["num_queries"],
+            "model": payload.get("judge_model", ""),
+        }
+    }
 
 
 def _faithfulness(payload: dict, path: Path) -> None:

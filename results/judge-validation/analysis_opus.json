@@ -1,0 +1,45 @@
+{
+  "n_label_rows": 40,
+  "n_labeled": 40,
+  "n_unlabeled": 0,
+  "label_map": {
+    "yes": 1.0,
+    "partial": 0.5,
+    "no": 0.0
+  },
+  "agreement_tolerance": 0.25,
+  "binary_threshold": 0.5,
+  "accuracy_at_0.5_note": "Both human and judge scores are treated as positive if >= 0.5 (yes or partial vs no; judge score >= 0.5 vs < 0.5).",
+  "faithfulness": {
+    "ours": {
+      "n": 40,
+      "mae": 0.2875,
+      "agreement_within_0.25": 0.575,
+      "spearman": -0.132946,
+      "accuracy_at_0.5": 0.825
+    },
+    "ragas": {
+      "n": 40,
+      "mae": 0.410417,
+      "agreement_within_0.25": 0.4,
+      "spearman": 0.310177,
+      "accuracy_at_0.5": 0.675
+    }
+  },
+  "relevancy": {
+    "ours": {
+      "n": 40,
+      "mae": 0.256042,
+      "agreement_within_0.25": 0.5,
+      "spearman": -0.271766,
+      "accuracy_at_0.5": 1.0
+    },
+    "ragas": {
+      "n": 40,
+      "mae": 0.205525,
+      "agreement_within_0.25": 0.7,
+      "spearman": 0.541683,
+      "accuracy_at_0.5": 0.825
+    }
+  }
+}

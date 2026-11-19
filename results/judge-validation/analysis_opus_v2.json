@@ -1,0 +1,498 @@
+{
+  "reference": "reference_labels_opus.csv (Claude Opus labels, one LLM, not human)",
+  "v2_scores": "results/gen-100-judge-v2/scores.jsonl",
+  "label_map": {
+    "yes": 1.0,
+    "partial": 0.5,
+    "no": 0.0
+  },
+  "faithfulness": {
+    "old_judge_v1": {
+      "n": 40,
+      "mae": 0.2875,
+      "agreement_within_0.25": 0.575,
+      "spearman": -0.132946,
+      "accuracy_at_0.5": 0.825
+    },
+    "new_judge_v2": {
+      "n": 40,
+      "mae": 0.175,
+      "agreement_within_0.25": 0.725,
+      "spearman": 0.507453,
+      "accuracy_at_0.5": 0.875
+    },
+    "ragas": {
+      "n": 40,
+      "mae": 0.410417,
+      "agreement_within_0.25": 0.4,
+      "spearman": 0.310177,
+      "accuracy_at_0.5": 0.675
+    }
+  },
+  "contradiction_items": [
+    {
+      "item": 3,
+      "reference_label": "no",
+      "old": 1.0,
+      "new": 0.0,
+      "ragas": 0.0,
+      "new_claims": [
+        {
+          "claim": "In mouse models, the loss of CSF1R facilitates MOZ-TIF2-induced leukemogenesis.",
+          "supported": false,
+          "verdict": "contradicted",
+          "evidence": "induction of AML was suppressed in CSF1R-deficient mice"
+        }
+      ]
+    },
+    {
+      "item": 7,
+      "reference_label": "no",
+      "old": 0.6666666666666666,
+      "new": 0.0,
+      "ragas": 0.0,
+      "new_claims": [
+        {
+          "claim": "All hematopoietic stem cells do not segregate their chromosomes randomly.",
+          "supported": false,
+          "verdict": "contradicted",
+          "evidence": "all HSCs segregate their chromosomes randomly"
+        }
+      ]
+    },
+    {
+      "item": 22,
+      "reference_label": "no",
+      "old": 1.0,
+      "new": 0.6666666666666666,
+      "ragas": 0.6666666666666666,
+      "new_claims": [
+        {
+          "claim": "CR (caloric restriction) is associated with higher methylation age.",
+          "supported": false,
+          "verdict": "not_found",
+          "evidence": "none"
+        },
+        {
+          "claim": "CR delays age-related methylation drift.",
+          "supported": true,
+          "verdict": "supported",
+          "evidence": "Caloric restriction delays age-related methylation drift"
+        },
+        {
+          "claim": "CR can make blood methylation age appear younger than chronological age.",
+          "supported": true,
+          "verdict": "supported",
+          "evidence": "their blood methylation age appeared 7 years younger than their chronologic age"
+        }
+      ]
+    },
+    {
+      "item": 35,
+      "reference_label": "no",
+      "old": 1.0,
+      "new": 0.5,
+      "ragas": 0.0,
+      "new_claims": [
+        {
+          "claim": "Downregulation and mislocalization of Scribble prevents cell transformation.",
+          "supported": false,
+          "verdict": "contradicted",
+          "evidence": "spontaneous mammary tumors in mice and humans possess both downregulated and mislocalized Scribble"
+        },
+        {
+          "claim": "Downregulation and mislocalization of Scribble prevents mammary tumorigenesis.",
+          "supported": true,
+          "verdict": "supported",
+          "evidence": "we demonstrate that scribble inhibits breast cancer formation"
+        }
+      ]
+    },
+    {
+      "item": 36,
+      "reference_label": "no",
+      "old": 1.0,
+      "new": 0.0,
+      "ragas": 0.0,
+      "new_claims": [
+        {
+          "claim": "Rapid up-regulation and higher basal expression of interferon-induced genes reduce survival of granule cell neurons that are infected by West Nile virus.",
+          "supported": false,
+          "verdict": "not_found",
+          "evidence": "we identified three interferon-stimulated genes (ISGs; Ifi27, Irg1 and Rsad2 (also known as Viperin)) that mediated the antiviral effects against different neurotropic viruses."
+        }
+      ]
+    }
+  ],
+  "false_alarms_v2": [
+    {
+      "item": 2,
+      "reference_label": "yes",
+      "old": 0.0,
+      "new": 0.0,
+      "ragas": 0.0,
+      "new_claims": [
+        {
+          "claim": "The context does not provide enough information to determine whether cSMAC formation enhances weak ligand signaling.",
+          "supported": false,
+          "verdict": "not_found",
+          "evidence": "the inability to form the central supramolecular activation cluster (cSMAC) could underlie the increased proliferation"
+        }
+      ]
+    },
+    {
+      "item": 9,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 0.0,
+      "ragas": 0.0,
+      "new_claims": [
+        {
+          "claim": "Rapid up-regulation and higher basal expression of interferon-induced genes increase survival of granule cell neurons that are infected by West Nile virus.",
+          "supported": false,
+          "verdict": "not_found",
+          "evidence": "we identified three interferon-stimulated genes (ISGs; Ifi27, Irg1 and Rsad2 (also known as Viperin)) that mediated the antiviral effects against different neurotropic viruses."
+        }
+      ]
+    },
+    {
+      "item": 33,
+      "reference_label": "yes",
+      "old": 0.0,
+      "new": 0.0,
+      "ragas": 0.5,
+      "new_claims": [
+        {
+          "claim": "The context does not provide enough information to confirm whether the composition of myosin-II isoform switches from the polarizable B isoform to the more homogenous A isoform during hematopoietic differentiation.",
+          "supported": false,
+          "verdict": "not_found",
+          "evidence": "MIIA is constitutive and activated by dephosphorylation during cytokine-triggered differentiation of cells"
+        }
+      ]
+    }
+  ],
+  "false_alarms_v1": [
+    2,
+    33
+  ],
+  "partial_items": [
+    {
+      "item": 11,
+      "old": 1.0,
+      "new": 0.5,
+      "ragas": 0.6666666666666666
+    },
+    {
+      "item": 14,
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 0.0
+    },
+    {
+      "item": 20,
+      "old": 1.0,
+      "new": 0.5,
+      "ragas": 0.0
+    },
+    {
+      "item": 23,
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 1.0
+    },
+    {
+      "item": 26,
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 0.0
+    },
+    {
+      "item": 37,
+      "old": 1.0,
+      "new": 0.5,
+      "ragas": 0.5
+    }
+  ],
+  "per_item": [
+    {
+      "item": 1,
+      "reference_label": "yes",
+      "old": 0.6666666666666666,
+      "new": 0.5,
+      "ragas": 0.75
+    },
+    {
+      "item": 2,
+      "reference_label": "yes",
+      "old": 0.0,
+      "new": 0.0,
+      "ragas": 0.0
+    },
+    {
+      "item": 3,
+      "reference_label": "no",
+      "old": 1.0,
+      "new": 0.0,
+      "ragas": 0.0
+    },
+    {
+      "item": 4,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 0.5
+    },
+    {
+      "item": 5,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 1.0
+    },
+    {
+      "item": 6,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 1.0
+    },
+    {
+      "item": 7,
+      "reference_label": "no",
+      "old": 0.6666666666666666,
+      "new": 0.0,
+      "ragas": 0.0
+    },
+    {
+      "item": 8,
+      "reference_label": "yes",
+      "old": 0.5,
+      "new": 1.0,
+      "ragas": 0.6666666666666666
+    },
+    {
+      "item": 9,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 0.0,
+      "ragas": 0.0
+    },
+    {
+      "item": 10,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 0.0
+    },
+    {
+      "item": 11,
+      "reference_label": "partial",
+      "old": 1.0,
+      "new": 0.5,
+      "ragas": 0.6666666666666666
+    },
+    {
+      "item": 12,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 0.5
+    },
+    {
+      "item": 13,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 1.0
+    },
+    {
+      "item": 14,
+      "reference_label": "partial",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 0.0
+    },
+    {
+      "item": 15,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 0.0
+    },
+    {
+      "item": 16,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 1.0
+    },
+    {
+      "item": 17,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 0.5
+    },
+    {
+      "item": 18,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 1.0
+    },
+    {
+      "item": 19,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 1.0
+    },
+    {
+      "item": 20,
+      "reference_label": "partial",
+      "old": 1.0,
+      "new": 0.5,
+      "ragas": 0.0
+    },
+    {
+      "item": 21,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 0.0
+    },
+    {
+      "item": 22,
+      "reference_label": "no",
+      "old": 1.0,
+      "new": 0.6666666666666666,
+      "ragas": 0.6666666666666666
+    },
+    {
+      "item": 23,
+      "reference_label": "partial",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 1.0
+    },
+    {
+      "item": 24,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 1.0
+    },
+    {
+      "item": 25,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 0.6666666666666666
+    },
+    {
+      "item": 26,
+      "reference_label": "partial",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 0.0
+    },
+    {
+      "item": 27,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 1.0
+    },
+    {
+      "item": 28,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 0.0
+    },
+    {
+      "item": 29,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 0.0
+    },
+    {
+      "item": 30,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 0.0
+    },
+    {
+      "item": 31,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 0.5
+    },
+    {
+      "item": 32,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 1.0
+    },
+    {
+      "item": 33,
+      "reference_label": "yes",
+      "old": 0.0,
+      "new": 0.0,
+      "ragas": 0.5
+    },
+    {
+      "item": 34,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 0.0
+    },
+    {
+      "item": 35,
+      "reference_label": "no",
+      "old": 1.0,
+      "new": 0.5,
+      "ragas": 0.0
+    },
+    {
+      "item": 36,
+      "reference_label": "no",
+      "old": 1.0,
+      "new": 0.0,
+      "ragas": 0.0
+    },
+    {
+      "item": 37,
+      "reference_label": "partial",
+      "old": 1.0,
+      "new": 0.5,
+      "ragas": 0.5
+    },
+    {
+      "item": 38,
+      "reference_label": "yes",
+      "old": 1.0,
+      "new": 1.0,
+      "ragas": 0.5
+    },
+    {
+      "item": 39,
+      "reference_label": "yes",
+      "old": 0.5,
+      "new": 0.6666666666666666,
+      "ragas": 0.6666666666666666
+    },
+    {
+      "item": 40,
+      "reference_label": "yes",
+      "old": 0.5,
+      "new": 0.5,
+      "ragas": 0.6666666666666666
+    }
+  ]
+}
