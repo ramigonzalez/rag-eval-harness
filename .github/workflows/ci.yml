@@ -26,3 +26,5 @@ jobs:
         run: pytest
       - name: Smoke eval
         run: raglab run --config configs/smoke.yaml --check configs/smoke_thresholds.json
+      - name: Search dry-run
+        run: raglab search --config examples/baby-food-rag.yaml --dry-run

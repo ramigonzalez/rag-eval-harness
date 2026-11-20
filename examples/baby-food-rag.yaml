@@ -1,0 +1,36 @@
+# Rank chunking and retrieval on the baby-food corpus.
+# Documents are downloaded from the manifest into cache_dir. They are not committed.
+# HyDE and RAG-Fusion call OpenRouter when OPENROUTER_API_KEY is set, and are
+# skipped otherwise. Completions are cached under llm.cache_dir. The key is not written.
+name: baby-food-rag
+language: pt
+corpus:
+  manifest_url: https://raw.githubusercontent.com/ramigonzalez/baby-food-rag/main/sources/manifest.yaml
+  roles: [core]
+eval:
+  url: https://raw.githubusercontent.com/ramigonzalez/baby-food-rag/main/eval/set.yaml
+embedder:
+  kind: fastembed
+  model: intfloat/multilingual-e5-large
+  query_prefix: "query: "
+  passage_prefix: "passage: "
+cache_dir: data/cache/baby-food
+llm:
+  cache_dir: data/cache/llm
+output_dir: results/baby-food
+search:
+  mode: staged
+  stage1_retriever: bm25
+  top_k_chunking: 3
+  chunkers: [markdown, recursive, fixed]
+  chunk_sizes: [256, 512, 1024]
+  overlaps: [0.0, 0.1, 0.2]
+  retrievers: [bm25, dense, hybrid, hyde, rag_fusion]
+  gold:
+    match: source_page
+    page_tolerance: 0
+    any_source: false
+  bootstrap_samples: 1000
+  seed: 7
+  k_values: [5, 10]
+  hit_k: 60

@@ -136,11 +136,33 @@ The earlier 20-query sample, which also scores HyDE and RAG-Fusion, is `raglab r
 
 `OPENROUTER_API_KEY` uses `https://openrouter.ai/api/v1` and default model `openai/gpt-4o-mini`. `OPENAI_API_KEY` uses `https://api.openai.com/v1` and `gpt-4o-mini`. If both are set, the OpenRouter key is used. `RAGBENCH_API_KEY`, `RAGBENCH_API_BASE`, and `RAGBENCH_LLM_MODEL` override those defaults. The key is not written into the results. Temperature is 0. Paid runs stop if the pre-run estimate exceeds $2.
 
-CI (`.github/workflows/ci.yml`) runs on push and pull request: ruff, pytest, and `raglab run --config configs/smoke.yaml --check configs/smoke_thresholds.json`, on Python 3.11. The smoke gate does not use an API key.
+CI (`.github/workflows/ci.yml`) runs on push and pull request: ruff, pytest, `raglab run --config configs/smoke.yaml --check configs/smoke_thresholds.json`, and `raglab search --config examples/baby-food-rag.yaml --dry-run`, on Python 3.11. The smoke gate and the search dry-run do not use an API key and do not download documents.
+
+## Plug in your own corpus
+
+`raglab search` takes a knowledge base and labeled questions, tries chunking and retrieval combinations, and writes a leaderboard. The documents are referenced by a manifest or a URL and are not committed.
+
+The manifest is YAML with a `sources` list. Each source has `id`, `title`, `url`, `filename`, `role`, `download`, and an optional `sha256`. PDF, Markdown, HTML, and plain text are accepted. PDF extraction needs the optional extra: `pip install -e ".[dev,pdf]"`. Each page is turned into Markdown and keeps its `source_id` and 1-based page, and every chunk keeps that page span.
+
+Questions are a YAML list under `questions`. Each item has `id`, `question`, `answerable`, and `gold`. A gold item is `source_id` plus `pdf_page` (or `page`), or `chunk_id` / `text_id`. `search.gold.match` is `source_page` or `chunk_id`. `page_tolerance` widens a page match. The leaderboard also writes `recall_any_source`, which counts a hit when the page matches and the source id is ignored.
+
+The chunking grid is `markdown`, `recursive`, and `fixed`. `chunk_sizes` and `overlaps` are word budgets; an overlap of `0.1` keeps 10% of the window. Retrieval is BM25, dense, hybrid reciprocal rank fusion, HyDE, and RAG-Fusion. With `language: pt`, BM25 drops Portuguese stopwords and then stems. The dense model defaults to `intfloat/multilingual-e5-large` and uses the `query: ` and `passage: ` prefixes when the config sets them. HyDE embeds one hypothetical passage. RAG-Fusion writes extra queries, retrieves each one, and fuses them with reciprocal rank fusion. Both call OpenRouter when `OPENROUTER_API_KEY` is set. Completions are cached under `llm.cache_dir`. The key is not written into that cache. Without a key those two retrievers are recorded as skipped.
+
+`search.mode: staged` scores every chunking config with `stage1_retriever`, keeps the top `top_k_chunking`, sweeps the other retrievers on those, then adds two per-source merges of the winner. `mode: full` crosses the whole grid. Each scored config reports recall@5, recall@10, MRR@10, nDCG@10, and latency per query. A paired bootstrap 95% interval compares that config's per-query nDCG@10 with the current best. The run writes `leaderboard.csv`, `leaderboard.md`, `per_query.json`, and `leaderboard.png`. The chart is drawn from the CSV. Redraw it with `python scripts/make_search_chart.py <leaderboard.csv>`.
+
+The first example points at the [baby-food-rag](https://github.com/ramigonzalez/baby-food-rag) manifest and question file. Running it downloads the core PDFs into `data/cache/baby-food/` on the machine where you start it:
+
+```bash
+pip install -e ".[dev,pdf]"
+export OPENROUTER_API_KEY=...   # optional; HyDE and RAG-Fusion are skipped without it
+raglab search --config examples/baby-food-rag.yaml
+```
+
+`raglab search --config examples/baby-food-rag.yaml --dry-run` prints how many configs the file describes and does not download documents or call an API.
 
 ## Limitations
 
-- One dataset. The abstracts are short (mean 214.6 words), so this does not say what happens on long documents.
+- The measured tables above are still SciFact. The abstracts are short (mean 214.6 words). `examples/baby-food-rag.yaml` is a longer Portuguese corpus, and this repository does not include a sweep of it.
 - The headline faithfulness numbers are judge v2 on 100 queries (`results/gen-100-judge-v2/results.md`). They were checked against Claude Opus labels on 40 items, not against human labels. Faithfulness excludes exact `I do not know.` abstentions. The 20-query file still uses judge v1.
 - Hallucination rate in these files is 1 minus faithfulness, not a second judge.
 - Latency from the 300-query run and the 50-query run comes from different machines (4 CPUs and 8 CPUs).
@@ -148,4 +170,4 @@ CI (`.github/workflows/ci.yml`) runs on push and pull request: ruff, pytest, and
 
 ## What's next
 
-Check the judge against human labels on a SciFact sample. The 40-item Opus sheet is not that check. Run the same grid on a dataset with longer documents. Add another retriever through `register_retriever` and score it with `raglab run` before treating it as measured.
+Check the judge against human labels on a SciFact sample. The 40-item Opus sheet is not that check. Run `raglab search --config examples/baby-food-rag.yaml` on a machine that can load `intfloat/multilingual-e5-large` before treating a baby-food ranking as measured. Add another retriever through `register_retriever` and score it with `raglab run` before treating it as measured.

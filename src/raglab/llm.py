@@ -16,6 +16,7 @@ whenever they are set.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -23,6 +24,7 @@ import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
+from pathlib import Path
 
 
 class LLMNotConfigured(RuntimeError):
@@ -157,9 +159,16 @@ class LLMClient:
         self.timeout = timeout
         self.usage = TokenUsage()
         self._cache: dict[tuple[str, float, str], str] = {}
+        self._disk_cache: Path | None = None
         self.max_estimated_usd: float | None = None
         self.input_usd_per_million = 0.15
         self.output_usd_per_million = 0.60
+
+    def set_disk_cache(self, directory: Path | None) -> None:
+        """Cache completions on disk. The API key is not written."""
+        self._disk_cache = directory
+        if directory is not None:
+            directory.mkdir(parents=True, exist_ok=True)
 
     def set_budget(
         self,
@@ -195,6 +204,11 @@ class LLMClient:
         if use_cache and cache_key in self._cache:
             self.usage.cache_hits += 1
             return self._cache[cache_key]
+        cached = self._read_disk_cache(cache_key) if use_cache else None
+        if cached is not None:
+            self.usage.cache_hits += 1
+            self._cache[cache_key] = cached
+            return cached
         text, prompt_tokens, completion_tokens, estimated = self._post(prompt, temperature)
         self.usage.calls += 1
         self.usage.prompt_tokens += prompt_tokens
@@ -203,8 +217,45 @@ class LLMClient:
             self.usage.estimated_calls += 1
         if use_cache:
             self._cache[cache_key] = text
+            self._write_disk_cache(cache_key, text, prompt_tokens, completion_tokens)
         self._raise_if_over_budget()
         return text
+
+    def _disk_file(self, cache_key: tuple[str, float, str]) -> Path | None:
+        if self._disk_cache is None:
+            return None
+        raw = f"{cache_key[0]}\n{cache_key[1]}\n{cache_key[2]}"
+        digest = hashlib.sha256(raw.encode()).hexdigest()
+        return self._disk_cache / f"{digest}.json"
+
+    def _read_disk_cache(self, cache_key: tuple[str, float, str]) -> str | None:
+        path = self._disk_file(cache_key)
+        if path is None or not path.exists():
+            return None
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        text = payload.get("text")
+        return text if isinstance(text, str) else None
+
+    def _write_disk_cache(
+        self,
+        cache_key: tuple[str, float, str],
+        text: str,
+        prompt_tokens: int,
+        completion_tokens: int,
+    ) -> None:
+        path = self._disk_file(cache_key)
+        if path is None:
+            return
+        path.write_text(
+            json.dumps(
+                {
+                    "text": text,
+                    "prompt_tokens": prompt_tokens,
+                    "completion_tokens": completion_tokens,
+                }
+            ),
+            encoding="utf-8",
+        )
 
     def _post(self, prompt: str, temperature: float) -> tuple[str, int, int, bool]:
         system = "Follow the user's output format exactly."
