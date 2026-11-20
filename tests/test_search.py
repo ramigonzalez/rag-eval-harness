@@ -108,6 +108,33 @@ def test_page_gold_tolerance_any_source_and_chunk_id():
     assert late["recall@10"] == 1
     assert late["mrr@5"] == 0
     assert late["mrr@10"] == pytest.approx(1 / 7)
+    repeated = [
+        Hit(f"same{i}", "outro", "x", 1.0, source_id="outro", page_start=1, page_end=1)
+        for i in range(6)
+    ]
+    repeated.append(Hit("gold", "guia", "y", 1.0, source_id="guia", page_start=5, page_end=5))
+    held = score_query(
+        repeated, query, tolerance=0, any_source=False, match="source_page", k_values=[5, 10]
+    )
+    assert held["recall@5"] == 0
+    assert held["mrr@10"] == pytest.approx(1 / 7)
+    wide = [Hit("wide", "outro", "x", 1.0, source_id="outro", page_start=1, page_end=8)]
+    wide.append(Hit("gold", "guia", "y", 1.0, source_id="guia", page_start=5, page_end=5))
+    spanned = score_query(
+        wide, query, tolerance=0, any_source=False, match="source_page", k_values=[5, 10]
+    )
+    assert spanned["mrr@5"] == pytest.approx(0.5)
+    duplicated = Query(
+        "dup",
+        "leite",
+        gold=(GoldLabel(source_id="guia", page=3), GoldLabel(source_id="outro", page=3)),
+    )
+    once = [Hit("c", "guia", "texto", 1.0, source_id="guia", page_start=3, page_end=3)]
+    collapsed = score_query(
+        once, duplicated, tolerance=0, any_source=True, match="source_page", k_values=[5, 10]
+    )
+    assert collapsed["recall@5"] == 1
+    assert collapsed["ndcg@10"] == 1
     skipped = Query("q4", "leite", gold=(GoldLabel(source_id="guia", page=1),), answerable=False)
     assert (
         score_query(

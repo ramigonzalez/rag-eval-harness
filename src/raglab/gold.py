@@ -7,7 +7,7 @@ the labeled page. ``any_source`` ignores the source id.
 
 from __future__ import annotations
 
-from raglab.metrics import mrr_at_k, ndcg_at_k, recall_at_k
+from raglab.metrics import dcg
 from raglab.types import GoldLabel, Hit, Query
 
 
@@ -50,46 +50,32 @@ def hit_matches(
     return (hit.source_id or hit.doc_id) == label.source_id
 
 
-def _hit_slots(hit: Hit, *, any_source: bool, match: str) -> list[str]:
-    """Identity of a hit that did not match gold. These slots keep its rank."""
-    if match == "chunk_id":
-        return [f"chunk:{hit.chunk_id}"]
-    start = hit.page_start
-    if start is None:
-        return [f"chunk:{hit.chunk_id}"]
-    end = hit.page_end if hit.page_end is not None else start
-    source = hit.source_id or hit.doc_id
-    if any_source:
-        return [f"page:{page}" for page in range(start, end + 1)]
-    return [f"{source}:{page}" for page in range(start, end + 1)]
-
-
-def ranked_keys(
+def first_ranks(
     hits: list[Hit],
     query: Query,
     *,
     tolerance: int,
     any_source: bool,
     match: str,
-) -> list[str]:
-    """Keys in retrieval order. A miss stays in the list so later gold keeps its rank."""
-    seen: set[str] = set()
-    ordered: list[str] = []
-    for hit in hits:
-        matched: list[str] = []
+) -> tuple[dict[str, int], list[float]]:
+    """Hit index of each gold key, and a gain of 1 for the hit that first covers one.
+
+    Each retrieved hit occupies one rank. A repeated page still counts, and a
+    window that spans several pages counts once. Labels that share a key count once.
+    """
+    found: dict[str, int] = {}
+    gains: list[float] = []
+    for index, hit in enumerate(hits):
+        new = False
         for label in query.gold:
             key = label_key(label, any_source=any_source, match=match)
-            if key is None or key in seen:
+            if key is None or key in found:
                 continue
             if hit_matches(hit, label, tolerance=tolerance, any_source=any_source, match=match):
-                matched.append(key)
-        fresh = matched or [
-            key for key in _hit_slots(hit, any_source=any_source, match=match) if key not in seen
-        ]
-        for key in fresh:
-            seen.add(key)
-            ordered.append(key)
-    return ordered
+                found[key] = index
+                new = True
+        gains.append(1.0 if new else 0.0)
+    return found, gains
 
 
 def score_query(
@@ -106,11 +92,11 @@ def score_query(
     relevant = relevant_keys(query, any_source=any_source, match=match)
     if not relevant:
         return None
-    ranked = ranked_keys(hits, query, tolerance=tolerance, any_source=any_source, match=match)
-    grades = {key: 1 for key in relevant}
+    found, gains = first_ranks(hits, query, tolerance=tolerance, any_source=any_source, match=match)
     scores: dict[str, float] = {}
     for k in k_values:
-        scores[f"recall@{k}"] = recall_at_k(ranked, relevant, k)
-        scores[f"mrr@{k}"] = mrr_at_k(ranked, relevant, k)
-        scores[f"ndcg@{k}"] = ndcg_at_k(ranked, grades, k)
+        inside = [rank for rank in found.values() if rank < k]
+        scores[f"recall@{k}"] = len(inside) / len(relevant)
+        scores[f"mrr@{k}"] = 0.0 if not inside else 1.0 / (min(inside) + 1)
+        scores[f"ndcg@{k}"] = dcg(gains, k) / dcg([1.0] * len(relevant), k)
     return scores
