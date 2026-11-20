@@ -162,7 +162,29 @@ def test_page_gold_tolerance_any_source_and_chunk_id():
     assert covered["recall@5"] == 1
     assert covered["ndcg@10"] == 1
     assert split["recall@5"] == 1
-    assert split["ndcg@10"] < 1
+    assert split["ndcg@10"] == pytest.approx(1)
+    many = Query(
+        "many",
+        "leite",
+        gold=tuple(GoldLabel(source_id="guia", page=page) for page in range(1, 5)),
+    )
+    separate = [
+        Hit(f"c{page}", "guia", "texto", 1.0, source_id="guia", page_start=page, page_end=page)
+        for page in range(1, 5)
+    ]
+    apart = score_query(
+        separate, many, tolerance=0, any_source=False, match="source_page", k_values=[5, 10]
+    )
+    together = score_query(
+        [Hit("all", "guia", "texto", 1.0, source_id="guia", page_start=1, page_end=4)],
+        many,
+        tolerance=0,
+        any_source=False,
+        match="source_page",
+        k_values=[5, 10],
+    )
+    assert apart["ndcg@10"] == pytest.approx(1)
+    assert together["ndcg@10"] == pytest.approx(1)
     skipped = Query("q4", "leite", gold=(GoldLabel(source_id="guia", page=1),), answerable=False)
     assert (
         score_query(

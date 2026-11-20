@@ -7,7 +7,8 @@ the labeled page. ``any_source`` ignores the source id.
 
 from __future__ import annotations
 
-from raglab.metrics import dcg
+import math
+
 from raglab.types import GoldLabel, Hit, Query
 
 
@@ -61,8 +62,8 @@ def first_ranks(
     """Hit index of each gold key, and how many new keys that hit covers.
 
     Each retrieved hit occupies one rank. A repeated page still counts, and a
-    window that spans several pages counts once. Its gain is the number of gold
-    keys it covers for the first time, so one chunk can cover every labeled page.
+    window that spans several pages counts once. The count is how many gold
+    keys that hit covers for the first time. Each key is worth 1, not ``2^n``.
     Labels that share a key count once.
     """
     found: dict[str, int] = {}
@@ -100,6 +101,14 @@ def score_query(
         inside = [rank for rank in found.values() if rank < k]
         scores[f"recall@{k}"] = len(inside) / len(relevant)
         scores[f"mrr@{k}"] = 0.0 if not inside else 1.0 / (min(inside) + 1)
-        # All of the gold at rank 1 is the ideal, which is what one covering chunk scores.
-        scores[f"ndcg@{k}"] = dcg(gains, k) / dcg([float(len(relevant))], k)
+        ideal = _key_dcg([1.0] * len(relevant), k)
+        scores[f"ndcg@{k}"] = 0.0 if ideal == 0 else min(1.0, _key_dcg(gains, k) / ideal)
     return scores
+
+
+def _key_dcg(gains: list[float], k: int) -> float:
+    """One point per gold key, discounted by the hit that found it."""
+    total = 0.0
+    for index, gain in enumerate(gains[:k]):
+        total += float(gain) / math.log2(index + 2)
+    return total
