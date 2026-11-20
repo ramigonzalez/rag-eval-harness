@@ -58,23 +58,25 @@ def first_ranks(
     any_source: bool,
     match: str,
 ) -> tuple[dict[str, int], list[float]]:
-    """Hit index of each gold key, and a gain of 1 for the hit that first covers one.
+    """Hit index of each gold key, and how many new keys that hit covers.
 
     Each retrieved hit occupies one rank. A repeated page still counts, and a
-    window that spans several pages counts once. Labels that share a key count once.
+    window that spans several pages counts once. Its gain is the number of gold
+    keys it covers for the first time, so one chunk can cover every labeled page.
+    Labels that share a key count once.
     """
     found: dict[str, int] = {}
     gains: list[float] = []
     for index, hit in enumerate(hits):
-        new = False
+        new = 0
         for label in query.gold:
             key = label_key(label, any_source=any_source, match=match)
             if key is None or key in found:
                 continue
             if hit_matches(hit, label, tolerance=tolerance, any_source=any_source, match=match):
                 found[key] = index
-                new = True
-        gains.append(1.0 if new else 0.0)
+                new += 1
+        gains.append(float(new))
     return found, gains
 
 
@@ -98,5 +100,6 @@ def score_query(
         inside = [rank for rank in found.values() if rank < k]
         scores[f"recall@{k}"] = len(inside) / len(relevant)
         scores[f"mrr@{k}"] = 0.0 if not inside else 1.0 / (min(inside) + 1)
-        scores[f"ndcg@{k}"] = dcg(gains, k) / dcg([1.0] * len(relevant), k)
+        # All of the gold at rank 1 is the ideal, which is what one covering chunk scores.
+        scores[f"ndcg@{k}"] = dcg(gains, k) / dcg([float(len(relevant))], k)
     return scores

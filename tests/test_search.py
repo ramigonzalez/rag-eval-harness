@@ -135,6 +135,34 @@ def test_page_gold_tolerance_any_source_and_chunk_id():
     )
     assert collapsed["recall@5"] == 1
     assert collapsed["ndcg@10"] == 1
+    both_pages = Query(
+        "span",
+        "leite",
+        gold=(GoldLabel(source_id="guia", page=1), GoldLabel(source_id="guia", page=2)),
+    )
+    covered = score_query(
+        [Hit("wide", "guia", "texto", 1.0, source_id="guia", page_start=1, page_end=2)],
+        both_pages,
+        tolerance=0,
+        any_source=False,
+        match="source_page",
+        k_values=[5, 10],
+    )
+    split = score_query(
+        [
+            Hit("a", "guia", "texto", 1.0, source_id="guia", page_start=1, page_end=1),
+            Hit("b", "guia", "texto", 1.0, source_id="guia", page_start=2, page_end=2),
+        ],
+        both_pages,
+        tolerance=0,
+        any_source=False,
+        match="source_page",
+        k_values=[5, 10],
+    )
+    assert covered["recall@5"] == 1
+    assert covered["ndcg@10"] == 1
+    assert split["recall@5"] == 1
+    assert split["ndcg@10"] < 1
     skipped = Query("q4", "leite", gold=(GoldLabel(source_id="guia", page=1),), answerable=False)
     assert (
         score_query(
