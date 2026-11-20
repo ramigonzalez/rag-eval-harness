@@ -1,6 +1,7 @@
 """Search, ingest, Portuguese tokens, and page-level gold. No downloads and no API."""
 
 import csv
+import hashlib
 import json
 from pathlib import Path
 
@@ -95,6 +96,18 @@ def test_page_gold_tolerance_any_source_and_chunk_id():
         hits, text_label, tolerance=0, any_source=False, match="chunk_id", k_values=[5, 10]
     )
     assert by_text["mrr@10"] == 1
+    buried = [
+        Hit(f"c{page}", "outro", "x", 1.0, source_id="outro", page_start=page, page_end=page)
+        for page in range(1, 7)
+    ]
+    buried.append(Hit("gold", "guia", "y", 1.0, source_id="guia", page_start=5, page_end=5))
+    late = score_query(
+        buried, query, tolerance=0, any_source=False, match="source_page", k_values=[5, 10]
+    )
+    assert late["recall@5"] == 0
+    assert late["recall@10"] == 1
+    assert late["mrr@5"] == 0
+    assert late["mrr@10"] == pytest.approx(1 / 7)
     skipped = Query("q4", "leite", gold=(GoldLabel(source_id="guia", page=1),), answerable=False)
     assert (
         score_query(
@@ -137,11 +150,40 @@ def test_ingest_markdown_html_and_text_keep_source_and_page(tmp_path):
     assert headed[0].text.startswith("# Leite")
 
 
-def test_cached_download_checks_sha256_without_fetching_again(tmp_path):
+def test_cached_download_checks_sha256_without_fetching_again(tmp_path, monkeypatch):
     dest = tmp_path / "already.bin"
+    calls = {"n": 0}
+
+    class _Response:
+        def read(self):
+            return b"not-the-file"
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+    def urlopen(request, timeout=120):
+        calls["n"] += 1
+        return _Response()
+
+    monkeypatch.setattr("urllib.request.urlopen", urlopen)
+    digest = hashlib.sha256(b"abc").hexdigest()
     dest.write_bytes(b"abc")
+    assert fetch_bytes("https://example.com/already.bin", dest, digest) == b"abc"
+    assert calls["n"] == 0
+
+    dest.write_bytes(b"poison")
     with pytest.raises(IngestError, match="Checksum mismatch"):
-        fetch_bytes("http://127.0.0.1:9/not-used", dest, "deadbeef")
+        fetch_bytes("https://example.com/already.bin", dest, digest)
+    assert calls["n"] == 1
+    assert not dest.exists()
+
+    fresh = tmp_path / "fresh.bin"
+    with pytest.raises(IngestError, match="Checksum mismatch"):
+        fetch_bytes("https://example.com/fresh.bin", fresh, digest)
+    assert not fresh.exists()
     manifest = tmp_path / "manifest.yaml"
     manifest.write_text(
         """

@@ -76,16 +76,24 @@ def select_sources(specs: list[SourceSpec], roles: list[str] | None) -> list[Sou
 def fetch_bytes(url: str, dest: Path, expected_sha256: str = "") -> bytes:
     dest.parent.mkdir(parents=True, exist_ok=True)
     if dest.exists():
-        data = dest.read_bytes()
-    else:
-        request = urllib.request.Request(url, headers={"User-Agent": "raglab/0.1"})
-        with urllib.request.urlopen(request, timeout=120) as response:
-            data = response.read()
-        dest.write_bytes(data)
-    digest = hashlib.sha256(data).hexdigest()
-    if expected_sha256 and digest != expected_sha256:
+        cached = dest.read_bytes()
+        if _checksum_ok(cached, expected_sha256):
+            return cached
+        dest.unlink()
+    request = urllib.request.Request(url, headers={"User-Agent": "raglab/0.1"})
+    with urllib.request.urlopen(request, timeout=120) as response:
+        data = response.read()
+    if not _checksum_ok(data, expected_sha256):
+        digest = hashlib.sha256(data).hexdigest()
         raise IngestError(f"Checksum mismatch for {dest.name}: {digest} != {expected_sha256}")
+    dest.write_bytes(data)
     return data
+
+
+def _checksum_ok(data: bytes, expected_sha256: str) -> bool:
+    if not expected_sha256:
+        return True
+    return hashlib.sha256(data).hexdigest() == expected_sha256
 
 
 def blocks_from_path(path: Path, source_id: str, title: str = "") -> list[Block]:

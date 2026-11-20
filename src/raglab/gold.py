@@ -50,6 +50,20 @@ def hit_matches(
     return (hit.source_id or hit.doc_id) == label.source_id
 
 
+def _hit_slots(hit: Hit, *, any_source: bool, match: str) -> list[str]:
+    """Identity of a hit that did not match gold. These slots keep its rank."""
+    if match == "chunk_id":
+        return [f"chunk:{hit.chunk_id}"]
+    start = hit.page_start
+    if start is None:
+        return [f"chunk:{hit.chunk_id}"]
+    end = hit.page_end if hit.page_end is not None else start
+    source = hit.source_id or hit.doc_id
+    if any_source:
+        return [f"page:{page}" for page in range(start, end + 1)]
+    return [f"{source}:{page}" for page in range(start, end + 1)]
+
+
 def ranked_keys(
     hits: list[Hit],
     query: Query,
@@ -58,17 +72,23 @@ def ranked_keys(
     any_source: bool,
     match: str,
 ) -> list[str]:
-    """Gold keys in the order a retrieved chunk first satisfies them."""
+    """Keys in retrieval order. A miss stays in the list so later gold keeps its rank."""
     seen: set[str] = set()
     ordered: list[str] = []
     for hit in hits:
+        matched: list[str] = []
         for label in query.gold:
             key = label_key(label, any_source=any_source, match=match)
             if key is None or key in seen:
                 continue
             if hit_matches(hit, label, tolerance=tolerance, any_source=any_source, match=match):
-                seen.add(key)
-                ordered.append(key)
+                matched.append(key)
+        fresh = matched or [
+            key for key in _hit_slots(hit, any_source=any_source, match=match) if key not in seen
+        ]
+        for key in fresh:
+            seen.add(key)
+            ordered.append(key)
     return ordered
 
 
