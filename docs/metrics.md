@@ -387,3 +387,15 @@ These are the differences that change how to read the tables.
 - Hallucination rate is \(1 - \mathrm{faithfulness}\) on the same claims, not another model.
 - Faithfulness, hallucination rate, and answer relevancy exclude the exact abstention `I do not know.` Answer relevancy does not add a separate non-committal penalty on top of that.
 - Judge metrics are not human labels. Nothing in the result files is a completed RAGAS agreement number.
+
+## Search leaderboard
+
+`raglab search` writes `leaderboard.csv`. Recall, MRR, and nDCG there are page-level or chunk-id matches, not the document collapse used in the SciFact tables. Each gold page is one point. A chunk that covers several gold pages adds that many points at the rank of that one hit. The discount is `1 / log2(rank + 1)` per page. It does not treat the page count as a grade inside `2^rel - 1`.
+
+Three extra columns keep a long chunk from looking better only because it carries more text:
+
+| Name | Column | What it means | Better |
+| --- | --- | --- | --- |
+| Mean words per chunk | `mean_chunk_words` | Mean length of the chunks in that config. | Depends |
+| Words in the first 10 hits | `mean_words@10` | Mean, over queries, of how many words the first 10 hits contain. | Depends |
+| Recall inside a word budget | `recall_budget@10` | Recall@10 after hits that would push the total past `word_budget` are dropped. The example budget is 2000 words. A first chunk longer than the budget contributes nothing. | Higher |

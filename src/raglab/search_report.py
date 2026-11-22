@@ -30,6 +30,10 @@ COLUMNS = [
     "recall_any_source@10",
     "recall_source_page@5",
     "recall_source_page@10",
+    "mean_chunk_words",
+    "mean_words@10",
+    "recall_budget@5",
+    "recall_budget@10",
     "reason",
 ]
 
@@ -136,20 +140,25 @@ def _markdown(rows: list[dict], plan: str) -> str:
         "",
         "nDCG CI is the paired bootstrap 95% interval of this config minus the current best, "
         "on per-query nDCG@10. Recall columns are the primary gold match. "
-        "`recall_any_source` ignores source id. The chart is drawn from `leaderboard.csv`.",
+        "`recall_any_source` ignores source id. "
+        "`words/chunk` is the mean chunk length. "
+        "`words@10` is the mean words in the first 10 hits. "
+        "`R@budget` is recall@10 after the hit list is cut to the configured word budget. "
+        "The chart is drawn from `leaderboard.csv`.",
         "",
-        "| Config | Stage | Recall@5 | Recall@10 | MRR@10 | nDCG@10 | Latency ms | CI vs best |",
-        "| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |",
+        "| Config | R@10 | nDCG@10 | Words/chunk | Words@10 | R@budget | Latency ms | CI vs best |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |",
     ]
     for row in ordered:
         lines.append(
-            "| {config} | {stage} | {r5} | {r10} | {mrr} | {ndcg} | {latency} | {ci} |".format(
+            "| {config} | {r10} | {ndcg} | {chunk_words} | {top_words} "
+            "| {budget} | {latency} | {ci} |".format(
                 config=row["config_id"],
-                stage=row["stage"],
-                r5=_num(row.get("recall@5")),
                 r10=_num(row.get("recall@10")),
-                mrr=_num(row.get("mrr@10")),
                 ndcg=_num(row.get("ndcg@10")),
+                chunk_words=_num(row.get("mean_chunk_words"), 0),
+                top_words=_num(row.get("mean_words@10"), 0),
+                budget=_num(row.get("recall_budget@10")),
                 latency=_num(row.get("latency_ms"), 1),
                 ci=_ci(row),
             )

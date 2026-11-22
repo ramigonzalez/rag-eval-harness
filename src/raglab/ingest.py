@@ -15,7 +15,8 @@ from pathlib import Path
 
 import yaml
 
-_HEADINGISH = re.compile(r"^[A-ZÁÉÍÓÚÂÊÔÃÕÇ0-9][A-ZÁÉÍÓÚÂÊÔÃÕÇ0-9 \-:.]{0,80}$")
+# A heading is a short title, not a table cell or a one-word column label.
+_HEADINGISH = re.compile(r"^[A-ZÁÉÍÓÚÂÊÔÃÕÇ][A-ZÁÉÍÓÚÂÊÔÃÕÇ0-9 \-:.]{8,79}$")
 
 
 class IngestError(RuntimeError):
@@ -127,14 +128,43 @@ def blocks_from_pdf(data: bytes, source_id: str, title: str = "") -> list[Block]
     return blocks
 
 
+def _is_heading(line: str) -> bool:
+    """True for a short title line. Table rows, numbers, and one-word labels are not titles."""
+    if not _HEADINGISH.match(line):
+        return False
+    if "  " in line or any(mark in line for mark in "|•·∙"):
+        return False
+    words = line.split()
+    if not 2 <= len(words) <= 8:
+        return False
+    letters = sum(character.isalpha() for character in line)
+    digits = sum(character.isdigit() for character in line)
+    if letters < 6 or (digits and digits * 2 >= letters):
+        return False
+    return True
+
+
 def plain_to_markdown(text: str) -> str:
-    lines = []
+    marked: list[tuple[str, str]] = []
     for raw in text.splitlines():
         line = raw.strip()
         if not line:
+            marked.append(("blank", ""))
+        elif _is_heading(line):
+            marked.append(("heading", line))
+        else:
+            marked.append(("text", line))
+    merged: list[tuple[str, str]] = []
+    for kind, line in marked:
+        if kind == "heading" and merged and merged[-1][0] == "heading":
+            merged[-1] = ("heading", f"{merged[-1][1]} {line}")
+        else:
+            merged.append((kind, line))
+    lines = []
+    for kind, line in merged:
+        if kind == "blank":
             lines.append("")
-            continue
-        if _HEADINGISH.match(line) and len(line.split()) <= 12:
+        elif kind == "heading":
             lines.append(f"## {line}")
         else:
             lines.append(line)

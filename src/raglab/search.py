@@ -1,7 +1,7 @@
 """Stage-wise search over chunking and retrieval for any labeled corpus.
 
-Stage 1 scores every chunk size and overlap with one retriever and keeps the
-top few. Stage 2 runs the other retrievers on those chunkings. Stage 3 adds a
+Stage 1 scores every chunk size and overlap with one retriever. Stage 2 runs
+the other retrievers on the best config of each chunker family. Stage 3 adds a
 per-source merge. ``mode: full`` crosses the whole grid instead.
 """
 
@@ -17,7 +17,8 @@ import yaml
 from raglab.chunking.fixed import FixedChunker
 from raglab.chunking.markdown import MarkdownChunker
 from raglab.chunking.recursive import RecursiveChunker
-from raglab.embeddings import load_embedder
+from raglab.chunking.semantic import SemanticChunker
+from raglab.embeddings import HashEmbedder, load_embedder
 from raglab.gold import score_query
 from raglab.ingest import (
     Block,
@@ -39,7 +40,8 @@ from raglab.retrieval.strategies import (
     RAGFusionRetriever,
 )
 from raglab.search_report import write_search_outputs
-from raglab.types import Chunk, GoldLabel, Hit, Query
+from raglab.textutil import word_count
+from raglab.types import Chunk, Document, GoldLabel, Hit, Query
 
 logger = logging.getLogger("raglab")
 
@@ -53,10 +55,14 @@ class ChunkSpec:
     chunker: str
     chunk_size: int
     overlap: float
+    cross_page: bool = False
 
     @property
     def key(self) -> str:
-        return f"{self.chunker}:{self.chunk_size}:overlap={self.overlap:.2f}"
+        base = f"{self.chunker}:{self.chunk_size}:overlap={self.overlap:.2f}"
+        if self.cross_page:
+            return f"{base}:cross-page"
+        return base
 
 
 @dataclass(frozen=True)
@@ -102,6 +108,9 @@ class SearchConfig:
     seed: int
     k_values: list[int]
     hit_k: int
+    cross_page: bool
+    word_budget: int
+    top_k_per_family: int
 
 
 def load_search_config(path: Path) -> SearchConfig:
@@ -156,16 +165,30 @@ def load_search_config(path: Path) -> SearchConfig:
         seed=int(search.get("seed") or 7),
         k_values=[int(value) for value in search.get("k_values") or [5, 10]],
         hit_k=int(search.get("hit_k") or 60),
+        cross_page=bool(search.get("cross_page", False)),
+        word_budget=int(2000 if search.get("word_budget") is None else search.get("word_budget")),
+        top_k_per_family=int(search.get("top_k_per_family") or 1),
     )
 
 
 def chunk_specs(config: SearchConfig) -> list[ChunkSpec]:
-    return [
-        ChunkSpec(name, size, overlap)
-        for name in config.chunkers
-        for size in config.chunk_sizes
-        for overlap in config.overlaps
-    ]
+    specs = []
+    for name in config.chunkers:
+        # Semantic splits do not use a word overlap, so the grid keeps one config per size.
+        overlaps = [0.0] if name == "semantic" else config.overlaps
+        for size in config.chunk_sizes:
+            for overlap in overlaps:
+                specs.append(ChunkSpec(name, size, overlap, config.cross_page and name == "fixed"))
+    return specs
+
+
+def _stage2_chunkings(config: SearchConfig) -> int:
+    specs = chunk_specs(config)
+    per_family = max(1, config.top_k_per_family)
+    available = {}
+    for spec in specs:
+        available[spec.chunker] = available.get(spec.chunker, 0) + 1
+    return sum(min(per_family, count) for count in available.values())
 
 
 def planned_count(config: SearchConfig) -> int:
@@ -173,8 +196,7 @@ def planned_count(config: SearchConfig) -> int:
     if config.mode == "full":
         return chunks * len(config.retrievers)
     others = [name for name in config.retrievers if name != config.stage1_retriever]
-    kept = min(config.top_k_chunking, chunks)
-    return chunks + kept * len(others) + 2
+    return chunks + _stage2_chunkings(config) * len(others) + 2
 
 
 def describe_plan(config: SearchConfig) -> str:
@@ -186,11 +208,13 @@ def describe_plan(config: SearchConfig) -> str:
             f"= {total} configs"
         )
     others = [name for name in config.retrievers if name != config.stage1_retriever]
-    kept = min(config.top_k_chunking, chunks)
+    families = len({spec.chunker for spec in chunk_specs(config)})
+    kept = _stage2_chunkings(config)
     stage2 = kept * len(others)
     return (
         f"staged: {chunks} chunking configs with {config.stage1_retriever}, "
-        f"then top {kept} x {len(others)} retrievers ({stage2}), "
+        f"then {config.top_k_per_family} best from each of {families} families "
+        f"({kept} chunkings x {len(others)} retrievers = {stage2}), "
         f"then 2 per-source combines = {planned_count(config)} configs"
     )
 
@@ -222,21 +246,37 @@ def stage3_runs(config: SearchConfig, rows: list[dict]) -> list[RunSpec]:
     if not scored:
         return []
     best = min(scored, key=_quality_key)
-    chunk = ChunkSpec(best["chunker"], int(best["chunk_size"]), float(best["overlap"]))
-    return _stage3(chunk, rows)
+    return _stage3(_spec_from_row(best), rows)
+
+
+def _spec_from_row(row: dict) -> ChunkSpec:
+    return ChunkSpec(
+        row["chunker"],
+        int(row["chunk_size"]),
+        float(row["overlap"]),
+        bool(row.get("cross_page")),
+    )
 
 
 def _top_chunks(config: SearchConfig, rows: list[dict]) -> list[ChunkSpec]:
-    ranked = sorted(rows, key=_quality_key)
+    """Best configs of each chunker family, so stage 2 is not only the global top few."""
+    grouped: dict[str, list[dict]] = {}
+    for row in sorted(rows, key=_quality_key):
+        if row.get("status") != "ok" or row.get("per_source"):
+            continue
+        grouped.setdefault(row["chunker"], []).append(row)
     winners: list[ChunkSpec] = []
     seen: set[str] = set()
-    for row in ranked:
-        if row.get("status") != "ok" or row["chunk_key"] in seen:
-            continue
-        seen.add(row["chunk_key"])
-        winners.append(ChunkSpec(row["chunker"], int(row["chunk_size"]), float(row["overlap"])))
-        if len(winners) >= config.top_k_chunking:
-            break
+    for family in config.chunkers:
+        kept = 0
+        for row in grouped.get(family, []):
+            if row["chunk_key"] in seen:
+                continue
+            seen.add(row["chunk_key"])
+            winners.append(_spec_from_row(row))
+            kept += 1
+            if kept >= config.top_k_per_family:
+                break
     return winners
 
 
@@ -307,7 +347,7 @@ def make_embedder(config: SearchConfig):
     return inner
 
 
-def chunk_blocks(blocks: list[Block], spec: ChunkSpec) -> list[Chunk]:
+def chunk_blocks(blocks: list[Block], spec: ChunkSpec, embedder=None) -> list[Chunk]:
     overlap = int(round(spec.chunk_size * spec.overlap))
     if overlap >= spec.chunk_size:
         overlap = max(0, spec.chunk_size - 1)
@@ -315,37 +355,74 @@ def chunk_blocks(blocks: list[Block], spec: ChunkSpec) -> list[Chunk]:
     grouped: dict[str, list[Block]] = {}
     for block in blocks:
         grouped.setdefault(block.source_id, []).append(block)
+    semantic = embedder or HashEmbedder(dim=32)
     for source_id, source_blocks in grouped.items():
-        if spec.chunker == "fixed":
+        if spec.chunker == "fixed" and spec.cross_page:
             chunks.extend(
                 _fixed_across_pages(source_id, source_blocks, spec.chunk_size, overlap, len(chunks))
             )
-        else:
-            for block in source_blocks:
-                parts = _split_strategy(spec.chunker, block.text, spec.chunk_size, overlap)
-                for part in parts:
-                    chunks.append(_make_chunk(source_id, part, block.page, block.page, len(chunks)))
+            continue
+        for block in source_blocks:
+            parts = _split_page(spec, block.text, overlap, semantic)
+            for part in parts:
+                chunks.append(_make_chunk(source_id, part, block.page, block.page, len(chunks)))
     if not chunks:
         raise IngestError(f"{spec.key} produced no chunks")
     return chunks
 
 
-def _split_strategy(name: str, text: str, size: int, overlap: int) -> list[str]:
-    if name == "markdown":
-        sections = MarkdownChunker().split_text(text)
-        window = FixedChunker(size, overlap)
-        pieces: list[str] = []
-        for section in sections:
-            if len(section.split()) <= size:
-                pieces.append(section)
-            else:
-                pieces.extend(window.split_text(section))
-        return pieces
-    if name == "recursive":
-        return RecursiveChunker(size, overlap).split_text(text)
-    if name == "fixed":
-        return FixedChunker(size, overlap).split_text(text)
-    raise KeyError(name)
+def _split_page(spec: ChunkSpec, text: str, overlap: int, embedder) -> list[str]:
+    if spec.chunker == "markdown":
+        return _pack_sections(MarkdownChunker().split_text(text), spec.chunk_size, overlap)
+    if spec.chunker == "recursive":
+        return RecursiveChunker(spec.chunk_size, overlap).split_text(text)
+    if spec.chunker == "fixed":
+        return FixedChunker(spec.chunk_size, overlap).split_text(text)
+    if spec.chunker == "semantic":
+        return _semantic_parts(text, spec.chunk_size, embedder)
+    raise KeyError(spec.chunker)
+
+
+def _pack_sections(sections: list[str], size: int, overlap: int) -> list[str]:
+    """Merge short heading sections up to the target size, then window a long one."""
+    packed: list[str] = []
+    buffer = ""
+    window = FixedChunker(size, overlap)
+
+    def flush() -> None:
+        nonlocal buffer
+        if buffer.strip():
+            packed.append(buffer.strip())
+        buffer = ""
+
+    for section in sections:
+        words = word_count(section)
+        if words > size:
+            flush()
+            packed.extend(window.split_text(section))
+            continue
+        if buffer and word_count(buffer) + words > size:
+            flush()
+        buffer = f"{buffer}\n\n{section}".strip() if buffer else section
+    flush()
+    return packed
+
+
+def _semantic_parts(text: str, size: int, embedder) -> list[str]:
+    """Split one page with the existing semantic chunker and a local hash embedder."""
+    if not text.strip():
+        return []
+    minimum = min(40, size)
+    chunker = SemanticChunker(
+        breakpoint_percentile=95,
+        max_chunk_words=size,
+        min_chunk_words=minimum,
+        embedder=embedder,
+    )
+    document = Document(doc_id="page", title="", text=text)
+    return [
+        chunk.text for chunk in chunker.chunk_corpus([document], embedder) if chunk.text.strip()
+    ]
 
 
 def _fixed_across_pages(
@@ -597,15 +674,55 @@ def score_run(
             _collect(buckets, strict, "source_page_")
         if broad is not None:
             _collect(buckets, broad, "any_source_")
+        top = hits[:10]
+        buckets.setdefault("mean_words@10", []).append(
+            float(sum(word_count(hit.text) for hit in top))
+        )
+        if config.word_budget > 0:
+            trimmed = _hits_within_budget(hits, config.word_budget)
+            budget_scores = score_query(
+                trimmed,
+                query,
+                tolerance=config.page_tolerance,
+                any_source=config.any_source,
+                match=config.gold_match,
+                k_values=config.k_values,
+            )
+            if budget_scores is not None:
+                for k in config.k_values:
+                    buckets.setdefault(f"recall_budget@{k}", []).append(
+                        budget_scores[f"recall@{k}"]
+                    )
     elapsed_ms = (time.perf_counter() - started) / max(len(queries), 1) * 1000.0
     row = _base_row(spec, "ok", "")
     row["latency_ms"] = elapsed_ms
     row["n_queries"] = len(per_ndcg)
     row["query_ids"] = query_ids
     row["per_query_ndcg@10"] = per_ndcg
+    row["mean_chunk_words"] = sum(word_count(chunk.text) for chunk in index.chunks) / len(
+        index.chunks
+    )
     for key, values in buckets.items():
         row[key] = sum(values) / len(values) if values else None
     return row
+
+
+def _hits_within_budget(hits: list[Hit], budget: int) -> list[Hit]:
+    """Keep a prefix of hits whose combined words stay inside the budget.
+
+    A hit that would cross the budget is left out, including a first hit that is
+    already longer than the budget. That keeps a page-spanning window from
+    winning a recall number by carrying more text than the other configs.
+    """
+    kept: list[Hit] = []
+    words = 0
+    for hit in hits:
+        count = word_count(hit.text)
+        if words + count > budget:
+            break
+        kept.append(hit)
+        words += count
+    return kept
 
 
 def _collect(buckets: dict[str, list[float]], scores: dict[str, float], prefix: str) -> None:
@@ -628,6 +745,7 @@ def _base_row(spec: RunSpec, status: str, reason: str) -> dict:
         "chunk_key": spec.chunk.key,
         "retriever": spec.retriever,
         "per_source": spec.per_source,
+        "cross_page": spec.chunk.cross_page,
         "status": status,
         "reason": reason,
         "latency_ms": None,
@@ -724,6 +842,7 @@ def _execute(
 ) -> list[dict]:
     rows = []
     seen = set()
+    semantic_embedder = HashEmbedder(dim=32)
     for spec in runs:
         if spec.config_id in seen:
             continue
@@ -738,7 +857,7 @@ def _execute(
                 continue
         chunks = chunk_cache.get(spec.chunk.key)
         if chunks is None:
-            chunks = chunk_blocks(blocks, spec.chunk)
+            chunks = chunk_blocks(blocks, spec.chunk, semantic_embedder)
             chunk_cache[spec.chunk.key] = chunks
         index = _index_for(spec, chunks, services, config, index_cache)
         rows.append(score_run(index, queries, spec, services, config))

@@ -15,6 +15,7 @@ from raglab.ingest import (
     blocks_from_path,
     fetch_bytes,
     load_manifest,
+    plain_to_markdown,
     select_sources,
 )
 from raglab.lang_pt import stem_pt, tokenize_pt
@@ -23,11 +24,13 @@ from raglab.retrieval.index import Services
 from raglab.search import (
     ChunkSpec,
     PrefixedEmbedder,
+    _hits_within_budget,
     chunk_blocks,
     describe_plan,
     load_search_config,
     planned_count,
     run_search,
+    stage2_runs,
 )
 from raglab.types import GoldLabel, Hit, Query
 
@@ -200,7 +203,7 @@ def test_ingest_markdown_html_and_text_keep_source_and_page(tmp_path):
     html = tmp_path / "nota.html"
     html.write_text("<h2>Alergia</h2><p>Evite mel no primeiro ano.</p>", encoding="utf-8")
     plain = tmp_path / "nota.txt"
-    plain.write_text("INTRODUCAO\n\nOfereca alimentos amassados.\n", encoding="utf-8")
+    plain.write_text("ALIMENTACAO COMPLEMENTAR\n\nOfereca alimentos amassados.\n", encoding="utf-8")
     md_blocks = blocks_from_path(markdown, "guia", "Guia")
     html_blocks = blocks_from_path(html, "nota", "Nota")
     txt_blocks = blocks_from_path(plain, "txt", "Txt")
@@ -208,7 +211,7 @@ def test_ingest_markdown_html_and_text_keep_source_and_page(tmp_path):
     assert md_blocks[0].text.startswith("# Leite materno")
     assert html_blocks[0].text.startswith("## Alergia")
     assert html_blocks[0].source_id == "nota"
-    assert txt_blocks[0].text.startswith("## INTRODUCAO")
+    assert txt_blocks[0].text.startswith("## ALIMENTACAO COMPLEMENTAR")
     chunks = chunk_blocks(
         [
             Block("guia", 1, "um dois tres"),
@@ -217,8 +220,17 @@ def test_ingest_markdown_html_and_text_keep_source_and_page(tmp_path):
         ChunkSpec("fixed", 4, 0.0),
     )
     assert chunks[0].source_id == "guia"
-    assert chunks[0].page_start == 1 and chunks[0].page_end == 2
-    assert "quatro" in chunks[0].text
+    assert chunks[0].page_start == chunks[0].page_end == 1
+    assert "quatro" not in chunks[0].text
+    spanning = chunk_blocks(
+        [
+            Block("guia", 1, "um dois tres"),
+            Block("guia", 2, "quatro cinco seis"),
+        ],
+        ChunkSpec("fixed", 4, 0.0, cross_page=True),
+    )
+    assert spanning[0].page_start == 1 and spanning[0].page_end == 2
+    assert "quatro" in spanning[0].text
     headed = chunk_blocks(
         [Block("guia", 3, "# Leite\n\nO leite materno exclusivo.")],
         ChunkSpec("markdown", 32, 0.0),
@@ -296,12 +308,94 @@ def test_disk_cache_does_not_store_the_api_key(tmp_path, monkeypatch):
     assert "sk-test-secret-value" not in blob
 
 
+def test_heading_detector_skips_fragments_and_merges_short_sections():
+    text = plain_to_markdown(
+        "\n".join(
+            [
+                "123 456",
+                "IDADE",
+                "6 MESES 2 3",
+                "COLUNA   VALOR",
+                "ALIMENTACAO COMPLEMENTAR",
+                "DO LACTENTE",
+                "Ofereca papa.",
+            ]
+        )
+    )
+    assert "## 123" not in text
+    assert "## IDADE" not in text
+    assert "## 6 MESES" not in text
+    assert "## COLUNA" not in text
+    assert "## ALIMENTACAO COMPLEMENTAR DO LACTENTE" in text
+    sections = "\n\n".join(f"## Parte {index}\n\npalavra {index}" for index in range(1, 6))
+    packed = chunk_blocks([Block("guia", 1, sections)], ChunkSpec("markdown", 12, 0.0))
+    assert len(packed) < 5
+    assert all(len(chunk.text.split()) <= 12 for chunk in packed)
+
+
+def test_fixed_page_budget_and_semantic_family():
+    huge = Hit(
+        "big", "guia", " ".join(["palavra"] * 50), 1.0, source_id="guia", page_start=1, page_end=3
+    )
+    small = Hit("small", "guia", "leite materno", 1.0, source_id="guia", page_start=2, page_end=2)
+    assert _hits_within_budget([huge, small], 20) == []
+    assert _hits_within_budget([small, huge], 20) == [small]
+    page = (
+        "O leite materno exclusivo protege a crianca. "
+        "A introducao alimentar comeca aos seis meses. "
+        "Ofereca alimentos amassados com colher. "
+        "Evite mel no primeiro ano de vida."
+    )
+    semantic = chunk_blocks(
+        [Block("guia", 4, page), Block("guia", 5, page)],
+        ChunkSpec("semantic", 12, 0.2),
+    )
+    assert semantic
+    assert {chunk.page_start for chunk in semantic} == {4, 5}
+    assert all(chunk.page_start == chunk.page_end for chunk in semantic)
+    assert all(len(chunk.text.split()) <= 12 for chunk in semantic)
+
+
+def test_stage2_includes_every_chunker_family():
+    config = load_search_config(ROOT / "examples" / "baby-food-rag.yaml")
+    rows = []
+    for chunker, score in (
+        ("fixed", 0.9),
+        ("fixed", 0.8),
+        ("fixed", 0.7),
+        ("recursive", 0.2),
+        ("markdown", 0.1),
+        ("semantic", 0.05),
+    ):
+        spec = ChunkSpec(chunker, 256 if chunker != "fixed" else 1024, 0.0)
+        rows.append(
+            {
+                "status": "ok",
+                "chunker": chunker,
+                "chunk_size": spec.chunk_size,
+                "overlap": 0.0,
+                "cross_page": False,
+                "chunk_key": spec.key,
+                "config_id": f"{spec.key}|bm25|corpus",
+                "ndcg@10": score,
+                "latency_ms": 1.0,
+                "per_source": False,
+                "retriever": "bm25",
+            }
+        )
+    families = {run.chunk.chunker for run in stage2_runs(config, rows)}
+    assert families == {"fixed", "recursive", "markdown", "semantic"}
+
+
 def test_baby_food_dry_run_counts_the_staged_grid():
     config = load_search_config(ROOT / "examples" / "baby-food-rag.yaml")
     assert config.embedder_model == "intfloat/multilingual-e5-large"
     assert config.language == "pt"
-    assert planned_count(config) == 41
-    assert "41" in describe_plan(config)
+    assert config.cross_page is False
+    assert config.word_budget == 2000
+    assert "semantic" in config.chunkers
+    assert planned_count(config) == 48
+    assert "48" in describe_plan(config)
     assert "manifest.yaml" in config.manifest_url
     assert config.eval_url.endswith("eval/set.yaml")
 
@@ -412,6 +506,9 @@ search:
     assert saved[0]["query_ids"] == ["q1"]
     assert "sk-" not in csv_path.read_text(encoding="utf-8")
     assert rows[bm25["config_id"]]["recall_source_page@5"] == 1
+    assert bm25["mean_chunk_words"] > 0
+    assert bm25["mean_words@10"] > 0
+    assert bm25["recall_budget@5"] == 1
 
     bare = Services(embedder=services.embedder, llm=None, rrf_k=60, fusion_pool=10)
     skipped = run_search(config, services=bare)

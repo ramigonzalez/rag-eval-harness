@@ -21,10 +21,15 @@ output_dir: results/baby-food
 search:
   mode: staged
   stage1_retriever: bm25
-  top_k_chunking: 3
-  chunkers: [markdown, recursive, fixed]
+  # Best config of each chunker family advances, not only the global top 3.
+  top_k_per_family: 1
+  chunkers: [markdown, recursive, fixed, semantic]
   chunk_sizes: [256, 512, 1024]
   overlaps: [0.0, 0.1, 0.2]
+  # Fixed stays inside a page. Set true to allow windows that span pages.
+  cross_page: false
+  # Recall after cutting the hit list to this many words, reported next to recall@k.
+  word_budget: 2000
   retrievers: [bm25, dense, hybrid, hyde, rag_fusion]
   gold:
     match: source_page
