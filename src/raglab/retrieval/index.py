@@ -45,6 +45,7 @@ def build_search_index(
     build_bm25: bool,
     bm25_k1: float,
     bm25_b: float,
+    tokenizer=tokenize,
 ) -> SearchIndex:
     embeddings = None
     if build_dense:
@@ -56,7 +57,7 @@ def build_search_index(
         embeddings = l2_normalize(matrix)
     bm25 = None
     if build_bm25:
-        bm25 = BM25Index([tokenize(chunk.text) for chunk in chunks], k1=bm25_k1, b=bm25_b)
+        bm25 = BM25Index([tokenizer(chunk.text) for chunk in chunks], k1=bm25_k1, b=bm25_b)
     return SearchIndex(chunks=chunks, embeddings=embeddings, bm25=bm25)
 
 
@@ -82,14 +83,7 @@ def hits_from_scores(index: SearchIndex, scores: np.ndarray, k: int) -> list[Hit
     hits: list[Hit] = []
     for position in rank_indices(scores, index.chunk_ids, k):
         chunk = index.chunks[position]
-        hits.append(
-            Hit(
-                chunk_id=chunk.chunk_id,
-                doc_id=chunk.doc_id,
-                text=chunk.text,
-                score=float(scores[position]),
-            )
-        )
+        hits.append(_hit(chunk, float(scores[position])))
     return hits
 
 
@@ -97,12 +91,17 @@ def hits_from_id_scores(index: SearchIndex, ranked: list[tuple[str, float]], k: 
     hits: list[Hit] = []
     for chunk_id, score in ranked[:k]:
         chunk = index.by_id[chunk_id]
-        hits.append(
-            Hit(
-                chunk_id=chunk.chunk_id,
-                doc_id=chunk.doc_id,
-                text=chunk.text,
-                score=float(score),
-            )
-        )
+        hits.append(_hit(chunk, float(score)))
     return hits
+
+
+def _hit(chunk: Chunk, score: float) -> Hit:
+    return Hit(
+        chunk_id=chunk.chunk_id,
+        doc_id=chunk.doc_id,
+        text=chunk.text,
+        score=score,
+        source_id=chunk.source_id or chunk.doc_id,
+        page_start=chunk.page_start,
+        page_end=chunk.page_end,
+    )

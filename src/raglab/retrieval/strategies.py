@@ -78,15 +78,20 @@ class BM25Retriever(Retriever):
     needs_bm25 = True
     score_type = "bm25"
 
+    def __init__(self, tokenizer=None) -> None:
+        self._tokenize = tokenizer or tokenize
+
     def retrieve(self, index: SearchIndex, query: str, k: int, services: Services) -> list[Hit]:
-        scores = _require_bm25(index).score_all(tokenize(query))
+        scores = _require_bm25(index).score_all(self._tokenize(query))
         return hits_from_scores(index, scores, k)
 
     def retrieve_all(
         self, index: SearchIndex, queries: list[str], k: int, services: Services
     ) -> list[list[Hit]]:
         bm25 = _require_bm25(index)
-        return [hits_from_scores(index, bm25.score_all(tokenize(query)), k) for query in queries]
+        return [
+            hits_from_scores(index, bm25.score_all(self._tokenize(query)), k) for query in queries
+        ]
 
 
 @register_retriever
@@ -120,9 +125,9 @@ class HybridRetriever(Retriever):
     needs_bm25 = True
     score_type = "rrf"
 
-    def __init__(self) -> None:
+    def __init__(self, tokenizer=None) -> None:
         self._dense = DenseRetriever()
-        self._bm25 = BM25Retriever()
+        self._bm25 = BM25Retriever(tokenizer)
 
     def retrieve(self, index: SearchIndex, query: str, k: int, services: Services) -> list[Hit]:
         return self.retrieve_all(index, [query], k, services)[0]

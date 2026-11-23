@@ -35,6 +35,17 @@ def main(argv: list[str] | None = None) -> int:
     )
     ablate.add_argument("--config", default="configs/ablation.yaml")
     ablate.set_defaults(func=_cmd_ablate)
+    search = commands.add_parser(
+        "search",
+        help="Rank chunking and retrieval configs for a manifest and a labeled question file",
+    )
+    search.add_argument("--config", required=True, help="YAML search config path")
+    search.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Print the config count and do not read documents or call a model",
+    )
+    search.set_defaults(func=_cmd_search)
     args = parser.parse_args(argv)
     try:
         return args.func(args)
@@ -54,6 +65,21 @@ def _cmd_ablate(args: argparse.Namespace) -> int:
 
     result = run_ablation(load_ablation_config(args.config))
     print(_markdown(result))
+    return 0
+
+
+def _cmd_search(args: argparse.Namespace) -> int:
+    logging.basicConfig(level=logging.INFO, format="%(message)s", force=True)
+    from raglab.search import describe_plan, load_search_config, planned_count, run_search
+
+    config = load_search_config(_cli_path(args.config))
+    if args.dry_run:
+        print(describe_plan(config))
+        print(f"configs: {planned_count(config)}")
+        return 0
+    result = run_search(config)
+    print(result["plan"])
+    print(f"wrote {result['output_dir']}")
     return 0
 
 

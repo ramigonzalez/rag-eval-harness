@@ -26,12 +26,32 @@ class Chunk:
     doc_id: str
     text: str
     index: int
+    source_id: str = ""
+    page_start: int | None = None
+    page_end: int | None = None
+
+
+@dataclass(frozen=True)
+class GoldLabel:
+    """One acceptable evidence location for a query.
+
+    ``page`` is the 1-based page in the source. ``chunk_id`` matches a chunk
+    directly when the corpus is already chunked. Both may be empty when the
+    label is only a free-text id stored in ``text_id``.
+    """
+
+    source_id: str = ""
+    page: int | None = None
+    chunk_id: str = ""
+    text_id: str = ""
 
 
 @dataclass(frozen=True)
 class Query:
     query_id: str
     text: str
+    gold: tuple[GoldLabel, ...] = ()
+    answerable: bool = True
 
 
 @dataclass(frozen=True)
@@ -40,6 +60,9 @@ class Hit:
     doc_id: str
     text: str
     score: float
+    source_id: str = ""
+    page_start: int | None = None
+    page_end: int | None = None
 
 
 @dataclass(frozen=True)
